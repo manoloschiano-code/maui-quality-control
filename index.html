@@ -690,7 +690,20 @@
             </form>
 
             <div class="reports-section">
-                <h3>📊 Ultimi Report Salvati</h3>
+                <h3>📊 Storico Report</h3>
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="monthFilter">Filtra per Mese:</label>
+                    <select id="monthFilter" onchange="filterReportsByMonth()">
+                        <option value="all">📅 Tutti i Report</option>
+                    </select>
+                </div>
+                
+                <div id="monthlyStats" style="display: none; background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #005AA7;">
+                    <h4 style="margin: 0 0 10px 0; color: #005AA7;">📈 Statistiche del Mese</h4>
+                    <div id="statsContent"></div>
+                </div>
+                
                 <div id="reportsList">
                     <p style="text-align: center; color: #666; font-style: italic;">🌟 Inizia compilando il primo report di qualità!</p>
                 </div>
@@ -772,16 +785,17 @@
         }
 
         function sendViaEmailJS(reportData) {
+            const emailBody = generateEmailBody(reportData);
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
                 subject: '🌺 MAUI QUALITY REPORT - ' + reportData.store + ' - ' + new Date(reportData.date).toLocaleDateString('it-IT'),
+                message: emailBody,
                 store_name: reportData.store,
                 inspector_name: reportData.inspector,
                 report_date: new Date(reportData.date).toLocaleDateString('it-IT'),
                 report_time: reportData.time,
-                overall_score: reportData.valutazione_complessiva || 'Non specificato',
-                message: generateEmailBody(reportData)
+                overall_score: reportData.valutazione_complessiva || 'Non specificato'
             };
 
             emailjs.send('service_cysrzkx', 'template_j203617', templateParams).then(function(result) {
@@ -907,18 +921,61 @@
         }
 
         function updateReportsList() {
+            updateMonthFilter();
+            displayReports();
+        }
+
+        function updateMonthFilter() {
+            const monthFilter = document.getElementById('monthFilter');
+            const currentOptions = Array.from(monthFilter.options).map(opt => opt.value);
+            
+            // Ottieni tutti i mesi disponibili dai report
+            const months = [...new Set(reports.map(report => {
+                const date = new Date(report.date);
+                return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+            }))].sort().reverse();
+            
+            // Aggiungi nuovi mesi al filtro
+            months.forEach(month => {
+                if (!currentOptions.includes(month)) {
+                    const option = document.createElement('option');
+                    option.value = month;
+                    const [year, monthNum] = month.split('-');
+                    const monthNames = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+                    option.textContent = monthNames[parseInt(monthNum) - 1] + ' ' + year;
+                    monthFilter.appendChild(option);
+                }
+            });
+        }
+
+        function filterReportsByMonth() {
+            const selectedMonth = document.getElementById('monthFilter').value;
+            displayReports(selectedMonth);
+            updateMonthlyStats(selectedMonth);
+        }
+
+        function displayReports(filterMonth = 'all') {
             const reportsList = document.getElementById('reportsList');
             
-            if (reports.length === 0) {
-                reportsList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">🌟 Inizia compilando il primo report!</p>';
+            let filteredReports = reports;
+            if (filterMonth !== 'all') {
+                filteredReports = reports.filter(report => {
+                    const date = new Date(report.date);
+                    const reportMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+                    return reportMonth === filterMonth;
+                });
+            }
+            
+            if (filteredReports.length === 0) {
+                reportsList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">📭 Nessun report trovato per questo periodo</p>';
                 return;
             }
 
-            reportsList.innerHTML = reports
+            reportsList.innerHTML = filteredReports
                 .sort(function(a, b) {
                     return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
                 })
-                .slice(0, 10)
+                .slice(0, 20)
                 .map(function(report) {
                     return '<div class="report-item">' +
                            '<div>' +
@@ -935,6 +992,61 @@
                            '</div>' +
                            '</div>';
                 }).join('');
+        }
+
+        function updateMonthlyStats(selectedMonth) {
+            const statsDiv = document.getElementById('monthlyStats');
+            const statsContent = document.getElementById('statsContent');
+            
+            if (selectedMonth === 'all') {
+                statsDiv.style.display = 'none';
+                return;
+            }
+            
+            const monthReports = reports.filter(report => {
+                const date = new Date(report.date);
+                const reportMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+                return reportMonth === selectedMonth;
+            });
+            
+            if (monthReports.length === 0) {
+                statsDiv.style.display = 'none';
+                return;
+            }
+            
+            // Calcola statistiche
+            const totalReports = monthReports.length;
+            const avgScore = (monthReports.reduce((sum, report) => sum + parseInt(report.valutazione_complessiva || 0), 0) / totalReports).toFixed(1);
+            
+            // Raggruppa per store
+            const storeStats = {};
+            monthReports.forEach(report => {
+                if (!storeStats[report.store]) {
+                    storeStats[report.store] = { count: 0, totalScore: 0 };
+                }
+                storeStats[report.store].count++;
+                storeStats[report.store].totalScore += parseInt(report.valutazione_complessiva || 0);
+            });
+            
+            // Trova miglior e peggior store
+            let bestStore = '', worstStore = '';
+            let bestAvg = 0, worstAvg = 10;
+            
+            Object.keys(storeStats).forEach(store => {
+                const avg = storeStats[store].totalScore / storeStats[store].count;
+                if (avg > bestAvg) { bestAvg = avg; bestStore = store; }
+                if (avg < worstAvg) { worstAvg = avg; worstStore = store; }
+            });
+            
+            statsContent.innerHTML = 
+                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">' +
+                '<div><strong>📊 Report Totali:</strong> ' + totalReports + '</div>' +
+                '<div><strong>⭐ Media Generale:</strong> ' + avgScore + '/10</div>' +
+                '<div><strong>🏆 Miglior Store:</strong> ' + bestStore + ' (' + bestAvg.toFixed(1) + '/10)</div>' +
+                '<div><strong>⚠️ Da Migliorare:</strong> ' + worstStore + ' (' + worstAvg.toFixed(1) + '/10)</div>' +
+                '</div>';
+            
+            statsDiv.style.display = 'block';
         }
 
         function getScoreColor(score) {
