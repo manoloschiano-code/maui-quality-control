@@ -1671,52 +1671,107 @@
                 return grades[value] || 'Non valutato';
             };
             
+            // Debug: log what we're sending
+            console.log('Sending email with report data:', report);
+            
             // Prepara tutti i parametri per il template EmailJS
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
                 subject: `Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
                 
-                // Dati base
-                store_name: report.store,
-                inspector_name: report.inspector,
-                report_date: new Date(report.date).toLocaleDateString('it-IT'),
-                report_time: report.time,
-                overall_score: report.score,
+                // Dati base - assicuriamoci che tutti i campi siano presenti
+                store_name: report.store || 'Non specificato',
+                inspector_name: report.inspector || currentUser?.name || 'Non specificato',
+                report_date: report.date ? new Date(report.date).toLocaleDateString('it-IT') : 'Non specificata',
+                report_time: report.time || 'Non specificata',
+                overall_score: report.score || '0',
                 personale: report.personale || 'Non specificato',
                 
-                // Valutazioni Pulizia
-                pulizia_generale: ratingToText(report.ratings.pulizia_generale),
-                pulizia_bancone: ratingToText(report.ratings.pulizia_bancone),
-                pulizia_pavimenti: ratingToText(report.ratings.pulizia_pavimenti),
-                pulizia_bagni: ratingToText(report.ratings.pulizia_bagni),
-                pulizia_note: report.notes.pulizia || 'Nessuna nota',
+                // Valutazioni Pulizia - controlliamo che esistano
+                pulizia_generale: ratingToText(report.ratings?.pulizia_generale),
+                pulizia_bancone: ratingToText(report.ratings?.pulizia_bancone),
+                pulizia_pavimenti: ratingToText(report.ratings?.pulizia_pavimenti),
+                pulizia_bagni: ratingToText(report.ratings?.pulizia_bagni),
+                pulizia_note: report.notes?.pulizia || 'Nessuna nota',
                 
                 // Valutazioni Staff
-                staff_cortesia: ratingToText(report.ratings.staff_cortesia),
-                staff_professionalita: ratingToText(report.ratings.staff_professionalita),
-                staff_velocita: ratingToText(report.ratings.staff_velocita),
-                staff_conoscenza: ratingToText(report.ratings.staff_conoscenza),
-                staff_note: report.notes.staff || 'Nessuna nota',
+                staff_cortesia: ratingToText(report.ratings?.staff_cortesia),
+                staff_professionalita: ratingToText(report.ratings?.staff_professionalita),
+                staff_velocita: ratingToText(report.ratings?.staff_velocita),
+                staff_conoscenza: ratingToText(report.ratings?.staff_conoscenza),
+                staff_note: report.notes?.staff || 'Nessuna nota',
                 
                 // Valutazioni Freschezza
-                fresh_pesce: ratingToText(report.ratings.fresh_pesce),
-                fresh_verdure: ratingToText(report.ratings.fresh_verdure),
-                fresh_riso: ratingToText(report.ratings.fresh_riso),
-                fresh_salse: ratingToText(report.ratings.fresh_salse),
-                fresh_note: report.notes.fresh || 'Nessuna nota',
+                fresh_pesce: ratingToText(report.ratings?.fresh_pesce),
+                fresh_verdure: ratingToText(report.ratings?.fresh_verdure),
+                fresh_riso: ratingToText(report.ratings?.fresh_riso),
+                fresh_salse: ratingToText(report.ratings?.fresh_salse),
+                fresh_note: report.notes?.fresh || 'Nessuna nota',
                 
                 // Note finali
-                note_finali: report.notes.final || 'Nessuna nota generale'
+                note_finali: report.notes?.final || 'Nessuna nota generale'
             };
+            
+            // Debug: log template parameters
+            console.log('Template parameters being sent:', templateParams);
             
             // Invia con EmailJS usando il template con variabili
             emailjs.send('service_cysrzkx', 'template_j203617', templateParams)
-                .then(() => {
-                    console.log('Email sent successfully with parameters');
+                .then((response) => {
+                    console.log('Email sent successfully!', response.status, response.text);
+                    
+                    // Show success notification
+                    const notification = document.createElement('div');
+                    notification.className = 'email-success-notification';
+                    notification.innerHTML = '✅ Email inviata con successo a manolo.schiano@mauipoke.ch';
+                    notification.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                        color: white;
+                        padding: 20px 30px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                        z-index: 3000;
+                        animation: slideInRight 0.5s ease;
+                        font-weight: 600;
+                    `;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.style.animation = 'slideOutRight 0.5s ease';
+                        setTimeout(() => notification.remove(), 500);
+                    }, 4000);
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
+                    console.error('Failed parameters:', templateParams);
+                    
+                    // Show error notification
+                    const errorNotification = document.createElement('div');
+                    errorNotification.className = 'email-error-notification';
+                    errorNotification.innerHTML = '⚠️ Errore invio email. Uso metodo alternativo...';
+                    errorNotification.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
+                        color: white;
+                        padding: 20px 30px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 30px rgba(255, 59, 59, 0.3);
+                        z-index: 3000;
+                        animation: slideInRight 0.5s ease;
+                        font-weight: 600;
+                    `;
+                    document.body.appendChild(errorNotification);
+                    
+                    setTimeout(() => {
+                        errorNotification.remove();
+                    }, 3000);
+                    
                     // Fallback: apri client email con il report formattato
                     const emailBody = formatEmailBody(report);
                     const subject = encodeURIComponent(templateParams.subject);
