@@ -325,35 +325,109 @@
             font-size: 1.1em;
         }
         
-        /* Star Rating System */
-        .star-rating {
+        /* Grade Buttons System */
+        .grade-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-top: 15px;
         }
         
-        .star {
-            font-size: 2em;
-            color: #ddd;
+        .grade-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            background: white;
+            font-size: 1.5em;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-            transform-origin: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .star:hover {
-            transform: scale(1.2);
+        .grade-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
         }
         
-        .star.active {
-            color: #FFD700;
-            animation: starPop 0.5s ease;
+        .grade-btn[data-value="5"] {
+            color: var(--success);
+            border-color: var(--success);
         }
         
-        @keyframes starPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
+        .grade-btn[data-value="5"]:hover,
+        .grade-btn[data-value="5"].active {
+            background: var(--success);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+        }
+        
+        .grade-btn[data-value="4"] {
+            color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .grade-btn[data-value="4"]:hover,
+        .grade-btn[data-value="4"].active {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .grade-btn[data-value="3"] {
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+        
+        .grade-btn[data-value="3"]:hover,
+        .grade-btn[data-value="3"].active {
+            background: var(--warning);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 184, 0, 0.3);
+        }
+        
+        .grade-btn[data-value="2"] {
+            color: #FF9800;
+            border-color: #FF9800;
+        }
+        
+        .grade-btn[data-value="2"]:hover,
+        .grade-btn[data-value="2"].active {
+            background: #FF9800;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .grade-btn[data-value="1"] {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+        
+        .grade-btn[data-value="1"]:hover,
+        .grade-btn[data-value="1"].active {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+        }
+        
+        .grade-btn.active::before {
+            background: rgba(255, 255, 255, 0.3);
+            width: 100px;
+            height: 100px;
         }
         
         /* Modern Input Styles */
@@ -786,42 +860,42 @@
                 <div class="rating-grid">
                     <div class="rating-item">
                         <label>Pulizia Generale</label>
-                        <div class="star-rating" data-field="pulizia_generale">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="pulizia_generale">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Bancone e Superfici</label>
-                        <div class="star-rating" data-field="pulizia_bancone">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="pulizia_bancone">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Pavimenti</label>
-                        <div class="star-rating" data-field="pulizia_pavimenti">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="pulizia_pavimenti">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Servizi Igienici</label>
-                        <div class="star-rating" data-field="pulizia_bagni">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="pulizia_bagni">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                 </div>
@@ -839,42 +913,42 @@
                 <div class="rating-grid">
                     <div class="rating-item">
                         <label>Cortesia</label>
-                        <div class="star-rating" data-field="staff_cortesia">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="staff_cortesia">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Professionalità</label>
-                        <div class="star-rating" data-field="staff_professionalita">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="staff_professionalita">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Velocità Servizio</label>
-                        <div class="star-rating" data-field="staff_velocita">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="staff_velocita">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Conoscenza Prodotti</label>
-                        <div class="star-rating" data-field="staff_conoscenza">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="staff_conoscenza">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                 </div>
@@ -892,42 +966,42 @@
                 <div class="rating-grid">
                     <div class="rating-item">
                         <label>Pesce e Proteine</label>
-                        <div class="star-rating" data-field="fresh_pesce">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="fresh_pesce">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Verdure</label>
-                        <div class="star-rating" data-field="fresh_verdure">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="fresh_verdure">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Riso e Cereali</label>
-                        <div class="star-rating" data-field="fresh_riso">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="fresh_riso">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                     <div class="rating-item">
                         <label>Salse e Condimenti</label>
-                        <div class="star-rating" data-field="fresh_salse">
-                            <span class="star" data-value="1">⭐</span>
-                            <span class="star" data-value="2">⭐</span>
-                            <span class="star" data-value="3">⭐</span>
-                            <span class="star" data-value="4">⭐</span>
-                            <span class="star" data-value="5">⭐</span>
+                        <div class="grade-buttons" data-field="fresh_salse">
+                            <button type="button" class="grade-btn" data-value="5">5</button>
+                            <button type="button" class="grade-btn" data-value="4">4</button>
+                            <button type="button" class="grade-btn" data-value="3">3</button>
+                            <button type="button" class="grade-btn" data-value="2">2</button>
+                            <button type="button" class="grade-btn" data-value="1">1</button>
                         </div>
                     </div>
                 </div>
@@ -974,6 +1048,14 @@
         <div class="dashboard">
             <h3 style="color: var(--dark); margin-bottom: 30px; font-size: 1.8em;">📊 Dashboard Analytics</h3>
             
+            <!-- Month Filter -->
+            <div class="month-filter" style="margin-bottom: 30px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <label for="monthSelect" style="font-weight: 600; margin-right: 15px; color: var(--dark);">📅 Seleziona Periodo:</label>
+                <select id="monthSelect" style="padding: 10px 20px; border-radius: 10px; border: 2px solid #ddd; font-size: 1em; min-width: 200px;">
+                    <option value="all">Tutti i Report</option>
+                </select>
+            </div>
+            
             <div class="stats-grid">
                 <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <div class="stat-number" id="totalReports">0</div>
@@ -988,16 +1070,22 @@
                     <div class="stat-label">Miglior Store</div>
                 </div>
                 <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                    <div class="stat-number" id="recentInspections">0</div>
-                    <div class="stat-label">Ispezioni Mese</div>
+                    <div class="stat-number" id="worstStore">-</div>
+                    <div class="stat-label">Da Migliorare</div>
                 </div>
+            </div>
+            
+            <!-- Monthly Summary -->
+            <div id="monthlySummary" style="display: none; background: white; padding: 25px; border-radius: 20px; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h4 style="color: var(--dark); margin-bottom: 20px;">📈 Riepilogo Mensile</h4>
+                <div id="monthlySummaryContent"></div>
             </div>
             
             <div class="chart-container">
                 <canvas id="performanceChart"></canvas>
             </div>
             
-            <h4 style="color: var(--dark); margin: 30px 0 20px; font-size: 1.4em;">📝 Report Recenti</h4>
+            <h4 style="color: var(--dark); margin: 30px 0 20px; font-size: 1.4em;">📝 Report del Periodo</h4>
             <div class="reports-grid" id="recentReports">
                 <p style="text-align: center; color: #999;">Nessun report disponibile</p>
             </div>
@@ -1065,31 +1153,42 @@
             });
         }
         
-        // Star Ratings
+        // Grade Ratings
         function initializeRatings() {
-            document.querySelectorAll('.star-rating').forEach(rating => {
-                const field = rating.dataset.field;
-                rating.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('star')) {
-                        const value = parseInt(e.target.dataset.value);
+            document.querySelectorAll('.grade-buttons').forEach(gradeGroup => {
+                const field = gradeGroup.dataset.field;
+                const buttons = gradeGroup.querySelectorAll('.grade-btn');
+                
+                buttons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Remove active class from all buttons in this group
+                        buttons.forEach(btn => btn.classList.remove('active'));
+                        
+                        // Add active class to clicked button
+                        this.classList.add('active');
+                        
+                        // Store the rating value
+                        const value = parseInt(this.dataset.value);
                         ratings[field] = value;
-                        updateStars(rating, value);
+                        
+                        // Update progress and auto-calculate score
                         updateProgressBar();
                         calculateAutoScore();
-                    }
+                        
+                        // Visual feedback
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 100);
+                    });
                 });
             });
         }
         
         function updateStars(ratingElement, value) {
-            const stars = ratingElement.querySelectorAll('.star');
-            stars.forEach((star, index) => {
-                if (index < value) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
-            });
+            // Not used anymore, keeping for compatibility
         }
         
         // Auto Calculate Score
@@ -1181,15 +1280,15 @@
         
         function sendEmail(report) {
             const ratingToText = (value) => {
-                const labels = ['Inaccettabile', 'Scarso', 'Sufficiente', 'Buono', 'Eccellente'];
-                return labels[value - 1] || 'Non valutato';
+                const grades = { 5: '5 - Eccellente', 4: '4 - Buono', 3: '3 - Sufficiente', 2: '2 - Scarso', 1: '1 - Inaccettabile' };
+                return grades[value] || 'Non valutato';
             };
             
             // Prepara tutti i parametri per il template EmailJS
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
-                subject: `🌺 Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
+                subject: `Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
                 
                 // Dati base
                 store_name: report.store,
@@ -1241,12 +1340,12 @@
         
         function formatEmailBody(report) {
             const ratingToText = (value) => {
-                const labels = ['Inaccettabile', 'Scarso', 'Sufficiente', 'Buono', 'Eccellente'];
-                return labels[value - 1] || 'N/A';
+                const grades = { 5: '5 - Eccellente', 4: '4 - Buono', 3: '3 - Sufficiente', 2: '2 - Scarso', 1: '1 - Inaccettabile' };
+                return grades[value] || 'Non valutato';
             };
             
             return `
-🌺 MAUI POKE - QUALITY CONTROL REPORT
+MAUI POKE - QUALITY CONTROL REPORT
 ═══════════════════════════════════════
 
 📍 STORE: ${report.store}
@@ -1284,7 +1383,7 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
 
 ═══════════════════════════════════════
 🤖 Report generato automaticamente
-📱 Maui Quality Control System 2.0
+📱 Maui Quality Control System
             `;
         }
         
@@ -1304,7 +1403,7 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
         function resetForm() {
             document.getElementById('qualityForm').reset();
             document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
             selectedStore = '';
             ratings = {};
             initializeDateTime();
@@ -1313,59 +1412,160 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
         
         // Dashboard
         function updateDashboard() {
-            // Update stats
-            document.getElementById('totalReports').textContent = reports.length;
+            updateMonthFilter();
+            const selectedMonth = document.getElementById('monthSelect').value;
+            updateDashboardStats(selectedMonth);
+            updateRecentReports(selectedMonth);
+            updateChart(selectedMonth);
+        }
+        
+        function updateMonthFilter() {
+            const monthSelect = document.getElementById('monthSelect');
+            const existingValue = monthSelect.value;
             
-            if (reports.length > 0) {
+            // Get unique months from reports
+            const months = [...new Set(reports.map(r => {
+                const date = new Date(r.date);
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            }))].sort().reverse();
+            
+            // Clear and rebuild options
+            monthSelect.innerHTML = '<option value="all">Tutti i Report</option>';
+            
+            const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                              'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            
+            months.forEach(month => {
+                const [year, monthNum] = month.split('-');
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = `${monthNames[parseInt(monthNum) - 1]} ${year}`;
+                monthSelect.appendChild(option);
+            });
+            
+            // Restore selection if it exists
+            if (existingValue && [...monthSelect.options].some(opt => opt.value === existingValue)) {
+                monthSelect.value = existingValue;
+            }
+            
+            // Add change event listener
+            monthSelect.onchange = () => updateDashboard();
+        }
+        
+        function updateDashboardStats(selectedMonth = 'all') {
+            let filteredReports = reports;
+            
+            if (selectedMonth !== 'all') {
+                filteredReports = reports.filter(r => {
+                    const date = new Date(r.date);
+                    const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    return reportMonth === selectedMonth;
+                });
+            }
+            
+            // Update total reports
+            document.getElementById('totalReports').textContent = filteredReports.length;
+            
+            if (filteredReports.length > 0) {
                 // Average score
-                const avgScore = reports.reduce((sum, r) => sum + parseInt(r.score), 0) / reports.length;
+                const avgScore = filteredReports.reduce((sum, r) => sum + parseInt(r.score || 0), 0) / filteredReports.length;
                 document.getElementById('avgScore').textContent = avgScore.toFixed(1);
                 
-                // Best store
+                // Store statistics
                 const storeScores = {};
-                reports.forEach(r => {
+                filteredReports.forEach(r => {
                     if (!storeScores[r.store]) {
                         storeScores[r.store] = { total: 0, count: 0 };
                     }
-                    storeScores[r.store].total += parseInt(r.score);
+                    storeScores[r.store].total += parseInt(r.score || 0);
                     storeScores[r.store].count++;
                 });
                 
                 let bestStore = '';
+                let worstStore = '';
                 let bestAvg = 0;
+                let worstAvg = 10;
+                
                 Object.keys(storeScores).forEach(store => {
                     const avg = storeScores[store].total / storeScores[store].count;
                     if (avg > bestAvg) {
                         bestAvg = avg;
                         bestStore = store;
                     }
+                    if (avg < worstAvg) {
+                        worstAvg = avg;
+                        worstStore = store;
+                    }
                 });
+                
                 document.getElementById('bestStore').textContent = bestStore || '-';
+                document.getElementById('worstStore').textContent = worstStore || '-';
                 
-                // Recent inspections (this month)
-                const thisMonth = new Date().getMonth();
-                const recentCount = reports.filter(r => new Date(r.date).getMonth() === thisMonth).length;
-                document.getElementById('recentInspections').textContent = recentCount;
-                
-                // Update recent reports
-                updateRecentReports();
-                
-                // Update chart
-                updateChart();
+                // Show monthly summary if month is selected
+                if (selectedMonth !== 'all') {
+                    showMonthlySummary(filteredReports, storeScores);
+                } else {
+                    document.getElementById('monthlySummary').style.display = 'none';
+                }
+            } else {
+                document.getElementById('avgScore').textContent = '0.0';
+                document.getElementById('bestStore').textContent = '-';
+                document.getElementById('worstStore').textContent = '-';
+                document.getElementById('monthlySummary').style.display = 'none';
             }
         }
         
-        function updateRecentReports() {
-            const container = document.getElementById('recentReports');
-            const recent = reports.slice(-5).reverse();
+        function showMonthlySummary(monthReports, storeScores) {
+            const summaryDiv = document.getElementById('monthlySummary');
+            const contentDiv = document.getElementById('monthlySummaryContent');
             
-            if (recent.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun report disponibile</p>';
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">';
+            
+            Object.keys(storeScores).forEach(store => {
+                const avg = (storeScores[store].total / storeScores[store].count).toFixed(1);
+                const count = storeScores[store].count;
+                const color = avg >= 8 ? 'var(--success)' : avg >= 6 ? 'var(--warning)' : 'var(--danger)';
+                
+                html += `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; border-left: 4px solid ${color};">
+                        <h5 style="margin: 0 0 10px 0; color: var(--dark);">${store}</h5>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 2em; font-weight: bold; color: ${color};">${avg}</span>
+                            <span style="color: #666;">${count} report${count > 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            contentDiv.innerHTML = html;
+            summaryDiv.style.display = 'block';
+        }
+        
+        function updateRecentReports(selectedMonth = 'all') {
+            const container = document.getElementById('recentReports');
+            
+            let filteredReports = reports;
+            if (selectedMonth !== 'all') {
+                filteredReports = reports.filter(r => {
+                    const date = new Date(r.date);
+                    const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    return reportMonth === selectedMonth;
+                });
+            }
+            
+            if (filteredReports.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun report disponibile per questo periodo</p>';
                 return;
             }
             
-            container.innerHTML = recent.map(report => {
-                const score = parseInt(report.score);
+            // Sort by date and show all reports for the selected period
+            const sortedReports = filteredReports.sort((a, b) => 
+                new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time)
+            );
+            
+            container.innerHTML = sortedReports.map(report => {
+                const score = parseInt(report.score || 0);
                 const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
                 
                 return `
@@ -1373,7 +1573,7 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                         <div class="report-info">
                             <h4>${report.store}</h4>
                             <div class="report-meta">
-                                ${new Date(report.date).toLocaleDateString('it-IT')} - ${report.inspector}
+                                ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time} - ${report.inspector}
                             </div>
                         </div>
                         <div class="report-score" style="color: ${score >= 8 ? 'var(--success)' : score >= 6 ? 'var(--warning)' : 'var(--danger)'}">
@@ -1384,26 +1584,56 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             }).join('');
         }
         
-        function updateChart() {
+        function updateChart(selectedMonth = 'all') {
             const ctx = document.getElementById('performanceChart');
             
+            // Clear existing chart if it exists
+            if (window.performanceChart && typeof window.performanceChart.destroy === 'function') {
+                window.performanceChart.destroy();
+            }
+            
+            let filteredReports = reports;
+            if (selectedMonth !== 'all') {
+                filteredReports = reports.filter(r => {
+                    const date = new Date(r.date);
+                    const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    return reportMonth === selectedMonth;
+                });
+            }
+            
+            if (filteredReports.length === 0) {
+                // Clear the canvas if no data
+                ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
+                return;
+            }
+            
             // Prepare data
-            const stores = [...new Set(reports.map(r => r.store))];
+            const stores = [...new Set(filteredReports.map(r => r.store))];
             const storeData = stores.map(store => {
-                const storeReports = reports.filter(r => r.store === store);
-                const avg = storeReports.reduce((sum, r) => sum + parseInt(r.score), 0) / storeReports.length;
+                const storeReports = filteredReports.filter(r => r.store === store);
+                const avg = storeReports.reduce((sum, r) => sum + parseInt(r.score || 0), 0) / storeReports.length;
                 return avg;
             });
             
-            new Chart(ctx, {
+            window.performanceChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: stores,
                     datasets: [{
                         label: 'Media Voti',
                         data: storeData,
-                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: stores.map((_, i) => {
+                            const score = storeData[i];
+                            if (score >= 8) return 'rgba(0, 200, 150, 0.8)';
+                            if (score >= 6) return 'rgba(255, 184, 0, 0.8)';
+                            return 'rgba(255, 59, 59, 0.8)';
+                        }),
+                        borderColor: stores.map((_, i) => {
+                            const score = storeData[i];
+                            if (score >= 8) return 'rgba(0, 200, 150, 1)';
+                            if (score >= 6) return 'rgba(255, 184, 0, 1)';
+                            return 'rgba(255, 59, 59, 1)';
+                        }),
                         borderWidth: 2,
                         borderRadius: 10,
                         barThickness: 40
@@ -1418,7 +1648,7 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                         },
                         title: {
                             display: true,
-                            text: 'Performance per Store',
+                            text: selectedMonth === 'all' ? 'Performance Generale Store' : 'Performance Store nel Periodo',
                             font: {
                                 size: 18,
                                 weight: 'bold'
