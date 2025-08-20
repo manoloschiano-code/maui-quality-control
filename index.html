@@ -3,258 +3,465 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maui Poke - Controllo Qualita</title>
+    <title>Maui Poke - Quality Control System 2.0</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #005AA7 0%, #FC6A57 100%);
-            margin: 0;
-            padding: 15px;
-            color: #333;
-            min-height: 100vh;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
         
+        :root {
+            --primary: #005AA7;
+            --secondary: #FC6A57;
+            --success: #00C896;
+            --warning: #FFB800;
+            --danger: #FF3B3B;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gradient-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(270deg, #005AA7, #FC6A57, #00C896, #764ba2);
+            background-size: 800% 800%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.1;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Main Container */
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease;
+            position: relative;
             overflow: hidden;
         }
         
-        .header {
-            background: linear-gradient(45deg, #FC6A57, #005AA7);
-            color: white;
-            padding: 25px;
-            text-align: center;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
         
         .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.2em;
-            font-weight: bold;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #FC6A57 50%, #00C896 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(252, 106, 87, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(252, 106, 87, 0.8)); }
         }
         
         .header p {
-            margin: 0;
-            font-size: 1.1em;
-            opacity: 0.95;
-        }
-        
-        .status-bar {
-            background: #d1ecf1;
-            color: #0c5460;
-            padding: 8px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        
-        .main-content {
-            padding: 25px;
-        }
-        
-        .store-selector {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-            border: 1px solid #e9ecef;
-        }
-        
-        .store-selector label {
-            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 1.2em;
-            margin-right: 15px;
-            color: #333;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
         
-        .store-selector select {
-            padding: 12px 20px;
-            font-size: 1.1em;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            min-width: 220px;
-            background: white;
+        /* Store Selector */
+        .store-selector {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease 0.2s both;
         }
         
-        .store-selector select:focus {
-            outline: none;
-            border-color: #005AA7;
-            box-shadow: 0 0 5px rgba(0, 90, 167, 0.3);
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
         
+        .store-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .store-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .store-card:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .store-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .store-card.selected {
+            background: linear-gradient(135deg, var(--success), #00a878);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 200, 150, 0.4);
+        }
+        
+        .store-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 1.5em;
+        }
+        
+        /* Form Sections */
         .form-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 5px solid #005AA7;
-            border: 1px solid #e9ecef;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-1);
+            animation: colorWave 3s ease-in-out infinite;
+        }
+        
+        @keyframes colorWave {
+            0%, 100% { background: var(--gradient-1); }
+            33% { background: var(--gradient-2); }
+            66% { background: var(--gradient-3); }
         }
         
         .form-section h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
-        .form-group {
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Advanced Rating System */
+        .rating-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .rating-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rating-item::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(252, 106, 87, 0.1) 0%, transparent 70%);
+            transition: all 0.5s;
+        }
+        
+        .rating-item:hover::before {
+            top: -150%;
+            left: -150%;
+        }
+        
+        .rating-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .rating-item label {
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 20px;
+            display: block;
+            font-size: 1.1em;
+        }
+        
+        /* Star Rating System */
+        .star-rating {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .star {
+            font-size: 2em;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform-origin: center;
+        }
+        
+        .star:hover {
+            transform: scale(1.2);
+        }
+        
+        .star.active {
+            color: #FFD700;
+            animation: starPop 0.5s ease;
+        }
+        
+        @keyframes starPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Modern Input Styles */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
         }
         
         .form-group label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
             font-size: 1em;
+            transition: all 0.3s;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            padding: 15px 20px;
+            border: 2px solid transparent;
+            border-radius: 15px;
             font-size: 1em;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            transition: all 0.3s;
+            font-family: inherit;
         }
         
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #005AA7;
-            box-shadow: 0 0 5px rgba(0, 90, 167, 0.3);
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 90, 167, 0.2);
+            transform: translateY(-2px);
         }
         
         .form-group textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
         
-        .rating-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
+        /* Progress Indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
         }
         
-        .rating-item {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #eee;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            width: 0%;
+            transition: width 0.3s ease;
         }
         
-        .rating-item:hover {
-            transform: translateY(-2px);
-            border-color: #005AA7;
-        }
-        
-        .rating-item label {
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: block;
-            color: #333;
-            font-size: 1em;
-        }
-        
-        .rating-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .rating-btn {
-            flex: 1;
-            padding: 12px 8px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.3s;
-            font-size: 0.9em;
-            font-family: Arial, sans-serif;
-        }
-        
-        .rating-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .rating-btn.excellent {
-            border-color: #27ae60;
-            color: #27ae60;
-        }
-        
-        .rating-btn.excellent.active,
-        .rating-btn.excellent:hover {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .rating-btn.good {
-            border-color: #f39c12;
-            color: #f39c12;
-        }
-        
-        .rating-btn.good.active,
-        .rating-btn.good:hover {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .rating-btn.poor {
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
-        
-        .rating-btn.poor.active,
-        .rating-btn.poor:hover {
-            background: #e74c3c;
-            color: white;
-        }
-        
+        /* Submit Button */
         .submit-section {
             text-align: center;
-            margin-top: 30px;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
+            margin: 40px 0;
+            animation: slideUp 0.8s ease 0.6s both;
         }
         
         .submit-btn {
-            background: linear-gradient(45deg, #FC6A57, #005AA7);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             border: none;
-            padding: 18px 40px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 10px;
+            padding: 20px 60px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border-radius: 50px;
             cursor: pointer;
-            min-width: 250px;
-            transition: all 0.3s;
-            font-family: Arial, sans-serif;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(0, 90, 167, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .submit-btn:hover::before {
+            width: 400px;
+            height: 400px;
         }
         
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(0, 90, 167, 0.4);
         }
         
         .submit-btn:disabled {
@@ -263,898 +470,973 @@
             transform: none;
         }
         
-        .reports-section {
-            background: #f1f3f4;
-            border-radius: 12px;
+        .submit-btn.loading {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Dashboard Section */
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 35px;
+            margin-top: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease 0.8s both;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 25px;
-            margin-top: 30px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .reports-section h3 {
-            color: #333;
-            margin-bottom: 20px;
+            border-radius: 20px;
             text-align: center;
-            font-size: 1.3em;
-            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
         }
         
-        .report-item {
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Chart Container */
+        .chart-container {
             background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #005AA7;
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        #performanceChart {
+            max-width: 100%;
+            height: 300px;
+        }
+        
+        /* Report Cards */
+        .reports-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .report-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 5px solid;
+            animation: slideRight 0.5s ease both;
         }
         
-        .report-date {
-            font-weight: bold;
+        .report-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .report-card.excellent { border-left-color: var(--success); }
+        .report-card.good { border-left-color: var(--warning); }
+        .report-card.poor { border-left-color: var(--danger); }
+        
+        .report-info h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+        
+        .report-meta {
             color: #666;
             font-size: 0.9em;
         }
         
-        .report-store {
-            color: #005AA7;
-            font-weight: bold;
-            font-size: 1em;
-        }
-        
-        .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+        .report-score {
+            font-size: 2em;
+            font-weight: 900;
             padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
             text-align: center;
-            font-weight: bold;
+            animation: successPop 0.5s ease forwards;
         }
         
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
+        @keyframes successPop {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
         
-        input[readonly] {
-            background-color: #f8f9fa !important;
-            cursor: not-allowed !important;
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3em;
+            color: white;
+            animation: checkmark 0.8s ease 0.3s both;
         }
         
-        #loadingMessage {
-            color: #005AA7;
-            font-weight: bold;
-            margin-top: 15px;
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(0); }
+            50% { transform: scale(1.2) rotate(360deg); }
+            100% { transform: scale(1) rotate(360deg); }
         }
         
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideRight {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
+            .header h1 {
+                font-size: 2.5em;
             }
             
-            .main-content {
-                padding: 20px;
+            .store-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
             
             .rating-grid {
                 grid-template-columns: 1fr;
             }
             
-            .rating-buttons {
-                flex-direction: column;
-                gap: 8px;
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .rating-btn {
-                padding: 14px;
-                font-size: 1em;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .store-selector {
-                text-align: left;
-            }
-            
-            .store-selector select {
-                width: 100%;
-                margin-top: 10px;
+            .submit-btn {
+                padding: 18px 40px;
+                font-size: 1.1em;
             }
         }
         
         @media (max-width: 480px) {
             .container {
-                margin: 5px;
-                border-radius: 10px;
+                padding: 10px;
             }
             
             .header {
-                padding: 20px;
+                padding: 30px 20px;
             }
             
-            .main-content {
-                padding: 15px;
+            .header h1 {
+                font-size: 2em;
             }
             
             .form-section {
-                padding: 20px;
+                padding: 25px 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-
+    <div class="animated-bg"></div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
     
     <div class="container">
         <div class="header">
-            <h1>🌺 MAUI POKE</h1>
+            <h1>MAUI POKE</h1>
             <p>Sistema Controllo Qualità - Rete Store</p>
         </div>
-
-        <div class="main-content">
-            <div class="store-selector">
-                <label for="storeSelect">Seleziona Store:</label>
-                <select id="storeSelect">
-                    <option value="">-- Scegli Store --</option>
-                    <option value="Locarno">Locarno</option>
-                    <option value="Lugano">Lugano</option>
-                    <option value="Grancia">Grancia</option>
-                    <option value="Lido">Lido</option>
-                    <option value="Lugano Centro">Lugano Centro</option>
-                    <option value="Mendrisio">Mendrisio</option>
-                </select>
+        
+        <div class="store-selector">
+            <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 1.5em;">📍 Seleziona Store</h3>
+            <div class="store-grid">
+                <div class="store-card" data-store="Locarno">Locarno</div>
+                <div class="store-card" data-store="Lugano">Lugano</div>
+                <div class="store-card" data-store="Grancia">Grancia</div>
+                <div class="store-card" data-store="Lido">Lido</div>
+                <div class="store-card" data-store="Lugano Centro">Lugano Centro</div>
+                <div class="store-card" data-store="Mendrisio">Mendrisio</div>
             </div>
-
-            <form id="qualityForm">
-                <div class="form-section">
-                    <h3>ℹ️ Informazioni Generali</h3>
-                    <div class="form-group">
-                        <label for="inspector">Nome Ispettore:</label>
-                        <input type="text" id="inspector" name="inspector" required placeholder="Inserisci il tuo nome">
+        </div>
+        
+        <form id="qualityForm">
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">ℹ️</div>
+                    Informazioni Generali
+                </h3>
+                <div class="form-group">
+                    <label for="inspector">Nome Ispettore</label>
+                    <input type="text" id="inspector" name="inspector" required placeholder="Inserisci il tuo nome">
+                </div>
+                <div class="form-group">
+                    <label for="date">Data Ispezione</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">Ora Ispezione</label>
+                    <input type="time" id="time" name="time" required>
+                </div>
+                <div class="form-group">
+                    <label for="personale">Personale in Servizio</label>
+                    <textarea id="personale" name="personale" placeholder="Elenca il personale presente durante l'ispezione"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">🧹</div>
+                    Valutazione Pulizia
+                </h3>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label>Pulizia Generale</label>
+                        <div class="star-rating" data-field="pulizia_generale">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="date">Data:</label>
-                        <input type="date" id="date" name="date" required readonly>
+                    <div class="rating-item">
+                        <label>Bancone e Superfici</label>
+                        <div class="star-rating" data-field="pulizia_bancone">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="time">Ora:</label>
-                        <input type="time" id="time" name="time" required readonly>
+                    <div class="rating-item">
+                        <label>Pavimenti</label>
+                        <div class="star-rating" data-field="pulizia_pavimenti">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="personale_servizio">Personale in Servizio:</label>
-                        <textarea id="personale_servizio" name="personale_servizio" placeholder="Inserisci i nomi del personale presente durante l'ispezione (es: Mario Rossi, Laura Bianchi, etc.)"></textarea>
+                    <div class="rating-item">
+                        <label>Servizi Igienici</label>
+                        <div class="star-rating" data-field="pulizia_bagni">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-section">
-                    <h3>🧹 Pulizia</h3>
-                    <div class="rating-grid">
-                        <div class="rating-item">
-                            <label>Pulizia generale del locale</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('pulizia_generale', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('pulizia_generale', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('pulizia_generale', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="pulizia_generale" id="pulizia_generale">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Pulizia bancone e superfici</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('pulizia_bancone', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('pulizia_bancone', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('pulizia_bancone', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="pulizia_bancone" id="pulizia_bancone">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Pulizia pavimenti</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('pulizia_pavimenti', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('pulizia_pavimenti', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('pulizia_pavimenti', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="pulizia_pavimenti" id="pulizia_pavimenti">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Pulizia bagni</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('pulizia_bagni', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('pulizia_bagni', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('pulizia_bagni', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="pulizia_bagni" id="pulizia_bagni">
+                <div class="form-group">
+                    <label for="pulizia_note">Note e Osservazioni</label>
+                    <textarea id="pulizia_note" name="pulizia_note" placeholder="Dettagli specifici sulla pulizia..."></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">👥</div>
+                    Comportamento Staff
+                </h3>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label>Cortesia</label>
+                        <div class="star-rating" data-field="staff_cortesia">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="pulizia_note">Note Pulizia:</label>
-                        <textarea id="pulizia_note" name="pulizia_note" placeholder="Inserisci eventuali osservazioni sulla pulizia..."></textarea>
+                    <div class="rating-item">
+                        <label>Professionalità</label>
+                        <div class="star-rating" data-field="staff_professionalita">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="pulizia_soluzioni">Soluzioni Comunicate al Personale:</label>
-                        <textarea id="pulizia_soluzioni" name="pulizia_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare la pulizia..."></textarea>
+                    <div class="rating-item">
+                        <label>Velocità Servizio</label>
+                        <div class="star-rating" data-field="staff_velocita">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <label>Conoscenza Prodotti</label>
+                        <div class="star-rating" data-field="staff_conoscenza">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-section">
-                    <h3>👥 Comportamento Staff</h3>
-                    <div class="rating-grid">
-                        <div class="rating-item">
-                            <label>Cortesia e disponibilità</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('comportamento_cortesia', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('comportamento_cortesia', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('comportamento_cortesia', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="comportamento_cortesia" id="comportamento_cortesia">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Professionalità</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('comportamento_professionalita', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('comportamento_professionalita', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('comportamento_professionalita', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="comportamento_professionalita" id="comportamento_professionalita">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Velocità servizio</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('comportamento_velocita', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('comportamento_velocita', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('comportamento_velocita', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="comportamento_velocita" id="comportamento_velocita">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Conoscenza prodotti</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('comportamento_conoscenza', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('comportamento_conoscenza', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('comportamento_conoscenza', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="comportamento_conoscenza" id="comportamento_conoscenza">
+                <div class="form-group">
+                    <label for="staff_note">Note e Osservazioni</label>
+                    <textarea id="staff_note" name="staff_note" placeholder="Dettagli sul comportamento dello staff..."></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">🥗</div>
+                    Freschezza Ingredienti
+                </h3>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <label>Pesce e Proteine</label>
+                        <div class="star-rating" data-field="fresh_pesce">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="comportamento_note">Note Comportamento:</label>
-                        <textarea id="comportamento_note" name="comportamento_note" placeholder="Inserisci eventuali osservazioni sul comportamento dello staff..."></textarea>
+                    <div class="rating-item">
+                        <label>Verdure</label>
+                        <div class="star-rating" data-field="fresh_verdure">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="comportamento_soluzioni">Soluzioni Comunicate al Personale:</label>
-                        <textarea id="comportamento_soluzioni" name="comportamento_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare il comportamento e il servizio..."></textarea>
+                    <div class="rating-item">
+                        <label>Riso e Cereali</label>
+                        <div class="star-rating" data-field="fresh_riso">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <label>Salse e Condimenti</label>
+                        <div class="star-rating" data-field="fresh_salse">
+                            <span class="star" data-value="1">⭐</span>
+                            <span class="star" data-value="2">⭐</span>
+                            <span class="star" data-value="3">⭐</span>
+                            <span class="star" data-value="4">⭐</span>
+                            <span class="star" data-value="5">⭐</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-section">
-                    <h3>🥗 Freschezza Ingredienti</h3>
-                    <div class="rating-grid">
-                        <div class="rating-item">
-                            <label>Pesce e proteine</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('freschezza_pesce', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('freschezza_pesce', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('freschezza_pesce', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="freschezza_pesce" id="freschezza_pesce">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Verdure e contorni</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('freschezza_verdure', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('freschezza_verdure', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('freschezza_verdure', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="freschezza_verdure" id="freschezza_verdure">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Riso e cereali</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('freschezza_riso', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('freschezza_riso', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('freschezza_riso', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="freschezza_riso" id="freschezza_riso">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Salse e condimenti</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('freschezza_salse', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('freschezza_salse', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('freschezza_salse', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="freschezza_salse" id="freschezza_salse">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="freschezza_note">Note Freschezza:</label>
-                        <textarea id="freschezza_note" name="freschezza_note" placeholder="Inserisci eventuali osservazioni sulla freschezza degli ingredienti..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="freschezza_soluzioni">Soluzioni Comunicate al Personale:</label>
-                        <textarea id="freschezza_soluzioni" name="freschezza_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per mantenere la freschezza degli ingredienti..."></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="fresh_note">Note e Osservazioni</label>
+                    <textarea id="fresh_note" name="fresh_note" placeholder="Dettagli sulla freschezza degli ingredienti..."></textarea>
                 </div>
-
-                <div class="form-section">
-                    <h3>👔 Divisa e Portamento</h3>
-                    <div class="rating-grid">
-                        <div class="rating-item">
-                            <label>Pulizia divisa</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('divisa_pulizia', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('divisa_pulizia', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('divisa_pulizia', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="divisa_pulizia" id="divisa_pulizia">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Completezza divisa</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('divisa_completezza', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('divisa_completezza', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('divisa_completezza', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="divisa_completezza" id="divisa_completezza">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Portamento generale</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('divisa_portamento', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('divisa_portamento', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('divisa_portamento', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="divisa_portamento" id="divisa_portamento">
-                        </div>
-                        
-                        <div class="rating-item">
-                            <label>Igiene personale</label>
-                            <div class="rating-buttons">
-                                <button type="button" class="rating-btn excellent" onclick="setRating('divisa_igiene', 'excellent')">Eccellente</button>
-                                <button type="button" class="rating-btn good" onclick="setRating('divisa_igiene', 'good')">Buono</button>
-                                <button type="button" class="rating-btn poor" onclick="setRating('divisa_igiene', 'poor')">Scarso</button>
-                            </div>
-                            <input type="hidden" name="divisa_igiene" id="divisa_igiene">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="divisa_note">Note Divisa:</label>
-                        <textarea id="divisa_note" name="divisa_note" placeholder="Inserisci eventuali osservazioni sulla divisa e il portamento..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="divisa_soluzioni">Soluzioni Comunicate al Personale:</label>
-                        <textarea id="divisa_soluzioni" name="divisa_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare divisa e portamento..."></textarea>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>📝 Valutazione Complessiva</h3>
-                    <div class="form-group">
-                        <label for="valutazione_complessiva">Voto Complessivo (1-10):</label>
-                        <select id="valutazione_complessiva" name="valutazione_complessiva" required>
-                            <option value="">-- Seleziona --</option>
-                            <option value="10">10 - Eccellente</option>
-                            <option value="9">9 - Ottimo</option>
-                            <option value="8">8 - Molto Buono</option>
-                            <option value="7">7 - Buono</option>
-                            <option value="6">6 - Sufficiente</option>
-                            <option value="5">5 - Insufficiente</option>
-                            <option value="4">4 - Scarso</option>
-                            <option value="3">3 - Molto Scarso</option>
-                            <option value="2">2 - Pessimo</option>
-                            <option value="1">1 - Inaccettabile</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="note_generali">Note Generali:</label>
-                        <textarea id="note_generali" name="note_generali" placeholder="Inserisci eventuali osservazioni generali o suggerimenti..."></textarea>
-                    </div>
-                </div>
-
-                <div class="submit-section">
-                    <button type="submit" class="submit-btn" id="submitBtn">📤 Salva e Invia Report</button>
-                    <div id="loadingMessage" style="display: none;">
-                        🚀 Invio automatico in corso...
-                    </div>
-                </div>
-            </form>
-
-            <div class="reports-section">
-                <h3>📊 Storico Report</h3>
-                
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label for="monthFilter">Filtra per Mese:</label>
-                    <select id="monthFilter" onchange="filterReportsByMonth()">
-                        <option value="all">📅 Tutti i Report</option>
+            </div>
+            
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">📝</div>
+                    Valutazione Finale
+                </h3>
+                <div class="form-group">
+                    <label for="valutazione_finale">Voto Complessivo (1-10)</label>
+                    <select id="valutazione_finale" name="valutazione_finale" required>
+                        <option value="">Seleziona un voto...</option>
+                        <option value="10">10 - Eccellente</option>
+                        <option value="9">9 - Ottimo</option>
+                        <option value="8">8 - Molto Buono</option>
+                        <option value="7">7 - Buono</option>
+                        <option value="6">6 - Sufficiente</option>
+                        <option value="5">5 - Insufficiente</option>
+                        <option value="4">4 - Scarso</option>
+                        <option value="3">3 - Molto Scarso</option>
+                        <option value="2">2 - Pessimo</option>
+                        <option value="1">1 - Inaccettabile</option>
                     </select>
                 </div>
-                
-                <div id="monthlyStats" style="display: none; background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #005AA7;">
-                    <h4 style="margin: 0 0 10px 0; color: #005AA7;">📈 Statistiche del Mese</h4>
-                    <div id="statsContent"></div>
+                <div class="form-group">
+                    <label for="note_finali">Note Generali e Raccomandazioni</label>
+                    <textarea id="note_finali" name="note_finali" placeholder="Osservazioni finali e suggerimenti per il miglioramento..."></textarea>
                 </div>
-                
-                <div id="reportsList">
-                    <p style="text-align: center; color: #666; font-style: italic;">🌟 Inizia compilando il primo report di qualità!</p>
+            </div>
+            
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">INVIA REPORT</span>
+                </button>
+            </div>
+        </form>
+        
+        <div class="dashboard">
+            <h3 style="color: var(--dark); margin-bottom: 30px; font-size: 1.8em;">📊 Dashboard Analytics</h3>
+            
+            <div class="stats-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="stat-number" id="totalReports">0</div>
+                    <div class="stat-label">Report Totali</div>
                 </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-number" id="avgScore">0.0</div>
+                    <div class="stat-label">Media Voti</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="stat-number" id="bestStore">-</div>
+                    <div class="stat-label">Miglior Store</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="stat-number" id="recentInspections">0</div>
+                    <div class="stat-label">Ispezioni Mese</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+            
+            <h4 style="color: var(--dark); margin: 30px 0 20px; font-size: 1.4em;">📝 Report Recenti</h4>
+            <div class="reports-grid" id="recentReports">
+                <p style="text-align: center; color: #999;">Nessun report disponibile</p>
             </div>
         </div>
     </div>
-
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="success-message" id="successMessage" style="display: none;">
+        <div class="success-icon">✓</div>
+        <h2 style="color: var(--dark); margin-bottom: 10px;">Report Inviato!</h2>
+        <p style="color: #666;">Il report è stato salvato e inviato con successo.</p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        // Initialize EmailJS
         emailjs.init("azBz9PrKR4ljQuq93");
         
-        document.getElementById('date').valueAsDate = new Date();
-        document.getElementById('time').value = new Date().toTimeString().slice(0,5);
-
-        let reports = [];
-
-        function loadSavedData() {
-            const savedReports = localStorage.getItem('mauiQualityReports');
-            if (savedReports) {
-                reports = JSON.parse(savedReports);
-                console.log('Caricati ' + reports.length + ' report salvati');
+        // State Management
+        let selectedStore = '';
+        let ratings = {};
+        let reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            initializeDateTime();
+            initializeStoreSelector();
+            initializeRatings();
+            initializeForm();
+            updateDashboard();
+            updateProgressBar();
+        });
+        
+        // Particles Animation
+        function initializeParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
             }
         }
-
-        function saveData() {
-            localStorage.setItem('mauiQualityReports', JSON.stringify(reports));
-            console.log('Salvati ' + reports.length + ' report');
+        
+        // DateTime
+        function initializeDateTime() {
+            const now = new Date();
+            document.getElementById('date').valueAsDate = now;
+            document.getElementById('time').value = now.toTimeString().slice(0, 5);
         }
-
-        function setRating(fieldName, rating) {
-            const buttons = document.querySelectorAll('input[name="' + fieldName + '"]').item(0).parentNode.querySelectorAll('.rating-btn');
-            buttons.forEach(function(btn) {
-                btn.classList.remove('active');
+        
+        // Store Selector
+        function initializeStoreSelector() {
+            document.querySelectorAll('.store-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedStore = this.dataset.store;
+                    updateProgressBar();
+                });
             });
-            event.target.classList.add('active');
-            document.getElementById(fieldName).value = rating;
         }
-
-        function calculateOverallScore() {
-            const ratings = ['pulizia_generale', 'pulizia_bancone', 'pulizia_pavimenti', 'pulizia_bagni',
-                           'comportamento_cortesia', 'comportamento_professionalita', 'comportamento_velocita', 'comportamento_conoscenza',
-                           'freschezza_pesce', 'freschezza_verdure', 'freschezza_riso', 'freschezza_salse',
-                           'divisa_pulizia', 'divisa_completezza', 'divisa_portamento', 'divisa_igiene'];
-            
-            let totalScore = 0;
-            let validRatings = 0;
-            
-            ratings.forEach(function(rating) {
-                const value = document.getElementById(rating).value;
-                if (value) {
-                    validRatings++;
-                    switch(value) {
-                        case 'excellent': totalScore += 10; break;
-                        case 'good': totalScore += 7; break;
-                        case 'poor': totalScore += 4; break;
+        
+        // Star Ratings
+        function initializeRatings() {
+            document.querySelectorAll('.star-rating').forEach(rating => {
+                const field = rating.dataset.field;
+                rating.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('star')) {
+                        const value = parseInt(e.target.dataset.value);
+                        ratings[field] = value;
+                        updateStars(rating, value);
+                        updateProgressBar();
+                        calculateAutoScore();
                     }
+                });
+            });
+        }
+        
+        function updateStars(ratingElement, value) {
+            const stars = ratingElement.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < value) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
                 }
             });
-            
-            if (validRatings > 0) {
-                const averageScore = Math.round(totalScore / validRatings);
-                document.getElementById('valutazione_complessiva').value = averageScore;
+        }
+        
+        // Auto Calculate Score
+        function calculateAutoScore() {
+            const ratingValues = Object.values(ratings);
+            if (ratingValues.length > 0) {
+                const avg = ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length;
+                const score = Math.round(avg * 2);
+                document.getElementById('valutazione_finale').value = score;
             }
         }
-
-        function sendReportEmailReal(reportData) {
-            console.log('Sending email...');
+        
+        // Progress Bar
+        function updateProgressBar() {
+            const totalFields = 17; // Total fields to complete
+            let completed = 0;
             
-            updateReportsList();
+            if (selectedStore) completed++;
+            if (document.getElementById('inspector').value) completed++;
+            if (document.getElementById('date').value) completed++;
+            if (document.getElementById('time').value) completed++;
+            completed += Object.keys(ratings).length;
+            if (document.getElementById('valutazione_finale').value) completed++;
             
-            try {
-                sendViaEmailJS(reportData);
-            } catch (error) {
-                console.error('EmailJS failed:', error);
-                sendEmailDirectly(reportData);
+            const progress = (completed / totalFields) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        // Form Submission
+        function initializeForm() {
+            document.getElementById('qualityForm').addEventListener('submit', handleSubmit);
+            
+            // Update progress on input
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('input', updateProgressBar);
+            });
+        }
+        
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            if (!selectedStore) {
+                alert('Seleziona uno store!');
+                return;
             }
             
-            resetSubmitButton();
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            
+            btn.classList.add('loading');
+            btnText.textContent = 'INVIO IN CORSO...';
+            btn.disabled = true;
+            
+            const formData = new FormData(e.target);
+            const report = {
+                id: Date.now(),
+                store: selectedStore,
+                date: formData.get('date'),
+                time: formData.get('time'),
+                inspector: formData.get('inspector'),
+                personale: formData.get('personale'),
+                ratings: {...ratings},
+                score: formData.get('valutazione_finale'),
+                notes: {
+                    pulizia: formData.get('pulizia_note'),
+                    staff: formData.get('staff_note'),
+                    fresh: formData.get('fresh_note'),
+                    final: formData.get('note_finali')
+                }
+            };
+            
+            // Save report
+            reports.push(report);
+            localStorage.setItem('mauiReports', JSON.stringify(reports));
+            
+            // Send email
+            sendEmail(report);
+            
+            // Show success
+            setTimeout(() => {
+                showSuccess();
+                resetForm();
+                updateDashboard();
+                btn.classList.remove('loading');
+                btnText.textContent = 'INVIA REPORT';
+                btn.disabled = false;
+            }, 1500);
         }
-
-        function sendViaEmailJS(reportData) {
-            const emailBody = generateEmailBody(reportData);
+        
+        function sendEmail(report) {
+            const ratingToText = (value) => {
+                const labels = ['Inaccettabile', 'Scarso', 'Sufficiente', 'Buono', 'Eccellente'];
+                return labels[value - 1] || 'Non valutato';
+            };
+            
+            // Prepara tutti i parametri per il template EmailJS
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
-                subject: '🌺 MAUI QUALITY REPORT - ' + reportData.store + ' - ' + new Date(reportData.date).toLocaleDateString('it-IT'),
-                message: emailBody,
-                store_name: reportData.store,
-                inspector_name: reportData.inspector,
-                report_date: new Date(reportData.date).toLocaleDateString('it-IT'),
-                report_time: reportData.time,
-                overall_score: reportData.valutazione_complessiva || 'Non specificato'
+                subject: `🌺 Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
+                
+                // Dati base
+                store_name: report.store,
+                inspector_name: report.inspector,
+                report_date: new Date(report.date).toLocaleDateString('it-IT'),
+                report_time: report.time,
+                overall_score: report.score,
+                personale: report.personale || 'Non specificato',
+                
+                // Valutazioni Pulizia
+                pulizia_generale: ratingToText(report.ratings.pulizia_generale),
+                pulizia_bancone: ratingToText(report.ratings.pulizia_bancone),
+                pulizia_pavimenti: ratingToText(report.ratings.pulizia_pavimenti),
+                pulizia_bagni: ratingToText(report.ratings.pulizia_bagni),
+                pulizia_note: report.notes.pulizia || 'Nessuna nota',
+                
+                // Valutazioni Staff
+                staff_cortesia: ratingToText(report.ratings.staff_cortesia),
+                staff_professionalita: ratingToText(report.ratings.staff_professionalita),
+                staff_velocita: ratingToText(report.ratings.staff_velocita),
+                staff_conoscenza: ratingToText(report.ratings.staff_conoscenza),
+                staff_note: report.notes.staff || 'Nessuna nota',
+                
+                // Valutazioni Freschezza
+                fresh_pesce: ratingToText(report.ratings.fresh_pesce),
+                fresh_verdure: ratingToText(report.ratings.fresh_verdure),
+                fresh_riso: ratingToText(report.ratings.fresh_riso),
+                fresh_salse: ratingToText(report.ratings.fresh_salse),
+                fresh_note: report.notes.fresh || 'Nessuna nota',
+                
+                // Note finali
+                note_finali: report.notes.final || 'Nessuna nota generale'
             };
-
-            emailjs.send('service_cysrzkx', 'template_j203617', templateParams).then(function(result) {
-                console.log('EmailJS SUCCESS:', result);
-                showSuccessMessage(reportData, 'emailjs');
-            }).catch(function(error) {
-                console.error('EmailJS ERROR:', error);
-                sendEmailDirectly(reportData);
-            });
-        }
-
-        function sendEmailDirectly(reportData) {
-            const subject = '🌺 MAUI QUALITY REPORT - ' + reportData.store + ' - ' + new Date(reportData.date).toLocaleDateString('it-IT');
-            const body = generateEmailBody(reportData);
-            const mailtoLink = 'mailto:manolo.schiano@mauipoke.ch,antonello.romeo@mauipoke.ch?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-            window.open(mailtoLink, '_blank');
-            showSuccessMessage(reportData, 'direct');
-        }
-
-        function generateEmailBody(data) {
-            return '🌺 MAUI POKE - CONTROLLO QUALITÀ\n' +
-                   '═══════════════════════════════════════\n\n' +
-                   '📍 STORE: ' + data.store + '\n' +
-                   '👤 ISPETTORE: ' + data.inspector + '\n' +
-                   '📅 DATA: ' + new Date(data.date).toLocaleDateString('it-IT') + ' alle ' + data.time + '\n' +
-                   (data.personale_servizio ? '👥 PERSONALE: ' + data.personale_servizio + '\n' : '') +
-                   '\n⭐ VOTO COMPLESSIVO: ' + data.valutazione_complessiva + '/10\n\n' +
-                   
-                   '🧹 PULIZIA\n' +
-                   '─────────────────────────\n' +
-                   '• Generale: ' + translateRating(data.pulizia_generale) + '\n' +
-                   '• Bancone: ' + translateRating(data.pulizia_bancone) + '\n' +
-                   '• Pavimenti: ' + translateRating(data.pulizia_pavimenti) + '\n' +
-                   '• Bagni: ' + translateRating(data.pulizia_bagni) + '\n' +
-                   (data.pulizia_note ? '📝 Note: ' + data.pulizia_note + '\n' : '') +
-                   (data.pulizia_soluzioni ? '🔧 Soluzioni: ' + data.pulizia_soluzioni + '\n' : '') + '\n' +
-                   
-                   '👥 COMPORTAMENTO STAFF\n' +
-                   '─────────────────────────\n' +
-                   '• Cortesia: ' + translateRating(data.comportamento_cortesia) + '\n' +
-                   '• Professionalità: ' + translateRating(data.comportamento_professionalita) + '\n' +
-                   '• Velocità: ' + translateRating(data.comportamento_velocita) + '\n' +
-                   '• Conoscenza: ' + translateRating(data.comportamento_conoscenza) + '\n' +
-                   (data.comportamento_note ? '📝 Note: ' + data.comportamento_note + '\n' : '') +
-                   (data.comportamento_soluzioni ? '🔧 Soluzioni: ' + data.comportamento_soluzioni + '\n' : '') + '\n' +
-                   
-                   '🥗 FRESCHEZZA INGREDIENTI\n' +
-                   '─────────────────────────\n' +
-                   '• Pesce/Proteine: ' + translateRating(data.freschezza_pesce) + '\n' +
-                   '• Verdure: ' + translateRating(data.freschezza_verdure) + '\n' +
-                   '• Riso/Cereali: ' + translateRating(data.freschezza_riso) + '\n' +
-                   '• Salse: ' + translateRating(data.freschezza_salse) + '\n' +
-                   (data.freschezza_note ? '📝 Note: ' + data.freschezza_note + '\n' : '') +
-                   (data.freschezza_soluzioni ? '🔧 Soluzioni: ' + data.freschezza_soluzioni + '\n' : '') + '\n' +
-                   
-                   '👔 DIVISA E PORTAMENTO\n' +
-                   '─────────────────────────\n' +
-                   '• Pulizia divisa: ' + translateRating(data.divisa_pulizia) + '\n' +
-                   '• Completezza: ' + translateRating(data.divisa_completezza) + '\n' +
-                   '• Portamento: ' + translateRating(data.divisa_portamento) + '\n' +
-                   '• Igiene: ' + translateRating(data.divisa_igiene) + '\n' +
-                   (data.divisa_note ? '📝 Note: ' + data.divisa_note + '\n' : '') +
-                   (data.divisa_soluzioni ? '🔧 Soluzioni: ' + data.divisa_soluzioni + '\n' : '') + '\n' +
-                   
-                   (data.note_generali ? '📋 NOTE GENERALI\n─────────────────────────\n' + data.note_generali + '\n\n' : '') +
-                   '═══════════════════════════════════════\n' +
-                   '🤖 Report generato automaticamente\n' +
-                   '📱 Maui Quality Control System';
-        }
-
-        function translateRating(rating) {
-            switch(rating) {
-                case 'excellent': return 'Eccellente';
-                case 'good': return 'Buono';
-                case 'poor': return 'Scarso';
-                default: return 'Non valutato';
-            }
-        }
-
-        function showSuccessMessage(reportData, emailStatus) {
-            const existingMessages = document.querySelectorAll('.success, .warning');
-            existingMessages.forEach(function(msg) {
-                msg.remove();
-            });
             
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'success';
-            
-            if (emailStatus === 'emailjs') {
-                messageDiv.innerHTML = '🎉 Report inviato con successo!<br>' +
-                                       'Store: <strong>' + reportData.store + '</strong><br>' +
-                                       'Voto: <strong>' + reportData.valutazione_complessiva + '/10</strong><br>' +
-                                       'Email inviata automaticamente ai manager';
-            } else {
-                messageDiv.innerHTML = '✅ Report salvato e email aperta!<br>' +
-                                       'Store: <strong>' + reportData.store + '</strong><br>' +
-                                       'Voto: <strong>' + reportData.valutazione_complessiva + '/10</strong><br>' +
-                                       'Completa l\'invio nel client email';
-            }
-            
-            document.querySelector('.submit-section').appendChild(messageDiv);
-            
-            setTimeout(function() {
-                messageDiv.remove();
-            }, 6000);
-            
-            resetForm();
-        }
-
-        function resetForm() {
-            document.getElementById('qualityForm').reset();
-            document.getElementById('date').valueAsDate = new Date();
-            document.getElementById('time').value = new Date().toTimeString().slice(0,5);
-            document.getElementById('storeSelect').value = '';
-            
-            document.querySelectorAll('.rating-btn.active').forEach(function(btn) {
-                btn.classList.remove('active');
-            });
-            
-            document.querySelectorAll('input[type="hidden"]').forEach(function(input) {
-                input.value = '';
-            });
-        }
-
-        function updateReportsList() {
-            updateMonthFilter();
-            displayReports();
-        }
-
-        function updateMonthFilter() {
-            const monthFilter = document.getElementById('monthFilter');
-            const currentOptions = Array.from(monthFilter.options).map(opt => opt.value);
-            
-            // Ottieni tutti i mesi disponibili dai report
-            const months = [...new Set(reports.map(report => {
-                const date = new Date(report.date);
-                return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-            }))].sort().reverse();
-            
-            // Aggiungi nuovi mesi al filtro
-            months.forEach(month => {
-                if (!currentOptions.includes(month)) {
-                    const option = document.createElement('option');
-                    option.value = month;
-                    const [year, monthNum] = month.split('-');
-                    const monthNames = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
-                    option.textContent = monthNames[parseInt(monthNum) - 1] + ' ' + year;
-                    monthFilter.appendChild(option);
-                }
-            });
-        }
-
-        function filterReportsByMonth() {
-            const selectedMonth = document.getElementById('monthFilter').value;
-            displayReports(selectedMonth);
-            updateMonthlyStats(selectedMonth);
-        }
-
-        function displayReports(filterMonth = 'all') {
-            const reportsList = document.getElementById('reportsList');
-            
-            let filteredReports = reports;
-            if (filterMonth !== 'all') {
-                filteredReports = reports.filter(report => {
-                    const date = new Date(report.date);
-                    const reportMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-                    return reportMonth === filterMonth;
-                });
-            }
-            
-            if (filteredReports.length === 0) {
-                reportsList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">📭 Nessun report trovato per questo periodo</p>';
-                return;
-            }
-
-            reportsList.innerHTML = filteredReports
-                .sort(function(a, b) {
-                    return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
+            // Invia con EmailJS usando il template con variabili
+            emailjs.send('service_cysrzkx', 'template_j203617', templateParams)
+                .then(() => {
+                    console.log('Email sent successfully with parameters');
                 })
-                .slice(0, 20)
-                .map(function(report) {
-                    return '<div class="report-item">' +
-                           '<div>' +
-                           '<div class="report-date">' + new Date(report.date).toLocaleDateString('it-IT') + ' - ' + report.time + '</div>' +
-                           '<div class="report-store">' + report.store + '</div>' +
-                           '</div>' +
-                           '<div style="text-align: right;">' +
-                           '<div style="font-weight: bold; color: ' + getScoreColor(report.valutazione_complessiva) + ';">' +
-                           report.valutazione_complessiva + '/10' +
-                           '</div>' +
-                           '<div style="font-size: 0.9em; color: #666;">' +
-                           report.inspector +
-                           '</div>' +
-                           '</div>' +
-                           '</div>';
-                }).join('');
-        }
-
-        function updateMonthlyStats(selectedMonth) {
-            const statsDiv = document.getElementById('monthlyStats');
-            const statsContent = document.getElementById('statsContent');
-            
-            if (selectedMonth === 'all') {
-                statsDiv.style.display = 'none';
-                return;
-            }
-            
-            const monthReports = reports.filter(report => {
-                const date = new Date(report.date);
-                const reportMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-                return reportMonth === selectedMonth;
-            });
-            
-            if (monthReports.length === 0) {
-                statsDiv.style.display = 'none';
-                return;
-            }
-            
-            // Calcola statistiche
-            const totalReports = monthReports.length;
-            const avgScore = (monthReports.reduce((sum, report) => sum + parseInt(report.valutazione_complessiva || 0), 0) / totalReports).toFixed(1);
-            
-            // Raggruppa per store
-            const storeStats = {};
-            monthReports.forEach(report => {
-                if (!storeStats[report.store]) {
-                    storeStats[report.store] = { count: 0, totalScore: 0 };
-                }
-                storeStats[report.store].count++;
-                storeStats[report.store].totalScore += parseInt(report.valutazione_complessiva || 0);
-            });
-            
-            // Trova miglior e peggior store
-            let bestStore = '', worstStore = '';
-            let bestAvg = 0, worstAvg = 10;
-            
-            Object.keys(storeStats).forEach(store => {
-                const avg = storeStats[store].totalScore / storeStats[store].count;
-                if (avg > bestAvg) { bestAvg = avg; bestStore = store; }
-                if (avg < worstAvg) { worstAvg = avg; worstStore = store; }
-            });
-            
-            statsContent.innerHTML = 
-                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">' +
-                '<div><strong>📊 Report Totali:</strong> ' + totalReports + '</div>' +
-                '<div><strong>⭐ Media Generale:</strong> ' + avgScore + '/10</div>' +
-                '<div><strong>🏆 Miglior Store:</strong> ' + bestStore + ' (' + bestAvg.toFixed(1) + '/10)</div>' +
-                '<div><strong>⚠️ Da Migliorare:</strong> ' + worstStore + ' (' + worstAvg.toFixed(1) + '/10)</div>' +
-                '</div>';
-            
-            statsDiv.style.display = 'block';
-        }
-
-        function getScoreColor(score) {
-            if (score >= 8) return '#27ae60';
-            if (score >= 6) return '#f39c12';
-            return '#e74c3c';
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const loadingMsg = document.getElementById('loadingMessage');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            loadingMsg.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.textContent = '🚀 Invio in corso...';
-            
-            const storeSelect = document.getElementById('storeSelect');
-            
-            if (!storeSelect.value) {
-                alert('⚠️ Seleziona uno store!');
-                resetSubmitButton();
-                return false;
-            }
-
-            const inspector = document.getElementById('inspector').value;
-            if (!inspector) {
-                alert('⚠️ Inserisci il nome ispettore!');
-                resetSubmitButton();
-                return false;
-            }
-
-            const reportData = {
-                id: Date.now(),
-                store: storeSelect.value,
-                date: document.getElementById('date').value,
-                time: document.getElementById('time').value,
-                inspector: inspector,
-                personale_servizio: document.getElementById('personale_servizio').value,
-                
-                pulizia_generale: document.getElementById('pulizia_generale').value,
-                pulizia_bancone: document.getElementById('pulizia_bancone').value,
-                pulizia_pavimenti: document.getElementById('pulizia_pavimenti').value,
-                pulizia_bagni: document.getElementById('pulizia_bagni').value,
-                pulizia_note: document.getElementById('pulizia_note').value,
-                pulizia_soluzioni: document.getElementById('pulizia_soluzioni').value,
-                
-                comportamento_cortesia: document.getElementById('comportamento_cortesia').value,
-                comportamento_professionalita: document.getElementById('comportamento_professionalita').value,
-                comportamento_velocita: document.getElementById('comportamento_velocita').value,
-                comportamento_conoscenza: document.getElementById('comportamento_conoscenza').value,
-                comportamento_note: document.getElementById('comportamento_note').value,
-                comportamento_soluzioni: document.getElementById('comportamento_soluzioni').value,
-                
-                freschezza_pesce: document.getElementById('freschezza_pesce').value,
-                freschezza_verdure: document.getElementById('freschezza_verdure').value,
-                freschezza_riso: document.getElementById('freschezza_riso').value,
-                freschezza_salse: document.getElementById('freschezza_salse').value,
-                freschezza_note: document.getElementById('freschezza_note').value,
-                freschezza_soluzioni: document.getElementById('freschezza_soluzioni').value,
-                
-                divisa_pulizia: document.getElementById('divisa_pulizia').value,
-                divisa_completezza: document.getElementById('divisa_completezza').value,
-                divisa_portamento: document.getElementById('divisa_portamento').value,
-                divisa_igiene: document.getElementById('divisa_igiene').value,
-                divisa_note: document.getElementById('divisa_note').value,
-                divisa_soluzioni: document.getElementById('divisa_soluzioni').value,
-                
-                valutazione_complessiva: document.getElementById('valutazione_complessiva').value,
-                note_generali: document.getElementById('note_generali').value
-            };
-
-            if (!reportData.valutazione_complessiva) {
-                calculateOverallScore();
-                reportData.valutazione_complessiva = document.getElementById('valutazione_complessiva').value;
-            }
-
-            reports.push(reportData);
-            saveData();
-            sendReportEmailReal(reportData);
-            
-            return false;
+                .catch(error => {
+                    console.error('EmailJS error:', error);
+                    // Fallback: apri client email con il report formattato
+                    const emailBody = formatEmailBody(report);
+                    const subject = encodeURIComponent(templateParams.subject);
+                    const body = encodeURIComponent(emailBody);
+                    window.open(`mailto:${templateParams.to_email},${templateParams.cc_email}?subject=${subject}&body=${body}`);
+                });
         }
         
-        function resetSubmitButton() {
-            document.getElementById('loadingMessage').style.display = 'none';
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').textContent = '📤 Salva e Invia Report';
+        function formatEmailBody(report) {
+            const ratingToText = (value) => {
+                const labels = ['Inaccettabile', 'Scarso', 'Sufficiente', 'Buono', 'Eccellente'];
+                return labels[value - 1] || 'N/A';
+            };
+            
+            return `
+🌺 MAUI POKE - QUALITY CONTROL REPORT
+═══════════════════════════════════════
+
+📍 STORE: ${report.store}
+👤 ISPETTORE: ${report.inspector}
+📅 DATA: ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time}
+${report.personale ? `👥 PERSONALE: ${report.personale}` : ''}
+
+⭐ VOTO COMPLESSIVO: ${report.score}/10
+
+🧹 PULIZIA
+─────────────────────────
+• Generale: ${ratingToText(report.ratings.pulizia_generale)}
+• Bancone: ${ratingToText(report.ratings.pulizia_bancone)}
+• Pavimenti: ${ratingToText(report.ratings.pulizia_pavimenti)}
+• Bagni: ${ratingToText(report.ratings.pulizia_bagni)}
+${report.notes.pulizia ? `📝 Note: ${report.notes.pulizia}` : ''}
+
+👥 STAFF
+─────────────────────────
+• Cortesia: ${ratingToText(report.ratings.staff_cortesia)}
+• Professionalità: ${ratingToText(report.ratings.staff_professionalita)}
+• Velocità: ${ratingToText(report.ratings.staff_velocita)}
+• Conoscenza: ${ratingToText(report.ratings.staff_conoscenza)}
+${report.notes.staff ? `📝 Note: ${report.notes.staff}` : ''}
+
+🥗 FRESCHEZZA
+─────────────────────────
+• Pesce: ${ratingToText(report.ratings.fresh_pesce)}
+• Verdure: ${ratingToText(report.ratings.fresh_verdure)}
+• Riso: ${ratingToText(report.ratings.fresh_riso)}
+• Salse: ${ratingToText(report.ratings.fresh_salse)}
+${report.notes.fresh ? `📝 Note: ${report.notes.fresh}` : ''}
+
+${report.notes.final ? `📋 NOTE FINALI\n─────────────────────────\n${report.notes.final}` : ''}
+
+═══════════════════════════════════════
+🤖 Report generato automaticamente
+📱 Maui Quality Control System 2.0
+            `;
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSavedData();
-            updateReportsList();
+        
+        function showSuccess() {
+            const overlay = document.getElementById('overlay');
+            const successMsg = document.getElementById('successMessage');
             
-            const form = document.getElementById('qualityForm');
-            if (form) {
-                form.addEventListener('submit', handleFormSubmit);
+            overlay.classList.add('active');
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+        
+        function resetForm() {
+            document.getElementById('qualityForm').reset();
+            document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            selectedStore = '';
+            ratings = {};
+            initializeDateTime();
+            updateProgressBar();
+        }
+        
+        // Dashboard
+        function updateDashboard() {
+            // Update stats
+            document.getElementById('totalReports').textContent = reports.length;
+            
+            if (reports.length > 0) {
+                // Average score
+                const avgScore = reports.reduce((sum, r) => sum + parseInt(r.score), 0) / reports.length;
+                document.getElementById('avgScore').textContent = avgScore.toFixed(1);
+                
+                // Best store
+                const storeScores = {};
+                reports.forEach(r => {
+                    if (!storeScores[r.store]) {
+                        storeScores[r.store] = { total: 0, count: 0 };
+                    }
+                    storeScores[r.store].total += parseInt(r.score);
+                    storeScores[r.store].count++;
+                });
+                
+                let bestStore = '';
+                let bestAvg = 0;
+                Object.keys(storeScores).forEach(store => {
+                    const avg = storeScores[store].total / storeScores[store].count;
+                    if (avg > bestAvg) {
+                        bestAvg = avg;
+                        bestStore = store;
+                    }
+                });
+                document.getElementById('bestStore').textContent = bestStore || '-';
+                
+                // Recent inspections (this month)
+                const thisMonth = new Date().getMonth();
+                const recentCount = reports.filter(r => new Date(r.date).getMonth() === thisMonth).length;
+                document.getElementById('recentInspections').textContent = recentCount;
+                
+                // Update recent reports
+                updateRecentReports();
+                
+                // Update chart
+                updateChart();
+            }
+        }
+        
+        function updateRecentReports() {
+            const container = document.getElementById('recentReports');
+            const recent = reports.slice(-5).reverse();
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Nessun report disponibile</p>';
+                return;
             }
             
-            console.log('🌺 Maui Quality Control - Ready!');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('rating-btn')) {
-                setTimeout(calculateOverallScore, 100);
-            }
-        });
+            container.innerHTML = recent.map(report => {
+                const score = parseInt(report.score);
+                const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
+                
+                return `
+                    <div class="report-card ${scoreClass}">
+                        <div class="report-info">
+                            <h4>${report.store}</h4>
+                            <div class="report-meta">
+                                ${new Date(report.date).toLocaleDateString('it-IT')} - ${report.inspector}
+                            </div>
+                        </div>
+                        <div class="report-score" style="color: ${score >= 8 ? 'var(--success)' : score >= 6 ? 'var(--warning)' : 'var(--danger)'}">
+                            ${score}/10
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateChart() {
+            const ctx = document.getElementById('performanceChart');
+            
+            // Prepare data
+            const stores = [...new Set(reports.map(r => r.store))];
+            const storeData = stores.map(store => {
+                const storeReports = reports.filter(r => r.store === store);
+                const avg = storeReports.reduce((sum, r) => sum + parseInt(r.score), 0) / storeReports.length;
+                return avg;
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: stores,
+                    datasets: [{
+                        label: 'Media Voti',
+                        data: storeData,
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 2,
+                        borderRadius: 10,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Performance per Store',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
