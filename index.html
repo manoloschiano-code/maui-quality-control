@@ -1066,7 +1066,7 @@
                 </h3>
                 <div class="form-group">
                     <label for="inspector">Nome Ispettore</label>
-                    <input type="text" id="inspector" name="inspector" required placeholder="Inserisci il tuo nome">
+                    <input type="text" id="inspector" name="inspector" required placeholder="Inserisci il tuo nome" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label for="date">Data Ispezione</label>
@@ -1348,6 +1348,258 @@
         };
         
         let currentUser = null;
+        let inactivityTimer = null;
+        const INACTIVITY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 ore in millisecondi
+        
+        // Activity tracking
+        function resetInactivityTimer() {
+            // Clear existing timer
+            if (inactivityTimer) {
+                clearTimeout(inactivityTimer);
+            }
+            
+            // Set new timer for 2 hours
+            inactivityTimer = setTimeout(() => {
+                // Show warning before logout
+                showInactivityWarning();
+            }, INACTIVITY_TIMEOUT - 60000); // Warning 1 minute before logout
+        }
+        
+        function showInactivityWarning() {
+            const warningModal = document.createElement('div');
+            warningModal.id = 'inactivityWarning';
+            warningModal.className = 'inactivity-warning-modal';
+            warningModal.innerHTML = `
+                <div class="inactivity-warning-content">
+                    <div class="warning-header">
+                        <div class="warning-icon">⏰</div>
+                        <h3>Sessione in Scadenza</h3>
+                    </div>
+                    <div class="warning-body">
+                        <p>La tua sessione scadrà tra <span id="countdown">60</span> secondi per inattività.</p>
+                        <p>Clicca il pulsante per rimanere connesso.</p>
+                    </div>
+                    <div class="warning-footer">
+                        <button onclick="extendSession()" class="extend-session-btn">
+                            🔄 Rimani Connesso
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add styles for warning modal
+            const warningStyles = `
+                <style>
+                .inactivity-warning-modal {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 6000;
+                    animation: slideInRight 0.5s ease;
+                }
+                
+                .inactivity-warning-content {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 25px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    border: 3px solid var(--warning);
+                    max-width: 350px;
+                }
+                
+                .warning-header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                
+                .warning-icon {
+                    font-size: 3em;
+                    animation: shake 1s infinite;
+                }
+                
+                .warning-header h3 {
+                    margin: 10px 0 0 0;
+                    color: var(--dark);
+                }
+                
+                .warning-body {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                
+                .warning-body p {
+                    margin: 10px 0;
+                    color: #666;
+                }
+                
+                #countdown {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    color: var(--danger);
+                }
+                
+                .extend-session-btn {
+                    width: 100%;
+                    padding: 15px;
+                    background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 1.1em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                }
+                
+                .extend-session-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                }
+                
+                @keyframes shake {
+                    0%, 100% { transform: rotate(0deg); }
+                    25% { transform: rotate(-10deg); }
+                    75% { transform: rotate(10deg); }
+                }
+                </style>
+            `;
+            
+            // Add styles if not present
+            if (!document.querySelector('#inactivityWarningStyles')) {
+                const styleElement = document.createElement('div');
+                styleElement.id = 'inactivityWarningStyles';
+                styleElement.innerHTML = warningStyles;
+                document.head.appendChild(styleElement);
+            }
+            
+            document.body.appendChild(warningModal);
+            
+            // Start countdown
+            let seconds = 60;
+            const countdownInterval = setInterval(() => {
+                seconds--;
+                const countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    countdownElement.textContent = seconds;
+                }
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    autoLogout();
+                }
+            }, 1000);
+            
+            // Store interval ID to clear it if user extends session
+            warningModal.dataset.intervalId = countdownInterval;
+        }
+        
+        function extendSession() {
+            // Remove warning modal
+            const warningModal = document.getElementById('inactivityWarning');
+            if (warningModal) {
+                // Clear countdown interval
+                const intervalId = warningModal.dataset.intervalId;
+                if (intervalId) {
+                    clearInterval(intervalId);
+                }
+                warningModal.remove();
+            }
+            
+            // Reset inactivity timer
+            resetInactivityTimer();
+            
+            // Show confirmation
+            const confirmation = document.createElement('div');
+            confirmation.className = 'session-extended';
+            confirmation.innerHTML = '✅ Sessione estesa di altre 2 ore';
+            confirmation.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                z-index: 6000;
+                animation: slideInRight 0.5s ease;
+                font-weight: 600;
+            `;
+            document.body.appendChild(confirmation);
+            
+            setTimeout(() => {
+                confirmation.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => confirmation.remove(), 500);
+            }, 3000);
+        }
+        
+        function autoLogout() {
+            // Remove warning modal if exists
+            const warningModal = document.getElementById('inactivityWarning');
+            if (warningModal) {
+                warningModal.remove();
+            }
+            
+            // Show logout message
+            const logoutMessage = document.createElement('div');
+            logoutMessage.className = 'auto-logout-message';
+            logoutMessage.innerHTML = '🔒 Sessione scaduta per inattività. Effettua nuovamente il login.';
+            logoutMessage.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
+                color: white;
+                padding: 25px 40px;
+                border-radius: 15px;
+                box-shadow: 0 20px 60px rgba(255, 59, 59, 0.4);
+                z-index: 6000;
+                font-weight: 600;
+                font-size: 1.1em;
+                text-align: center;
+            `;
+            document.body.appendChild(logoutMessage);
+            
+            // Perform logout after showing message
+            setTimeout(() => {
+                logoutMessage.remove();
+                performLogout();
+            }, 3000);
+        }
+        
+        function performLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('mauiUser');
+            
+            // Clear inactivity timer
+            if (inactivityTimer) {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = null;
+            }
+            
+            // Remove activity listeners
+            removeActivityListeners();
+            
+            // Show login screen
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+        
+        // Setup activity listeners
+        function setupActivityListeners() {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            events.forEach(event => {
+                document.addEventListener(event, resetInactivityTimer, true);
+            });
+        }
+        
+        function removeActivityListeners() {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            events.forEach(event => {
+                document.removeEventListener(event, resetInactivityTimer, true);
+            });
+        }
         
         // Check if user is already logged in
         function checkAuth() {
@@ -1380,6 +1632,10 @@
                 // Save session
                 sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
                 
+                // Setup inactivity timer and listeners
+                setupActivityListeners();
+                resetInactivityTimer();
+                
                 // Show main app
                 showMainApp();
                 
@@ -1406,22 +1662,25 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('currentUser').textContent = `👤 ${currentUser.name}`;
             
-            // Set inspector name automatically
-            if (document.getElementById('inspector')) {
-                document.getElementById('inspector').value = currentUser.name;
-            }
-            
-            // Initialize app
+            // Initialize app FIRST, then set inspector name
             initializeApp();
+            
+            // Set inspector name automatically and make it readonly
+            setTimeout(() => {
+                const inspectorField = document.getElementById('inspector');
+                if (inspectorField) {
+                    inspectorField.value = currentUser.name;
+                    inspectorField.readOnly = true;
+                    inspectorField.style.backgroundColor = '#f0f0f0';
+                    inspectorField.style.cursor = 'not-allowed';
+                }
+            }, 100);
         }
         
         // Handle Logout
         function handleLogout() {
             if (confirm('Sei sicuro di voler uscire?')) {
-                currentUser = null;
-                sessionStorage.removeItem('mauiUser');
-                document.getElementById('mainApp').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
+                performLogout();
             }
         }
         
@@ -1634,7 +1893,7 @@
                 store: selectedStore,
                 date: formData.get('date'),
                 time: formData.get('time'),
-                inspector: currentUser.name, // Use logged in user name
+                inspector: currentUser.name, // Always use logged in user name, not form field
                 personale: formData.get('personale'),
                 ratings: {...ratings},
                 score: formData.get('valutazione_finale'),
@@ -1850,6 +2109,15 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             ratings = {};
             initializeDateTime();
             updateProgressBar();
+            
+            // Re-set inspector name after form reset (keeps it as logged user)
+            const inspectorField = document.getElementById('inspector');
+            if (inspectorField && currentUser) {
+                inspectorField.value = currentUser.name;
+                inspectorField.readOnly = true;
+                inspectorField.style.backgroundColor = '#f0f0f0';
+                inspectorField.style.cursor = 'not-allowed';
+            }
         }
         
         // Dashboard
