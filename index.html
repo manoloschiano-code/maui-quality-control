@@ -12,22 +12,23 @@
         }
         
         :root {
-            --primary: #005AA7;
-            --secondary: #FC6A57;
+            --primary: #00BFFF;  /* Deep Sky Blue - come il logo */
+            --secondary: #F17B67; /* Corallo/Salmone - come il testo del logo */
+            --accent: #B0E0E6;   /* Celeste Pastello - sfondo logo */
             --success: #00C896;
             --warning: #FFB800;
             --danger: #FF3B3B;
             --dark: #1a1a2e;
             --light: #f8f9fa;
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-1: linear-gradient(135deg, #B0E0E6 0%, #00BFFF 100%);
+            --gradient-2: linear-gradient(135deg, #F17B67 0%, #FF8A75 100%);
+            --gradient-3: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
             --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gradient-dark);
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d3436 50%, #00BFFF 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -41,10 +42,10 @@
             top: 0;
             left: 0;
             z-index: -1;
-            background: linear-gradient(270deg, #005AA7, #FC6A57, #00C896, #764ba2);
+            background: linear-gradient(270deg, #00BFFF, #B0E0E6, #F17B67, #00BFFF);
             background-size: 800% 800%;
             animation: gradientShift 15s ease infinite;
-            opacity: 0.1;
+            opacity: 0.15;
         }
         
         @keyframes gradientShift {
@@ -110,7 +111,7 @@
         }
         
         .login-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
             color: white;
             padding: 40px 30px;
             text-align: center;
@@ -143,7 +144,7 @@
         .login-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, #F17B67 0%, #FF8A75 100%);
             color: white;
             border: none;
             border-radius: 15px;
@@ -158,7 +159,7 @@
         
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 90, 167, 0.3);
+            box-shadow: 0 10px 30px rgba(241, 123, 103, 0.3);
         }
         
         .login-btn:active {
@@ -180,6 +181,39 @@
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
+        }
+        
+        .biometric-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d3436 100%);
+            color: white;
+            border: 2px solid #00BFFF;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .biometric-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
+            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
+        }
+        
+        .biometric-icon {
+            font-size: 1.5em;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .login-footer {
@@ -313,12 +347,12 @@
         }
         
         .detected-store-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
             color: white;
             padding: 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 90, 167, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.3);
             animation: slideUp 0.5s ease;
         }
         
@@ -338,8 +372,8 @@
         
         .change-store-btn {
             background: rgba(255, 255, 255, 0.95);
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            color: #00BFFF;
+            border: 2px solid #00BFFF;
             padding: 12px 25px;
             border-radius: 12px;
             cursor: pointer;
@@ -349,10 +383,10 @@
         }
         
         .change-store-btn:hover {
-            background: var(--primary);
+            background: #00BFFF;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 90, 167, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
         }
         
         /* Store Selector */
@@ -374,7 +408,7 @@
         }
         
         .store-card {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #00BFFF, #B0E0E6);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -410,9 +444,9 @@
         }
         
         .store-card.selected {
-            background: linear-gradient(135deg, var(--success), #00a878);
+            background: linear-gradient(135deg, #F17B67, #FF8A75);
             transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 200, 150, 0.4);
+            box-shadow: 0 15px 40px rgba(241, 123, 103, 0.4);
         }
         
         .store-card.selected::after {
@@ -448,9 +482,9 @@
         }
         
         @keyframes colorWave {
-            0%, 100% { background: var(--gradient-1); }
-            33% { background: var(--gradient-2); }
-            66% { background: var(--gradient-3); }
+            0%, 100% { background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%); }
+            33% { background: linear-gradient(135deg, #B0E0E6 0%, #F17B67 100%); }
+            66% { background: linear-gradient(135deg, #F17B67 0%, #00BFFF 100%); }
         }
         
         .form-section h3 {
@@ -466,7 +500,7 @@
         .section-icon {
             width: 50px;
             height: 50px;
-            background: var(--gradient-1);
+            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
             border-radius: 15px;
             display: flex;
             align-items: center;
@@ -770,7 +804,7 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
             color: white;
             padding: 25px;
             border-radius: 20px;
@@ -780,9 +814,21 @@
             transition: all 0.3s;
         }
         
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #F17B67 0%, #FF8A75 100%);
+        }
+        
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #B0E0E6 0%, #87CEEB 100%);
+        }
+        
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, #00BFFF 0%, #00A5E0 100%);
+        }
+        
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.4);
         }
         
         .stat-number {
@@ -1018,7 +1064,10 @@
         <div id="loginScreen" class="login-container">
             <div class="login-box">
                 <div class="login-header">
-                    <h1>MAUI POKE</h1>
+                    <div class="logo-container" style="background: #B0E0E6; padding: 20px 40px; border-radius: 15px; margin-bottom: 20px; display: inline-block;">
+                        <div style="font-size: 3em; font-weight: 900; color: #F17B67; letter-spacing: -3px; margin-bottom: -10px;">MAUI</div>
+                        <div style="font-size: 1.8em; font-weight: 600; color: #F17B67; letter-spacing: 8px; margin-left: 2px;">POKE</div>
+                    </div>
                     <p>Sistema Controllo Qualità</p>
                 </div>
                 <div class="login-form">
@@ -1032,6 +1081,15 @@
                         <input type="password" id="password" placeholder="Inserisci password" autocomplete="current-password">
                     </div>
                     <button type="button" class="login-btn" onclick="handleLogin()">ACCEDI</button>
+                    <div id="biometricSection" style="display: none; margin-top: 20px;">
+                        <div style="text-align: center; padding: 15px 0; color: #666; font-size: 0.9em;">
+                            — oppure —
+                        </div>
+                        <button type="button" class="biometric-btn" onclick="handleBiometricLogin()">
+                            <span class="biometric-icon">🔐</span>
+                            <span id="biometricText">Accedi con Biometria</span>
+                        </button>
+                    </div>
                     <div id="loginError" class="error-message" style="display: none;">
                         Username o password non validi
                     </div>
@@ -1045,7 +1103,10 @@
         <!-- Main Application (hidden by default) -->
         <div id="mainApp" style="display: none;">
             <div class="header">
-                <h1>MAUI POKE</h1>
+                <div class="logo-container" style="background: #B0E0E6; padding: 15px 30px; border-radius: 12px; margin-bottom: 10px; display: inline-block;">
+                    <div style="font-size: 2.2em; font-weight: 900; color: #F17B67; letter-spacing: -2px; margin-bottom: -8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">MAUI</div>
+                    <div style="font-size: 1.3em; font-weight: 600; color: #F17B67; letter-spacing: 6px; margin-left: 2px;">POKE</div>
+                </div>
                 <p>Sistema Controllo Qualità - Rete Store</p>
                 <div class="user-info">
                     <span id="currentUser"></span>
@@ -1691,6 +1752,231 @@
             }
         }
         
+        // Initialize Biometric Authentication
+        async function initializeBiometric() {
+            // Check if WebAuthn is available
+            if (window.PublicKeyCredential) {
+                const biometricSection = document.getElementById('biometricSection');
+                const biometricText = document.getElementById('biometricText');
+                const biometricIcon = document.querySelector('.biometric-icon');
+                
+                if (biometricSection) {
+                    biometricSection.style.display = 'block';
+                    
+                    // Detect device type for appropriate icon and text
+                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                    const isApple = /iPhone|iPad|iPod|Mac/i.test(navigator.userAgent);
+                    
+                    if (isApple) {
+                        biometricIcon.textContent = '👤';
+                        biometricText.textContent = 'Accedi con Face ID / Touch ID';
+                    } else if (isMobile) {
+                        biometricIcon.textContent = '👆';
+                        biometricText.textContent = 'Accedi con Impronta';
+                    } else {
+                        biometricIcon.textContent = '🔐';
+                        biometricText.textContent = 'Accedi con Windows Hello / Biometria';
+                    }
+                    
+                    // Check if user has saved credentials
+                    checkSavedCredentials();
+                }
+            }
+        }
+        
+        // Check for saved biometric credentials
+        async function checkSavedCredentials() {
+            const savedBiometric = localStorage.getItem('mauiBiometricEnabled');
+            if (savedBiometric) {
+                const biometricBtn = document.querySelector('.biometric-btn');
+                if (biometricBtn) {
+                    biometricBtn.style.background = 'linear-gradient(135deg, var(--success) 0%, #00a878 100%)';
+                }
+            }
+        }
+        
+        // Handle Biometric Login
+        async function handleBiometricLogin() {
+            try {
+                // Check if user has previously authenticated
+                const savedCredentials = localStorage.getItem('mauiBiometricUser');
+                
+                if (!savedCredentials) {
+                    // First time - need to authenticate with username/password first
+                    alert('Per configurare l\'accesso biometrico, effettua prima il login con username e password.');
+                    return;
+                }
+                
+                // Simulate biometric authentication
+                // In a real implementation, this would use WebAuthn API
+                const authenticating = confirm('Posiziona il dito sul sensore o guarda la fotocamera per l\'autenticazione biometrica.');
+                
+                if (authenticating) {
+                    // Show loading state
+                    const biometricBtn = document.querySelector('.biometric-btn');
+                    const originalContent = biometricBtn.innerHTML;
+                    biometricBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; display: inline-block;"></span> Autenticazione...';
+                    biometricBtn.disabled = true;
+                    
+                    // Simulate biometric processing
+                    setTimeout(() => {
+                        try {
+                            const userData = JSON.parse(savedCredentials);
+                            
+                            // Verify this is a valid user
+                            if (USERS[userData.username]) {
+                                currentUser = {
+                                    username: userData.username,
+                                    name: USERS[userData.username].name,
+                                    role: USERS[userData.username].role
+                                };
+                                
+                                // Save session
+                                sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
+                                
+                                // Setup inactivity timer and listeners
+                                setupActivityListeners();
+                                resetInactivityTimer();
+                                
+                                // Show success animation
+                                biometricBtn.innerHTML = '✅ Autenticato!';
+                                biometricBtn.style.background = 'linear-gradient(135deg, var(--success) 0%, #00a878 100%)';
+                                
+                                setTimeout(() => {
+                                    showMainApp();
+                                }, 1000);
+                            } else {
+                                throw new Error('Invalid saved credentials');
+                            }
+                        } catch (error) {
+                            console.error('Biometric login error:', error);
+                            biometricBtn.innerHTML = originalContent;
+                            biometricBtn.disabled = false;
+                            alert('Autenticazione biometrica fallita. Usa username e password.');
+                        }
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Biometric authentication error:', error);
+                alert('La tua device non supporta l\'autenticazione biometrica o è stata negata l\'autorizzazione.');
+            }
+        }
+        
+        // Save biometric credentials after successful login
+        function saveBiometricCredentials(username) {
+            if (window.PublicKeyCredential) {
+                // Ask user if they want to enable biometric login
+                setTimeout(() => {
+                    if (confirm('Vuoi abilitare l\'accesso rapido con Face ID / Touch ID / Impronta per i prossimi accessi?')) {
+                        localStorage.setItem('mauiBiometricUser', JSON.stringify({ 
+                            username: username,
+                            timestamp: Date.now()
+                        }));
+                        localStorage.setItem('mauiBiometricEnabled', 'true');
+                        
+                        // Show success message
+                        const notification = document.createElement('div');
+                        notification.innerHTML = '✅ Accesso biometrico configurato con successo!';
+                        notification.style.cssText = `
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                            color: white;
+                            padding: 15px 25px;
+                            border-radius: 12px;
+                            box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                            z-index: 6000;
+                            animation: slideInRight 0.5s ease;
+                            font-weight: 600;
+                        `;
+                        document.body.appendChild(notification);
+                        
+                        setTimeout(() => {
+                            notification.style.animation = 'slideOutRight 0.5s ease';
+                            setTimeout(() => notification.remove(), 500);
+                        }, 3000);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Modified Handle Login to include biometric setup
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Inserisci username e password';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (USERS[username] && USERS[username].password === password) {
+                currentUser = {
+                    username: username,
+                    name: USERS[username].name,
+                    role: USERS[username].role
+                };
+                
+                // Save session
+                sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
+                
+                // Setup inactivity timer and listeners
+                setupActivityListeners();
+                resetInactivityTimer();
+                
+                // Show main app
+                showMainApp();
+                
+                // Clear login form
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                errorDiv.style.display = 'none';
+                
+                // Offer to save biometric credentials
+                saveBiometricCredentials(username);
+            } else {
+                errorDiv.textContent = 'Username o password non validi';
+                errorDiv.style.display = 'block';
+                
+                // Shake animation
+                const loginBox = document.querySelector('.login-box');
+                loginBox.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginBox.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // Modified performLogout to clear biometric data
+        function performLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('mauiUser');
+            
+            // Ask if user wants to clear biometric login
+            if (localStorage.getItem('mauiBiometricEnabled')) {
+                if (confirm('Vuoi anche disabilitare l\'accesso biometrico?')) {
+                    localStorage.removeItem('mauiBiometricUser');
+                    localStorage.removeItem('mauiBiometricEnabled');
+                }
+            }
+            
+            // Clear inactivity timer
+            if (inactivityTimer) {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = null;
+            }
+            
+            // Remove activity listeners
+            removeActivityListeners();
+            
+            // Show login screen
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+        
         // Enter key support for login
         document.addEventListener('DOMContentLoaded', function() {
             const passwordField = document.getElementById('password');
@@ -1711,6 +1997,9 @@
                     }
                 });
             }
+            
+            // Initialize biometric authentication
+            initializeBiometric();
             
             // Check authentication on load
             checkAuth();
