@@ -289,6 +289,72 @@
             z-index: 1;
         }
         
+        /* Geolocation Styles */
+        .location-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .detected-store-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 90, 167, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+        
+        .store-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        .distance-info {
+            font-size: 0.9em;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .change-store-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: block;
+        }
+        
+        .change-store-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 90, 167, 0.3);
+        }
+        
         /* Store Selector */
         .store-selector {
             background: rgba(255, 255, 255, 0.95);
@@ -1706,14 +1772,213 @@
             }
         }
         
-        // Store Selector
+        // Store locations with coordinates
+        const STORE_LOCATIONS = {
+            'Lugano': {
+                name: 'Lugano',
+                address: 'Via Marco da Carona 2, 6900 Lugano',
+                lat: 46.0037,
+                lng: 8.9511
+            },
+            'Locarno': {
+                name: 'Locarno',
+                address: 'Via della Posta 2, 6600 Locarno',
+                lat: 46.1712,
+                lng: 8.7955
+            },
+            'Mendrisio': {
+                name: 'Mendrisio',
+                address: 'Via Moree 16, 6850 Mendrisio',
+                lat: 45.8696,
+                lng: 8.9823
+            },
+            'Grancia': {
+                name: 'Grancia',
+                address: 'Centro Commerciale, 6916 Grancia',
+                lat: 45.9918,
+                lng: 8.9267
+            },
+            'Lugano Centro': {
+                name: 'Lugano Centro',
+                address: 'Via della Posta, 6900 Lugano',
+                lat: 46.0025,
+                lng: 8.9515
+            },
+            'Lido': {
+                name: 'Lido',
+                address: 'Via Lido, 6900 Lugano',
+                lat: 46.0067,
+                lng: 8.9650
+            }
+        };
+        
+        // Geolocation functions
+        function initializeGeolocation() {
+            // Check if elements exist before trying to use them
+            const locationStatus = document.getElementById('locationStatus');
+            const manualSelection = document.getElementById('manualSelection');
+            
+            if (!locationStatus || !manualSelection) {
+                console.log('Geolocation elements not found, using manual selection');
+                // If elements don't exist, just use standard store selector
+                return;
+            }
+            
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        try {
+                            const userLat = position.coords.latitude;
+                            const userLng = position.coords.longitude;
+                            console.log('User position:', userLat, userLng);
+                            
+                            const nearestStore = findNearestStore(userLat, userLng);
+                            
+                            if (nearestStore && nearestStore.distance < 0.5) { // Within 500 meters
+                                showDetectedStore(nearestStore);
+                                selectedStore = nearestStore.store.name;
+                                updateProgressBar();
+                            } else {
+                                // Too far from any store, show manual selection
+                                showManualStoreSelection();
+                            }
+                        } catch (error) {
+                            console.error('Error processing location:', error);
+                            showManualStoreSelection();
+                        }
+                    },
+                    (error) => {
+                        console.log('Geolocation error:', error.message);
+                        // Show manual selection on any geolocation error
+                        showManualStoreSelection();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                console.log('Geolocation not supported');
+                showManualStoreSelection();
+            }
+        }
+        
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // Distance in km
+        }
+        
+        function findNearestStore(userLat, userLng) {
+            let nearestStore = null;
+            let minDistance = Infinity;
+            
+            Object.values(STORE_LOCATIONS).forEach(store => {
+                const distance = calculateDistance(userLat, userLng, store.lat, store.lng);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestStore = { store: store, distance: distance };
+                }
+            });
+            
+            return nearestStore;
+        }
+        
+        function showDetectedStore(storeInfo) {
+            const locationStatus = document.getElementById('locationStatus');
+            const detectedStore = document.getElementById('detectedStore');
+            const changeStoreBtn = document.getElementById('changeStoreBtn');
+            const storeName = document.getElementById('storeName');
+            const storeAddress = document.getElementById('storeAddress');
+            const distanceInfo = document.getElementById('distanceInfo');
+            
+            if (!locationStatus || !detectedStore || !changeStoreBtn || !storeName || !storeAddress || !distanceInfo) {
+                console.error('Required elements not found');
+                return;
+            }
+            
+            locationStatus.style.display = 'none';
+            detectedStore.style.display = 'block';
+            changeStoreBtn.style.display = 'block';
+            
+            storeName.textContent = storeInfo.store.name;
+            storeAddress.textContent = storeInfo.store.address;
+            
+            const distanceText = storeInfo.distance < 0.1 
+                ? '📍 Sei qui!' 
+                : `📏 Distanza: ${(storeInfo.distance * 1000).toFixed(0)} metri`;
+            distanceInfo.textContent = distanceText;
+            
+            // Highlight store as selected
+            const detectedCard = document.querySelector('.detected-store-card');
+            if (detectedCard) {
+                detectedCard.classList.add('selected');
+            }
+        }
+        
+        function showManualStoreSelection() {
+            const locationStatus = document.getElementById('locationStatus');
+            const detectedStore = document.getElementById('detectedStore');
+            const manualSelection = document.getElementById('manualSelection');
+            
+            if (locationStatus) locationStatus.style.display = 'none';
+            if (detectedStore) detectedStore.style.display = 'none';
+            if (manualSelection) manualSelection.style.display = 'block';
+        }
+        
+        function showManualSelection() {
+            const detectedStore = document.getElementById('detectedStore');
+            const changeStoreBtn = document.getElementById('changeStoreBtn');
+            const manualSelection = document.getElementById('manualSelection');
+            
+            if (detectedStore) detectedStore.style.display = 'none';
+            if (changeStoreBtn) changeStoreBtn.style.display = 'none';
+            if (manualSelection) manualSelection.style.display = 'block';
+            
+            selectedStore = ''; // Reset selection
+            updateProgressBar();
+        }
+        
+        // Modified Store Selector initialization
         function initializeStoreSelector() {
+            // First try geolocation (if elements exist)
+            initializeGeolocation();
+            
+            // Manual selection buttons
             document.querySelectorAll('.store-card').forEach(card => {
                 card.addEventListener('click', function() {
                     document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedStore = this.dataset.store;
                     updateProgressBar();
+                    
+                    // Try to show selected store details if elements exist
+                    const manualSelection = document.getElementById('manualSelection');
+                    const detectedStore = document.getElementById('detectedStore');
+                    const changeStoreBtn = document.getElementById('changeStoreBtn');
+                    const storeName = document.getElementById('storeName');
+                    const storeAddress = document.getElementById('storeAddress');
+                    const distanceInfo = document.getElementById('distanceInfo');
+                    
+                    if (manualSelection && detectedStore && changeStoreBtn && storeName && storeAddress && distanceInfo) {
+                        manualSelection.style.display = 'none';
+                        detectedStore.style.display = 'block';
+                        changeStoreBtn.style.display = 'block';
+                        
+                        const storeData = STORE_LOCATIONS[selectedStore];
+                        if (storeData) {
+                            storeName.textContent = storeData.name;
+                            storeAddress.textContent = storeData.address;
+                            distanceInfo.textContent = '✅ Selezionato manualmente';
+                        }
+                    }
                 });
             });
         }
