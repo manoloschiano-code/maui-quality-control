@@ -468,7 +468,6 @@
             justify-content: center;
             margin-top: 15px;
             position: relative;
-            padding-right: 40px;
         }
         
         .grade-btn {
@@ -566,64 +565,6 @@
             background: rgba(255, 255, 255, 0.3);
             width: 100px;
             height: 100px;
-        }
-        
-        /* Clear Rating Button */
-        .clear-rating-btn {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 35px;
-            height: 35px;
-            border: 2px solid #ddd;
-            border-radius: 50%;
-            background: white;
-            color: #666;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .clear-rating-btn:hover {
-            border-color: var(--danger);
-            color: var(--danger);
-            transform: translateY(-50%) rotate(180deg);
-            background: rgba(255, 59, 59, 0.1);
-        }
-        
-        .clear-rating-btn:active {
-            transform: translateY(-50%) rotate(360deg) scale(0.9);
-        }
-        
-        /* Helper Text */
-        .rating-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .rating-item::after {
-            content: 'Clicca di nuovo per annullare';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75em;
-            color: #999;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .rating-item:hover::after {
-            opacity: 1;
         }
         
         /* Modern Input Styles */
@@ -1070,11 +1011,11 @@
                 </div>
                 <div class="form-group">
                     <label for="date">Data Ispezione</label>
-                    <input type="date" id="date" name="date" required>
+                    <input type="date" id="date" name="date" required readonly style="background-color: #f0f0f0; cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label for="time">Ora Ispezione</label>
-                    <input type="time" id="time" name="time" required>
+                    <input type="time" id="time" name="time" required readonly style="background-color: #f0f0f0; cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label for="personale">Personale in Servizio</label>
@@ -1744,11 +1685,25 @@
             }
         }
         
-        // DateTime
+        // DateTime - Always current, not editable
         function initializeDateTime() {
             const now = new Date();
-            document.getElementById('date').valueAsDate = now;
-            document.getElementById('time').value = now.toTimeString().slice(0, 5);
+            const dateField = document.getElementById('date');
+            const timeField = document.getElementById('time');
+            
+            if (dateField) {
+                dateField.valueAsDate = now;
+                dateField.readOnly = true;
+                dateField.style.backgroundColor = '#f0f0f0';
+                dateField.style.cursor = 'not-allowed';
+            }
+            
+            if (timeField) {
+                timeField.value = now.toTimeString().slice(0, 5);
+                timeField.readOnly = true;
+                timeField.style.backgroundColor = '#f0f0f0';
+                timeField.style.cursor = 'not-allowed';
+            }
         }
         
         // Store Selector
@@ -1816,19 +1771,6 @@
                         calculateAutoScore();
                     });
                 });
-                
-                // Add clear button for each rating group
-                const clearBtn = document.createElement('button');
-                clearBtn.className = 'clear-rating-btn';
-                clearBtn.innerHTML = '↻';
-                clearBtn.title = 'Annulla valutazione';
-                clearBtn.onclick = function() {
-                    buttons.forEach(btn => btn.classList.remove('active'));
-                    delete ratings[field];
-                    updateProgressBar();
-                    calculateAutoScore();
-                };
-                gradeGroup.appendChild(clearBtn);
             });
         }
         
@@ -1886,6 +1828,11 @@
             btn.classList.add('loading');
             btnText.textContent = 'INVIO IN CORSO...';
             btn.disabled = true;
+            
+            // Update date and time to current moment when submitting
+            const now = new Date();
+            document.getElementById('date').valueAsDate = now;
+            document.getElementById('time').value = now.toTimeString().slice(0, 5);
             
             const formData = new FormData(e.target);
             const report = {
