@@ -2251,31 +2251,254 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 return;
             }
             
-            // Confirmation dialog with report details
-            const confirmMessage = `Sei sicuro di voler eliminare questo report?
+            // Create custom confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'delete-confirm-modal';
+            confirmModal.innerHTML = `
+                <div class="delete-confirm-content">
+                    <div class="delete-confirm-header">
+                        <div class="warning-icon">⚠️</div>
+                        <h2>Conferma Eliminazione Report</h2>
+                    </div>
+                    <div class="delete-confirm-body">
+                        <p><strong>Stai per eliminare definitivamente questo report:</strong></p>
+                        <div class="report-summary">
+                            <div><strong>📍 Store:</strong> ${report.store}</div>
+                            <div><strong>📅 Data:</strong> ${new Date(report.date).toLocaleDateString('it-IT')}</div>
+                            <div><strong>⏰ Ora:</strong> ${report.time}</div>
+                            <div><strong>👤 Ispettore:</strong> ${report.inspector}</div>
+                            <div><strong>⭐ Voto:</strong> <span class="score-highlight">${report.score}/10</span></div>
+                        </div>
+                        <div class="warning-message">
+                            <p>⚠️ <strong>ATTENZIONE:</strong></p>
+                            <ul>
+                                <li>Questa azione è <strong>IRREVERSIBILE</strong></li>
+                                <li>Il report sarà eliminato <strong>PERMANENTEMENTE</strong></li>
+                                <li>Non sarà possibile recuperare i dati</li>
+                            </ul>
+                        </div>
+                        <div class="confirm-question">
+                            <p><strong>Sei assolutamente sicuro di voler procedere?</strong></p>
+                        </div>
+                    </div>
+                    <div class="delete-confirm-footer">
+                        <button onclick="cancelDelete()" class="cancel-delete-btn">❌ Annulla</button>
+                        <button onclick="confirmDelete(${reportId})" class="confirm-delete-btn">🗑️ Sì, Elimina Definitivamente</button>
+                    </div>
+                </div>
+            `;
             
-Store: ${report.store}
-Data: ${new Date(report.date).toLocaleDateString('it-IT')}
-Ispettore: ${report.inspector}
-Voto: ${report.score}/10
-
-Questa azione non può essere annullata.`;
-            
-            if (confirm(confirmMessage)) {
-                // Remove report from array
-                const index = reports.findIndex(r => r.id === reportId);
-                if (index > -1) {
-                    reports.splice(index, 1);
-                    
-                    // Save to localStorage
-                    localStorage.setItem('mauiReports', JSON.stringify(reports));
-                    
-                    // Show success message
-                    showDeleteSuccess();
-                    
-                    // Update dashboard
-                    updateDashboard();
+            // Add styles for the modal
+            const modalStyles = `
+                <style>
+                .delete-confirm-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(5px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 5000;
+                    animation: fadeIn 0.3s ease;
                 }
+                
+                .delete-confirm-content {
+                    background: white;
+                    border-radius: 20px;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+                    overflow: hidden;
+                    animation: slideUp 0.3s ease;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                @keyframes slideUp {
+                    from { 
+                        transform: translateY(50px);
+                        opacity: 0;
+                    }
+                    to { 
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                
+                .delete-confirm-header {
+                    background: linear-gradient(135deg, #FF3B3B 0%, #FF6B6B 100%);
+                    color: white;
+                    padding: 25px;
+                    text-align: center;
+                }
+                
+                .warning-icon {
+                    font-size: 3em;
+                    animation: pulse 1.5s infinite;
+                }
+                
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+                
+                .delete-confirm-header h2 {
+                    margin: 10px 0 0 0;
+                    font-size: 1.5em;
+                }
+                
+                .delete-confirm-body {
+                    padding: 30px;
+                }
+                
+                .report-summary {
+                    background: #f8f9fa;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px 0;
+                    border-left: 4px solid var(--primary);
+                }
+                
+                .report-summary div {
+                    margin: 8px 0;
+                }
+                
+                .score-highlight {
+                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                    color: white;
+                    padding: 3px 10px;
+                    border-radius: 15px;
+                    font-weight: bold;
+                }
+                
+                .warning-message {
+                    background: #fff3cd;
+                    border: 2px solid #ffc107;
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin: 20px 0;
+                }
+                
+                .warning-message p {
+                    margin: 0 0 10px 0;
+                    color: #856404;
+                    font-weight: bold;
+                }
+                
+                .warning-message ul {
+                    margin: 0;
+                    padding-left: 20px;
+                    color: #856404;
+                }
+                
+                .warning-message li {
+                    margin: 5px 0;
+                }
+                
+                .confirm-question {
+                    text-align: center;
+                    margin: 20px 0;
+                }
+                
+                .confirm-question p {
+                    font-size: 1.1em;
+                    color: var(--danger);
+                }
+                
+                .delete-confirm-footer {
+                    display: flex;
+                    gap: 15px;
+                    padding: 20px 30px;
+                    background: #f8f9fa;
+                    justify-content: center;
+                }
+                
+                .delete-confirm-footer button {
+                    padding: 15px 30px;
+                    border-radius: 10px;
+                    border: none;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    font-size: 1em;
+                }
+                
+                .cancel-delete-btn {
+                    background: #28a745;
+                    color: white;
+                    flex: 1;
+                }
+                
+                .cancel-delete-btn:hover {
+                    background: #218838;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+                }
+                
+                .confirm-delete-btn {
+                    background: var(--danger);
+                    color: white;
+                    flex: 1;
+                }
+                
+                .confirm-delete-btn:hover {
+                    background: #dc3545;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+                }
+                </style>
+            `;
+            
+            // Add styles if not already present
+            if (!document.querySelector('#deleteModalStyles')) {
+                const styleElement = document.createElement('div');
+                styleElement.id = 'deleteModalStyles';
+                styleElement.innerHTML = modalStyles;
+                document.head.appendChild(styleElement);
+            }
+            
+            document.body.appendChild(confirmModal);
+        }
+        
+        // Cancel Delete Function
+        function cancelDelete() {
+            const modal = document.querySelector('.delete-confirm-modal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }
+        
+        // Confirm Delete Function
+        function confirmDelete(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            // Remove report from array
+            const index = reports.findIndex(r => r.id === reportId);
+            if (index > -1) {
+                reports.splice(index, 1);
+                
+                // Save to localStorage
+                localStorage.setItem('mauiReports', JSON.stringify(reports));
+                
+                // Close modal
+                cancelDelete();
+                
+                // Show success message
+                showDeleteSuccess();
+                
+                // Update dashboard
+                updateDashboard();
             }
         }
         
