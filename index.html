@@ -88,15 +88,151 @@
             }
         }
         
+        /* Login Screen Styles */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 0;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.8s ease;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .login-header h1 {
+            font-size: 2.5em;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: -1px;
+        }
+        
+        .login-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .login-form {
+            padding: 40px 30px;
+        }
+        
+        .login-form h2 {
+            color: var(--dark);
+            margin: 0 0 30px 0;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 90, 167, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            background: rgba(255, 59, 59, 0.1);
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .login-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-info span {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+        
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
             position: relative;
         }
         
-        /* Header */
+        /* Header Update */
         .header {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -331,6 +467,8 @@
             gap: 10px;
             justify-content: center;
             margin-top: 15px;
+            position: relative;
+            padding-right: 40px;
         }
         
         .grade-btn {
@@ -428,6 +566,64 @@
             background: rgba(255, 255, 255, 0.3);
             width: 100px;
             height: 100px;
+        }
+        
+        /* Clear Rating Button */
+        .clear-rating-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: white;
+            color: #666;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .clear-rating-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            transform: translateY(-50%) rotate(180deg);
+            background: rgba(255, 59, 59, 0.1);
+        }
+        
+        .clear-rating-btn:active {
+            transform: translateY(-50%) rotate(360deg) scale(0.9);
+        }
+        
+        /* Helper Text */
+        .rating-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rating-item::after {
+            content: 'Clicca di nuovo per annullare';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75em;
+            color: #999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .rating-item:hover::after {
+            opacity: 1;
         }
         
         /* Modern Input Styles */
@@ -811,10 +1007,44 @@
     </div>
     
     <div class="container">
-        <div class="header">
-            <h1>MAUI POKE</h1>
-            <p>Sistema Controllo Qualità - Rete Store</p>
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <h1>MAUI POKE</h1>
+                    <p>Sistema Controllo Qualità</p>
+                </div>
+                <div class="login-form">
+                    <h2>Accesso Riservato</h2>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Inserisci username" autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Inserisci password" autocomplete="current-password">
+                    </div>
+                    <button type="button" class="login-btn" onclick="handleLogin()">ACCEDI</button>
+                    <div id="loginError" class="error-message" style="display: none;">
+                        Username o password non validi
+                    </div>
+                </div>
+                <div class="login-footer">
+                    <p>© 2024 Maui Poke - Quality Control System</p>
+                </div>
+            </div>
         </div>
+        
+        <!-- Main Application (hidden by default) -->
+        <div id="mainApp" style="display: none;">
+            <div class="header">
+                <h1>MAUI POKE</h1>
+                <p>Sistema Controllo Qualità - Rete Store</p>
+                <div class="user-info">
+                    <span id="currentUser"></span>
+                    <button onclick="handleLogout()" class="logout-btn">Esci</button>
+                </div>
+            </div>
         
         <div class="store-selector">
             <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 1.5em;">📍 Seleziona Store</h3>
@@ -1090,6 +1320,7 @@
                 <p style="text-align: center; color: #999;">Nessun report disponibile</p>
             </div>
         </div>
+        </div>
     </div>
     
     <div class="overlay" id="overlay"></div>
@@ -1105,13 +1336,126 @@
         // Initialize EmailJS
         emailjs.init("azBz9PrKR4ljQuq93");
         
+        // User Authentication
+        const USERS = {
+            'admin': { password: 'MauiPoke2024!', role: 'Administrator', name: 'Amministratore' },
+            'manolo': { password: 'Maui@Quality24', role: 'Manager', name: 'Manolo Schiano' },
+            'antonello': { password: 'Poke@Control24', role: 'Manager', name: 'Antonello Romeo' },
+            'luigi': { password: 'Luigi@Maui24', role: 'Manager', name: 'Luigi' },
+            'inspector1': { password: 'Quality@2024', role: 'Inspector', name: 'Ispettore 1' },
+            'inspector2': { password: 'Control@2024', role: 'Inspector', name: 'Ispettore 2' }
+        };
+        
+        let currentUser = null;
+        
+        // Check if user is already logged in
+        function checkAuth() {
+            const savedSession = sessionStorage.getItem('mauiUser');
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+                showMainApp();
+            }
+        }
+        
+        // Handle Login
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Inserisci username e password';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (USERS[username] && USERS[username].password === password) {
+                currentUser = {
+                    username: username,
+                    name: USERS[username].name,
+                    role: USERS[username].role
+                };
+                
+                // Save session
+                sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
+                
+                // Show main app
+                showMainApp();
+                
+                // Clear login form
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                errorDiv.style.display = 'none';
+            } else {
+                errorDiv.textContent = 'Username o password non validi';
+                errorDiv.style.display = 'block';
+                
+                // Shake animation
+                const loginBox = document.querySelector('.login-box');
+                loginBox.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginBox.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // Show Main Application
+        function showMainApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('currentUser').textContent = `👤 ${currentUser.name}`;
+            
+            // Set inspector name automatically
+            if (document.getElementById('inspector')) {
+                document.getElementById('inspector').value = currentUser.name;
+            }
+            
+            // Initialize app
+            initializeApp();
+        }
+        
+        // Handle Logout
+        function handleLogout() {
+            if (confirm('Sei sicuro di voler uscire?')) {
+                currentUser = null;
+                sessionStorage.removeItem('mauiUser');
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+            }
+        }
+        
+        // Enter key support for login
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            const usernameField = document.getElementById('username');
+            
+            if (passwordField) {
+                passwordField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            }
+            
+            if (usernameField) {
+                usernameField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('password').focus();
+                    }
+                });
+            }
+            
+            // Check authentication on load
+            checkAuth();
+        });
+        
         // State Management
         let selectedStore = '';
         let ratings = {};
         let reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
         
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize App (called after login)
+        function initializeApp() {
             initializeParticles();
             initializeDateTime();
             initializeStoreSelector();
@@ -1119,6 +1463,12 @@
             initializeForm();
             updateDashboard();
             updateProgressBar();
+        }
+        
+        // Modify the original DOMContentLoaded to not auto-initialize
+        window.addEventListener('load', function() {
+            // Only initialize particles for visual effect
+            initializeParticles();
         });
         
         // Particles Animation
@@ -1163,27 +1513,62 @@
                     button.addEventListener('click', function(e) {
                         e.preventDefault();
                         
-                        // Remove active class from all buttons in this group
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        
-                        // Add active class to clicked button
-                        this.classList.add('active');
-                        
-                        // Store the rating value
-                        const value = parseInt(this.dataset.value);
-                        ratings[field] = value;
+                        // Check if this button is already active
+                        if (this.classList.contains('active')) {
+                            // Deselect if clicking on already selected button
+                            this.classList.remove('active');
+                            delete ratings[field];
+                            
+                            // Visual feedback for deselection
+                            this.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                this.style.transform = '';
+                            }, 100);
+                        } else {
+                            // Remove active class from all buttons in this group
+                            buttons.forEach(btn => btn.classList.remove('active'));
+                            
+                            // Add active class to clicked button
+                            this.classList.add('active');
+                            
+                            // Store the rating value
+                            const value = parseInt(this.dataset.value);
+                            ratings[field] = value;
+                            
+                            // Visual feedback for selection
+                            this.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                this.style.transform = '';
+                            }, 100);
+                        }
                         
                         // Update progress and auto-calculate score
                         updateProgressBar();
                         calculateAutoScore();
-                        
-                        // Visual feedback
-                        this.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            this.style.transform = '';
-                        }, 100);
+                    });
+                    
+                    // Add double-click to clear
+                    button.addEventListener('dblclick', function(e) {
+                        e.preventDefault();
+                        buttons.forEach(btn => btn.classList.remove('active'));
+                        delete ratings[field];
+                        updateProgressBar();
+                        calculateAutoScore();
                     });
                 });
+                
+                // Add clear button for each rating group
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'clear-rating-btn';
+                clearBtn.innerHTML = '↻';
+                clearBtn.title = 'Annulla valutazione';
+                clearBtn.onclick = function() {
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    delete ratings[field];
+                    updateProgressBar();
+                    calculateAutoScore();
+                };
+                gradeGroup.appendChild(clearBtn);
             });
         }
         
@@ -1248,7 +1633,7 @@
                 store: selectedStore,
                 date: formData.get('date'),
                 time: formData.get('time'),
-                inspector: formData.get('inspector'),
+                inspector: currentUser.name, // Use logged in user name
                 personale: formData.get('personale'),
                 ratings: {...ratings},
                 score: formData.get('valutazione_finale'),
@@ -1257,7 +1642,8 @@
                     staff: formData.get('staff_note'),
                     fresh: formData.get('fresh_note'),
                     final: formData.get('note_finali')
-                }
+                },
+                submittedBy: currentUser.username // Track who submitted
             };
             
             // Save report
@@ -1567,21 +1953,166 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             container.innerHTML = sortedReports.map(report => {
                 const score = parseInt(report.score || 0);
                 const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
+                const canDelete = currentUser && (currentUser.role === 'Administrator' || 
+                                                  currentUser.role === 'Manager' || 
+                                                  report.submittedBy === currentUser.username);
                 
                 return `
-                    <div class="report-card ${scoreClass}">
+                    <div class="report-card ${scoreClass}" data-report-id="${report.id}">
                         <div class="report-info">
                             <h4>${report.store}</h4>
                             <div class="report-meta">
                                 ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time} - ${report.inspector}
                             </div>
                         </div>
-                        <div class="report-score" style="color: ${score >= 8 ? 'var(--success)' : score >= 6 ? 'var(--warning)' : 'var(--danger)'}">
-                            ${score}/10
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="report-score" style="color: ${score >= 8 ? 'var(--success)' : score >= 6 ? 'var(--warning)' : 'var(--danger)'}">
+                                ${score}/10
+                            </div>
+                            ${canDelete ? `
+                                <button class="delete-report-btn" onclick="deleteReport(${report.id})" title="Elimina report">
+                                    🗑️
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+        
+        // Delete Report Function
+        function deleteReport(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            // Check permissions
+            if (!currentUser) {
+                alert('Devi essere loggato per eliminare un report');
+                return;
+            }
+            
+            // Admins and Managers can delete any report
+            // Other users can only delete their own reports
+            const canDelete = currentUser.role === 'Administrator' || 
+                            currentUser.role === 'Manager' || 
+                            report.submittedBy === currentUser.username;
+            
+            if (!canDelete) {
+                alert('Non hai i permessi per eliminare questo report');
+                return;
+            }
+            
+            // Confirmation dialog with report details
+            const confirmMessage = `Sei sicuro di voler eliminare questo report?
+            
+Store: ${report.store}
+Data: ${new Date(report.date).toLocaleDateString('it-IT')}
+Ispettore: ${report.inspector}
+Voto: ${report.score}/10
+
+Questa azione non può essere annullata.`;
+            
+            if (confirm(confirmMessage)) {
+                // Remove report from array
+                const index = reports.findIndex(r => r.id === reportId);
+                if (index > -1) {
+                    reports.splice(index, 1);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('mauiReports', JSON.stringify(reports));
+                    
+                    // Show success message
+                    showDeleteSuccess();
+                    
+                    // Update dashboard
+                    updateDashboard();
+                }
+            }
+        }
+        
+        // Show delete success message
+        function showDeleteSuccess() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'delete-success';
+            messageDiv.innerHTML = '✅ Report eliminato con successo';
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                z-index: 3000;
+                animation: slideInRight 0.5s ease;
+                font-weight: 600;
+            `;
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Add animation keyframes
+        if (!document.querySelector('#deleteAnimations')) {
+            const style = document.createElement('style');
+            style.id = 'deleteAnimations';
+            style.innerHTML = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                .delete-report-btn {
+                    background: rgba(255, 59, 59, 0.1);
+                    border: 2px solid var(--danger);
+                    color: var(--danger);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    font-size: 1.2em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .delete-report-btn:hover {
+                    background: var(--danger);
+                    color: white;
+                    transform: scale(1.1);
+                    box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
+                }
+                
+                .delete-report-btn:active {
+                    transform: scale(0.95);
+                }
+            `;
+            document.head.appendChild(style);
         }
         
         function updateChart(selectedMonth = 'all') {
