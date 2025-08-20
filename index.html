@@ -298,7 +298,7 @@
         }
         
         .report-store {
-            color: #4ECDC4;
+            color: #005AA7;
             font-weight: bold;
             font-size: 1em;
         }
@@ -331,7 +331,7 @@
         }
         
         #loadingMessage {
-            color: #4ECDC4;
+            color: #005AA7;
             font-weight: bold;
             margin-top: 15px;
         }
@@ -775,7 +775,7 @@
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
-                subject: 'Maui Quality Report - ' + reportData.store + ' - ' + reportData.date,
+                subject: '🌺 MAUI QUALITY REPORT - ' + reportData.store + ' - ' + new Date(reportData.date).toLocaleDateString('it-IT'),
                 store_name: reportData.store,
                 inspector_name: reportData.inspector,
                 report_date: new Date(reportData.date).toLocaleDateString('it-IT'),
@@ -794,7 +794,7 @@
         }
 
         function sendEmailDirectly(reportData) {
-            const subject = 'Maui Quality Report - ' + reportData.store + ' - ' + reportData.date;
+            const subject = '🌺 MAUI QUALITY REPORT - ' + reportData.store + ' - ' + new Date(reportData.date).toLocaleDateString('it-IT');
             const body = generateEmailBody(reportData);
             const mailtoLink = 'mailto:manolo.schiano@mauipoke.ch,antonello.romeo@mauipoke.ch?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
             window.open(mailtoLink, '_blank');
@@ -802,43 +802,54 @@
         }
 
         function generateEmailBody(data) {
-            return 'MAUI POKE - CONTROLLO QUALITA\n\n' +
-                   'STORE: ' + data.store + '\n' +
-                   'ISPETTORE: ' + data.inspector + '\n' +
-                   'DATA: ' + data.date + '\n' +
-                   'ORA: ' + data.time + '\n' +
-                   (data.personale_servizio ? 'PERSONALE IN SERVIZIO: ' + data.personale_servizio + '\n' : '') + '\n' +
-                   'VOTO COMPLESSIVO: ' + data.valutazione_complessiva + '/10\n\n' +
-                   'PULIZIA\n' +
+            return '🌺 MAUI POKE - CONTROLLO QUALITÀ\n' +
+                   '═══════════════════════════════════════\n\n' +
+                   '📍 STORE: ' + data.store + '\n' +
+                   '👤 ISPETTORE: ' + data.inspector + '\n' +
+                   '📅 DATA: ' + new Date(data.date).toLocaleDateString('it-IT') + ' alle ' + data.time + '\n' +
+                   (data.personale_servizio ? '👥 PERSONALE: ' + data.personale_servizio + '\n' : '') +
+                   '\n⭐ VOTO COMPLESSIVO: ' + data.valutazione_complessiva + '/10\n\n' +
+                   
+                   '🧹 PULIZIA\n' +
+                   '─────────────────────────\n' +
                    '• Generale: ' + translateRating(data.pulizia_generale) + '\n' +
                    '• Bancone: ' + translateRating(data.pulizia_bancone) + '\n' +
                    '• Pavimenti: ' + translateRating(data.pulizia_pavimenti) + '\n' +
                    '• Bagni: ' + translateRating(data.pulizia_bagni) + '\n' +
-                   (data.pulizia_note ? 'Note: ' + data.pulizia_note + '\n' : '') +
-                   (data.pulizia_soluzioni ? 'Soluzioni: ' + data.pulizia_soluzioni + '\n' : '') + '\n' +
-                   'COMPORTAMENTO STAFF\n' +
+                   (data.pulizia_note ? '📝 Note: ' + data.pulizia_note + '\n' : '') +
+                   (data.pulizia_soluzioni ? '🔧 Soluzioni: ' + data.pulizia_soluzioni + '\n' : '') + '\n' +
+                   
+                   '👥 COMPORTAMENTO STAFF\n' +
+                   '─────────────────────────\n' +
                    '• Cortesia: ' + translateRating(data.comportamento_cortesia) + '\n' +
-                   '• Professionalita: ' + translateRating(data.comportamento_professionalita) + '\n' +
-                   '• Velocita: ' + translateRating(data.comportamento_velocita) + '\n' +
+                   '• Professionalità: ' + translateRating(data.comportamento_professionalita) + '\n' +
+                   '• Velocità: ' + translateRating(data.comportamento_velocita) + '\n' +
                    '• Conoscenza: ' + translateRating(data.comportamento_conoscenza) + '\n' +
-                   (data.comportamento_note ? 'Note: ' + data.comportamento_note + '\n' : '') +
-                   (data.comportamento_soluzioni ? 'Soluzioni: ' + data.comportamento_soluzioni + '\n' : '') + '\n' +
-                   'FRESCHEZZA INGREDIENTI\n' +
-                   '• Pesce: ' + translateRating(data.freschezza_pesce) + '\n' +
+                   (data.comportamento_note ? '📝 Note: ' + data.comportamento_note + '\n' : '') +
+                   (data.comportamento_soluzioni ? '🔧 Soluzioni: ' + data.comportamento_soluzioni + '\n' : '') + '\n' +
+                   
+                   '🥗 FRESCHEZZA INGREDIENTI\n' +
+                   '─────────────────────────\n' +
+                   '• Pesce/Proteine: ' + translateRating(data.freschezza_pesce) + '\n' +
                    '• Verdure: ' + translateRating(data.freschezza_verdure) + '\n' +
-                   '• Riso: ' + translateRating(data.freschezza_riso) + '\n' +
+                   '• Riso/Cereali: ' + translateRating(data.freschezza_riso) + '\n' +
                    '• Salse: ' + translateRating(data.freschezza_salse) + '\n' +
-                   (data.freschezza_note ? 'Note: ' + data.freschezza_note + '\n' : '') +
-                   (data.freschezza_soluzioni ? 'Soluzioni: ' + data.freschezza_soluzioni + '\n' : '') + '\n' +
-                   'DIVISA E PORTAMENTO\n' +
-                   '• Pulizia: ' + translateRating(data.divisa_pulizia) + '\n' +
+                   (data.freschezza_note ? '📝 Note: ' + data.freschezza_note + '\n' : '') +
+                   (data.freschezza_soluzioni ? '🔧 Soluzioni: ' + data.freschezza_soluzioni + '\n' : '') + '\n' +
+                   
+                   '👔 DIVISA E PORTAMENTO\n' +
+                   '─────────────────────────\n' +
+                   '• Pulizia divisa: ' + translateRating(data.divisa_pulizia) + '\n' +
                    '• Completezza: ' + translateRating(data.divisa_completezza) + '\n' +
                    '• Portamento: ' + translateRating(data.divisa_portamento) + '\n' +
                    '• Igiene: ' + translateRating(data.divisa_igiene) + '\n' +
-                   (data.divisa_note ? 'Note: ' + data.divisa_note + '\n' : '') +
-                   (data.divisa_soluzioni ? 'Soluzioni: ' + data.divisa_soluzioni + '\n' : '') + '\n' +
-                   (data.note_generali ? 'NOTE GENERALI: ' + data.note_generali + '\n\n' : '') +
-                   '---\nReport automatico - Maui Quality Control v2.0';
+                   (data.divisa_note ? '📝 Note: ' + data.divisa_note + '\n' : '') +
+                   (data.divisa_soluzioni ? '🔧 Soluzioni: ' + data.divisa_soluzioni + '\n' : '') + '\n' +
+                   
+                   (data.note_generali ? '📋 NOTE GENERALI\n─────────────────────────\n' + data.note_generali + '\n\n' : '') +
+                   '═══════════════════════════════════════\n' +
+                   '🤖 Report generato automaticamente\n' +
+                   '📱 Maui Quality Control System';
         }
 
         function translateRating(rating) {
