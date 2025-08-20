@@ -9,7 +9,7 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #005AA7 0%, #FC6A57 100%);
             margin: 0;
             padding: 15px;
             color: #333;
@@ -26,7 +26,7 @@
         }
         
         .header {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            background: linear-gradient(45deg, #FC6A57, #005AA7);
             color: white;
             padding: 25px;
             text-align: center;
@@ -84,8 +84,8 @@
         
         .store-selector select:focus {
             outline: none;
-            border-color: #4ECDC4;
-            box-shadow: 0 0 5px rgba(78, 205, 196, 0.3);
+            border-color: #005AA7;
+            box-shadow: 0 0 5px rgba(0, 90, 167, 0.3);
         }
         
         .form-section {
@@ -93,7 +93,7 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-            border-left: 5px solid #4ECDC4;
+            border-left: 5px solid #005AA7;
             border: 1px solid #e9ecef;
         }
         
@@ -134,8 +134,8 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #4ECDC4;
-            box-shadow: 0 0 5px rgba(78, 205, 196, 0.3);
+            border-color: #005AA7;
+            box-shadow: 0 0 5px rgba(0, 90, 167, 0.3);
         }
         
         .form-group textarea {
@@ -161,7 +161,7 @@
         
         .rating-item:hover {
             transform: translateY(-2px);
-            border-color: #4ECDC4;
+            border-color: #005AA7;
         }
         
         .rating-item label {
@@ -239,7 +239,7 @@
         }
         
         .submit-btn {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            background: linear-gradient(45deg, #FC6A57, #005AA7);
             color: white;
             border: none;
             padding: 18px 40px;
@@ -284,7 +284,7 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 8px;
-            border-left: 4px solid #4ECDC4;
+            border-left: 4px solid #005AA7;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -394,9 +394,7 @@
     </style>
 </head>
 <body>
-    <div class="status-bar">
-        🌐 Sistema Online - Maui Quality Control v2.0 | 📧 Email Automatiche Attive
-    </div>
+
     
     <div class="container">
         <div class="header">
@@ -432,6 +430,10 @@
                     <div class="form-group">
                         <label for="time">Ora:</label>
                         <input type="time" id="time" name="time" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="personale_servizio">Personale in Servizio:</label>
+                        <textarea id="personale_servizio" name="personale_servizio" placeholder="Inserisci i nomi del personale presente durante l'ispezione (es: Mario Rossi, Laura Bianchi, etc.)"></textarea>
                     </div>
                 </div>
 
@@ -483,6 +485,11 @@
                         <label for="pulizia_note">Note Pulizia:</label>
                         <textarea id="pulizia_note" name="pulizia_note" placeholder="Inserisci eventuali osservazioni sulla pulizia..."></textarea>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="pulizia_soluzioni">Soluzioni Comunicate al Personale:</label>
+                        <textarea id="pulizia_soluzioni" name="pulizia_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare la pulizia..."></textarea>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -532,6 +539,11 @@
                     <div class="form-group">
                         <label for="comportamento_note">Note Comportamento:</label>
                         <textarea id="comportamento_note" name="comportamento_note" placeholder="Inserisci eventuali osservazioni sul comportamento dello staff..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comportamento_soluzioni">Soluzioni Comunicate al Personale:</label>
+                        <textarea id="comportamento_soluzioni" name="comportamento_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare il comportamento e il servizio..."></textarea>
                     </div>
                 </div>
 
@@ -583,6 +595,11 @@
                         <label for="freschezza_note">Note Freschezza:</label>
                         <textarea id="freschezza_note" name="freschezza_note" placeholder="Inserisci eventuali osservazioni sulla freschezza degli ingredienti..."></textarea>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="freschezza_soluzioni">Soluzioni Comunicate al Personale:</label>
+                        <textarea id="freschezza_soluzioni" name="freschezza_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per mantenere la freschezza degli ingredienti..."></textarea>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -632,6 +649,11 @@
                     <div class="form-group">
                         <label for="divisa_note">Note Divisa:</label>
                         <textarea id="divisa_note" name="divisa_note" placeholder="Inserisci eventuali osservazioni sulla divisa e il portamento..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="divisa_soluzioni">Soluzioni Comunicate al Personale:</label>
+                        <textarea id="divisa_soluzioni" name="divisa_soluzioni" placeholder="Descrivi le soluzioni specifiche comunicate al personale per migliorare divisa e portamento..."></textarea>
                     </div>
                 </div>
 
@@ -784,29 +806,38 @@
                    'STORE: ' + data.store + '\n' +
                    'ISPETTORE: ' + data.inspector + '\n' +
                    'DATA: ' + data.date + '\n' +
-                   'ORA: ' + data.time + '\n\n' +
+                   'ORA: ' + data.time + '\n' +
+                   (data.personale_servizio ? 'PERSONALE IN SERVIZIO: ' + data.personale_servizio + '\n' : '') + '\n' +
                    'VOTO COMPLESSIVO: ' + data.valutazione_complessiva + '/10\n\n' +
                    'PULIZIA\n' +
                    '• Generale: ' + translateRating(data.pulizia_generale) + '\n' +
                    '• Bancone: ' + translateRating(data.pulizia_bancone) + '\n' +
                    '• Pavimenti: ' + translateRating(data.pulizia_pavimenti) + '\n' +
-                   '• Bagni: ' + translateRating(data.pulizia_bagni) + '\n\n' +
+                   '• Bagni: ' + translateRating(data.pulizia_bagni) + '\n' +
+                   (data.pulizia_note ? 'Note: ' + data.pulizia_note + '\n' : '') +
+                   (data.pulizia_soluzioni ? 'Soluzioni: ' + data.pulizia_soluzioni + '\n' : '') + '\n' +
                    'COMPORTAMENTO STAFF\n' +
                    '• Cortesia: ' + translateRating(data.comportamento_cortesia) + '\n' +
                    '• Professionalita: ' + translateRating(data.comportamento_professionalita) + '\n' +
                    '• Velocita: ' + translateRating(data.comportamento_velocita) + '\n' +
-                   '• Conoscenza: ' + translateRating(data.comportamento_conoscenza) + '\n\n' +
+                   '• Conoscenza: ' + translateRating(data.comportamento_conoscenza) + '\n' +
+                   (data.comportamento_note ? 'Note: ' + data.comportamento_note + '\n' : '') +
+                   (data.comportamento_soluzioni ? 'Soluzioni: ' + data.comportamento_soluzioni + '\n' : '') + '\n' +
                    'FRESCHEZZA INGREDIENTI\n' +
                    '• Pesce: ' + translateRating(data.freschezza_pesce) + '\n' +
                    '• Verdure: ' + translateRating(data.freschezza_verdure) + '\n' +
                    '• Riso: ' + translateRating(data.freschezza_riso) + '\n' +
-                   '• Salse: ' + translateRating(data.freschezza_salse) + '\n\n' +
+                   '• Salse: ' + translateRating(data.freschezza_salse) + '\n' +
+                   (data.freschezza_note ? 'Note: ' + data.freschezza_note + '\n' : '') +
+                   (data.freschezza_soluzioni ? 'Soluzioni: ' + data.freschezza_soluzioni + '\n' : '') + '\n' +
                    'DIVISA E PORTAMENTO\n' +
                    '• Pulizia: ' + translateRating(data.divisa_pulizia) + '\n' +
                    '• Completezza: ' + translateRating(data.divisa_completezza) + '\n' +
                    '• Portamento: ' + translateRating(data.divisa_portamento) + '\n' +
-                   '• Igiene: ' + translateRating(data.divisa_igiene) + '\n\n' +
-                   (data.note_generali ? 'NOTE: ' + data.note_generali + '\n\n' : '') +
+                   '• Igiene: ' + translateRating(data.divisa_igiene) + '\n' +
+                   (data.divisa_note ? 'Note: ' + data.divisa_note + '\n' : '') +
+                   (data.divisa_soluzioni ? 'Soluzioni: ' + data.divisa_soluzioni + '\n' : '') + '\n' +
+                   (data.note_generali ? 'NOTE GENERALI: ' + data.note_generali + '\n\n' : '') +
                    '---\nReport automatico - Maui Quality Control v2.0';
         }
 
@@ -932,30 +963,35 @@
                 date: document.getElementById('date').value,
                 time: document.getElementById('time').value,
                 inspector: inspector,
+                personale_servizio: document.getElementById('personale_servizio').value,
                 
                 pulizia_generale: document.getElementById('pulizia_generale').value,
                 pulizia_bancone: document.getElementById('pulizia_bancone').value,
                 pulizia_pavimenti: document.getElementById('pulizia_pavimenti').value,
                 pulizia_bagni: document.getElementById('pulizia_bagni').value,
                 pulizia_note: document.getElementById('pulizia_note').value,
+                pulizia_soluzioni: document.getElementById('pulizia_soluzioni').value,
                 
                 comportamento_cortesia: document.getElementById('comportamento_cortesia').value,
                 comportamento_professionalita: document.getElementById('comportamento_professionalita').value,
                 comportamento_velocita: document.getElementById('comportamento_velocita').value,
                 comportamento_conoscenza: document.getElementById('comportamento_conoscenza').value,
                 comportamento_note: document.getElementById('comportamento_note').value,
+                comportamento_soluzioni: document.getElementById('comportamento_soluzioni').value,
                 
                 freschezza_pesce: document.getElementById('freschezza_pesce').value,
                 freschezza_verdure: document.getElementById('freschezza_verdure').value,
                 freschezza_riso: document.getElementById('freschezza_riso').value,
                 freschezza_salse: document.getElementById('freschezza_salse').value,
                 freschezza_note: document.getElementById('freschezza_note').value,
+                freschezza_soluzioni: document.getElementById('freschezza_soluzioni').value,
                 
                 divisa_pulizia: document.getElementById('divisa_pulizia').value,
                 divisa_completezza: document.getElementById('divisa_completezza').value,
                 divisa_portamento: document.getElementById('divisa_portamento').value,
                 divisa_igiene: document.getElementById('divisa_igiene').value,
                 divisa_note: document.getElementById('divisa_note').value,
+                divisa_soluzioni: document.getElementById('divisa_soluzioni').value,
                 
                 valutazione_complessiva: document.getElementById('valutazione_complessiva').value,
                 note_generali: document.getElementById('note_generali').value
