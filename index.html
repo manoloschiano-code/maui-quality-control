@@ -1342,6 +1342,7 @@
             'manolo': { password: 'Maui@Quality24', role: 'Manager', name: 'Manolo Schiano' },
             'antonello': { password: 'Poke@Control24', role: 'Manager', name: 'Antonello Romeo' },
             'luigi': { password: 'Luigi@Maui24', role: 'Manager', name: 'Luigi' },
+            'rocco': { password: 'Rocco@Poke24', role: 'Inspector', name: 'Rocco' },
             'inspector1': { password: 'Quality@2024', role: 'Inspector', name: 'Ispettore 1' },
             'inspector2': { password: 'Control@2024', role: 'Inspector', name: 'Ispettore 2' }
         };
@@ -1953,9 +1954,8 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             container.innerHTML = sortedReports.map(report => {
                 const score = parseInt(report.score || 0);
                 const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
-                const canDelete = currentUser && (currentUser.role === 'Administrator' || 
-                                                  currentUser.role === 'Manager' || 
-                                                  report.submittedBy === currentUser.username);
+                // Only Manolo can delete reports
+                const canDelete = currentUser && currentUser.username === 'manolo';
                 
                 return `
                     <div class="report-card ${scoreClass}" data-report-id="${report.id}">
@@ -1965,10 +1965,16 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                                 ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time} - ${report.inspector}
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
                             <div class="report-score" style="color: ${score >= 8 ? 'var(--success)' : score >= 6 ? 'var(--warning)' : 'var(--danger)'}">
                                 ${score}/10
                             </div>
+                            <button class="view-report-btn" onclick="viewReportDetails(${report.id})" title="Visualizza dettagli">
+                                👁️
+                            </button>
+                            <button class="resend-email-btn" onclick="resendReportEmail(${report.id})" title="Reinvia email">
+                                📧
+                            </button>
                             ${canDelete ? `
                                 <button class="delete-report-btn" onclick="deleteReport(${report.id})" title="Elimina report">
                                     🗑️
@@ -1980,25 +1986,268 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             }).join('');
         }
         
+        // View Report Details
+        function viewReportDetails(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'report-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>📋 Dettagli Report - ${report.store}</h2>
+                        <button onclick="closeReportModal()" class="close-modal-btn">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="report-detail-section">
+                            <h3>📍 Informazioni Generali</h3>
+                            <div class="detail-grid">
+                                <div><strong>Store:</strong> ${report.store}</div>
+                                <div><strong>Data:</strong> ${new Date(report.date).toLocaleDateString('it-IT')}</div>
+                                <div><strong>Ora:</strong> ${report.time}</div>
+                                <div><strong>Ispettore:</strong> ${report.inspector}</div>
+                                <div><strong>Personale:</strong> ${report.personale || 'Non specificato'}</div>
+                                <div><strong>Voto Finale:</strong> <span class="score-badge">${report.score}/10</span></div>
+                            </div>
+                        </div>
+                        
+                        ${generateRatingSection('🧹 Pulizia', {
+                            'Generale': report.ratings.pulizia_generale,
+                            'Bancone': report.ratings.pulizia_bancone,
+                            'Pavimenti': report.ratings.pulizia_pavimenti,
+                            'Bagni': report.ratings.pulizia_bagni
+                        }, report.notes?.pulizia)}
+                        
+                        ${generateRatingSection('👥 Staff', {
+                            'Cortesia': report.ratings.staff_cortesia,
+                            'Professionalità': report.ratings.staff_professionalita,
+                            'Velocità': report.ratings.staff_velocita,
+                            'Conoscenza': report.ratings.staff_conoscenza
+                        }, report.notes?.staff)}
+                        
+                        ${generateRatingSection('🥗 Freschezza', {
+                            'Pesce': report.ratings.fresh_pesce,
+                            'Verdure': report.ratings.fresh_verdure,
+                            'Riso': report.ratings.fresh_riso,
+                            'Salse': report.ratings.fresh_salse
+                        }, report.notes?.fresh)}
+                        
+                        ${report.notes?.final ? `
+                            <div class="report-detail-section">
+                                <h3>📝 Note Finali</h3>
+                                <div class="notes-box">${report.notes.final}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${identifyProblems(report).length > 0 ? `
+                            <div class="report-detail-section problems-section">
+                                <h3>⚠️ Aree Critiche da Migliorare</h3>
+                                <div class="problems-list">
+                                    ${identifyProblems(report).map(problem => `
+                                        <div class="problem-item">
+                                            <span class="problem-icon">❗</span>
+                                            <div>
+                                                <strong>${problem.area}:</strong> ${problem.item} - Voto ${problem.score}/5
+                                                ${problem.note ? `<br><small>📝 ${problem.note}</small>` : ''}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="printReport(${reportId})" class="print-btn">🖨️ Stampa</button>
+                        <button onclick="downloadReport(${reportId})" class="download-btn">💾 Scarica</button>
+                        <button onclick="closeReportModal()" class="close-btn">Chiudi</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+        
+        function generateRatingSection(title, ratings, notes) {
+            return `
+                <div class="report-detail-section">
+                    <h3>${title}</h3>
+                    <div class="rating-details">
+                        ${Object.entries(ratings).map(([key, value]) => `
+                            <div class="rating-row">
+                                <span>${key}:</span>
+                                <span class="rating-value ${getRatingClass(value)}">${getRatingText(value)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${notes ? `<div class="section-notes">📝 Note: ${notes}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        function getRatingClass(value) {
+            if (value >= 5) return 'excellent';
+            if (value >= 4) return 'good';
+            if (value >= 3) return 'average';
+            if (value >= 2) return 'poor';
+            return 'critical';
+        }
+        
+        function getRatingText(value) {
+            const ratings = {
+                5: '5 - Eccellente',
+                4: '4 - Buono',
+                3: '3 - Sufficiente',
+                2: '2 - Scarso',
+                1: '1 - Inaccettabile'
+            };
+            return ratings[value] || 'Non valutato';
+        }
+        
+        function identifyProblems(report) {
+            const problems = [];
+            const categories = [
+                { prefix: 'pulizia', area: 'Pulizia', items: {
+                    'pulizia_generale': 'Generale',
+                    'pulizia_bancone': 'Bancone',
+                    'pulizia_pavimenti': 'Pavimenti',
+                    'pulizia_bagni': 'Bagni'
+                }},
+                { prefix: 'staff', area: 'Staff', items: {
+                    'staff_cortesia': 'Cortesia',
+                    'staff_professionalita': 'Professionalità',
+                    'staff_velocita': 'Velocità',
+                    'staff_conoscenza': 'Conoscenza'
+                }},
+                { prefix: 'fresh', area: 'Freschezza', items: {
+                    'fresh_pesce': 'Pesce',
+                    'fresh_verdure': 'Verdure',
+                    'fresh_riso': 'Riso',
+                    'fresh_salse': 'Salse'
+                }}
+            ];
+            
+            categories.forEach(category => {
+                Object.entries(category.items).forEach(([field, name]) => {
+                    const score = report.ratings[field];
+                    if (score && score <= 2) {
+                        problems.push({
+                            area: category.area,
+                            item: name,
+                            score: score,
+                            note: report.notes?.[category.prefix.split('_')[0]]
+                        });
+                    }
+                });
+            });
+            
+            return problems.sort((a, b) => a.score - b.score);
+        }
+        
+        function closeReportModal() {
+            const modal = document.querySelector('.report-modal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+        
+        function printReport(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Report ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { color: #005AA7; }
+                        .section { margin: 20px 0; }
+                        .rating { margin: 5px 0; }
+                        .critical { color: red; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1>MAUI POKE - Report Qualità</h1>
+                    <h2>${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}</h2>
+                    ${document.querySelector('.modal-body').innerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        function downloadReport(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            const content = formatEmailBody(report);
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `report_${report.store}_${report.date}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Resend Email Function
+        function resendReportEmail(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '⏳';
+            
+            // Resend email
+            sendEmail(report);
+            
+            // Show success message
+            setTimeout(() => {
+                btn.textContent = '✅';
+                setTimeout(() => {
+                    btn.textContent = '📧';
+                    btn.disabled = false;
+                }, 2000);
+                
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'email-notification';
+                notification.innerHTML = '✅ Email reinviata con successo!';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
+                    z-index: 3000;
+                    animation: slideInRight 0.5s ease;
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.5s ease';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            }, 1500);
+        }
+        
         // Delete Report Function
         function deleteReport(reportId) {
             const report = reports.find(r => r.id === reportId);
             if (!report) return;
             
-            // Check permissions
-            if (!currentUser) {
-                alert('Devi essere loggato per eliminare un report');
-                return;
-            }
-            
-            // Admins and Managers can delete any report
-            // Other users can only delete their own reports
-            const canDelete = currentUser.role === 'Administrator' || 
-                            currentUser.role === 'Manager' || 
-                            report.submittedBy === currentUser.username;
-            
-            if (!canDelete) {
-                alert('Non hai i permessi per eliminare questo report');
+            // Check permissions - Only Manolo can delete
+            if (!currentUser || currentUser.username !== 'manolo') {
+                alert('Solo Manolo Schiano ha i permessi per eliminare i report');
                 return;
             }
             
@@ -2110,6 +2359,279 @@ Questa azione non può essere annullata.`;
                 
                 .delete-report-btn:active {
                     transform: scale(0.95);
+                }
+                
+                .view-report-btn, .resend-email-btn {
+                    background: rgba(0, 90, 167, 0.1);
+                    border: 2px solid var(--primary);
+                    color: var(--primary);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    font-size: 1.2em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .view-report-btn:hover {
+                    background: var(--primary);
+                    color: white;
+                    transform: scale(1.1);
+                    box-shadow: 0 5px 15px rgba(0, 90, 167, 0.3);
+                }
+                
+                .resend-email-btn {
+                    background: rgba(0, 200, 150, 0.1);
+                    border: 2px solid var(--success);
+                    color: var(--success);
+                }
+                
+                .resend-email-btn:hover {
+                    background: var(--success);
+                    color: white;
+                    transform: scale(1.1);
+                    box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+                }
+                
+                /* Report Modal Styles */
+                .report-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(5px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 4000;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    padding: 20px;
+                }
+                
+                .report-modal.active {
+                    opacity: 1;
+                }
+                
+                .modal-content {
+                    background: white;
+                    border-radius: 25px;
+                    max-width: 900px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow: hidden;
+                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+                    display: flex;
+                    flex-direction: column;
+                    animation: modalSlideUp 0.3s ease;
+                }
+                
+                @keyframes modalSlideUp {
+                    from {
+                        transform: translateY(50px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                
+                .modal-header {
+                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                    color: white;
+                    padding: 25px 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .modal-header h2 {
+                    margin: 0;
+                    font-size: 1.5em;
+                }
+                
+                .close-modal-btn {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: none;
+                    color: white;
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    font-size: 1.5em;
+                    transition: all 0.3s;
+                }
+                
+                .close-modal-btn:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: rotate(90deg);
+                }
+                
+                .modal-body {
+                    padding: 30px;
+                    overflow-y: auto;
+                    flex: 1;
+                }
+                
+                .report-detail-section {
+                    margin-bottom: 30px;
+                    padding: 20px;
+                    background: #f8f9fa;
+                    border-radius: 15px;
+                }
+                
+                .report-detail-section h3 {
+                    color: var(--dark);
+                    margin: 0 0 15px 0;
+                    font-size: 1.2em;
+                    border-bottom: 2px solid #e0e0e0;
+                    padding-bottom: 10px;
+                }
+                
+                .detail-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 15px;
+                }
+                
+                .detail-grid div {
+                    padding: 10px;
+                    background: white;
+                    border-radius: 8px;
+                }
+                
+                .score-badge {
+                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                    color: white;
+                    padding: 5px 15px;
+                    border-radius: 20px;
+                    font-weight: bold;
+                }
+                
+                .rating-details {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 10px;
+                }
+                
+                .rating-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 10px;
+                    background: white;
+                    border-radius: 8px;
+                }
+                
+                .rating-value {
+                    font-weight: bold;
+                    padding: 2px 10px;
+                    border-radius: 5px;
+                }
+                
+                .rating-value.excellent {
+                    background: rgba(0, 200, 150, 0.2);
+                    color: var(--success);
+                }
+                
+                .rating-value.good {
+                    background: rgba(76, 175, 80, 0.2);
+                    color: #4CAF50;
+                }
+                
+                .rating-value.average {
+                    background: rgba(255, 184, 0, 0.2);
+                    color: var(--warning);
+                }
+                
+                .rating-value.poor {
+                    background: rgba(255, 152, 0, 0.2);
+                    color: #FF9800;
+                }
+                
+                .rating-value.critical {
+                    background: rgba(255, 59, 59, 0.2);
+                    color: var(--danger);
+                }
+                
+                .section-notes {
+                    margin-top: 15px;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 3px solid var(--primary);
+                }
+                
+                .problems-section {
+                    background: #fff3cd;
+                    border: 1px solid #ffeeba;
+                }
+                
+                .problems-list {
+                    display: grid;
+                    gap: 15px;
+                }
+                
+                .problem-item {
+                    display: flex;
+                    gap: 15px;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 8px;
+                    border-left: 4px solid var(--danger);
+                }
+                
+                .problem-icon {
+                    font-size: 1.5em;
+                }
+                
+                .notes-box {
+                    padding: 15px;
+                    background: white;
+                    border-radius: 8px;
+                    border: 1px solid #e0e0e0;
+                }
+                
+                .modal-footer {
+                    padding: 20px 30px;
+                    background: #f8f9fa;
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    border-top: 1px solid #e0e0e0;
+                }
+                
+                .modal-footer button {
+                    padding: 12px 25px;
+                    border-radius: 10px;
+                    border: none;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                }
+                
+                .print-btn, .download-btn {
+                    background: var(--primary);
+                    color: white;
+                }
+                
+                .print-btn:hover, .download-btn:hover {
+                    background: var(--secondary);
+                    transform: translateY(-2px);
+                }
+                
+                .close-btn {
+                    background: #e0e0e0;
+                    color: var(--dark);
+                }
+                
+                .close-btn:hover {
+                    background: #d0d0d0;
                 }
             `;
             document.head.appendChild(style);
