@@ -1608,13 +1608,37 @@
         <p style="color: #666;">Il report è stato salvato e inviato con successo.</p>
     </div>
     
+    <!-- Script esterni -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
     <script>
-        // Initialize EmailJS
-        emailjs.init("azBz9PrKR4ljQuq93");
+        // ====== CONFIGURAZIONE INIZIALE ======
+        console.log('🚀 Avvio sistema Maui Poke QC...');
         
-        // User Authentication
+        // Configurazione Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpRXiwDqtgCxZvgcv55FeYsd_DOhj7pco",
+            authDomain: "maui-poke-qc.firebaseapp.com",
+            projectId: "maui-poke-qc",
+            storageBucket: "maui-poke-qc.firebasestorage.app",
+            messagingSenderId: "88170125820",
+            appId: "1:88170125820:web:45215896c8279ef3533a79"
+        };
+        
+        // Variabili globali
+        let db = null;
+        let useFirebase = false;
+        let currentUser = null;
+        let selectedStore = '';
+        let ratings = {};
+        let uploadedPhotos = [];
+        
+        // User database (DEFINITO UNA SOLA VOLTA)
         const USERS = {
             'admin': { password: 'MauiPoke2024!', role: 'Administrator', name: 'Amministratore' },
             'manolo': { password: 'Maui@Quality24', role: 'Manager', name: 'Manolo Schiano' },
@@ -1625,27 +1649,205 @@
             'inspector2': { password: 'Control@2024', role: 'Inspector', name: 'Ispettore 2' }
         };
         
-        let currentUser = null;
-        let selectedStore = '';
-        let ratings = {};
-        let uploadedPhotos = [];
-        // NON inizializzare reports qui - lo faremo sempre dal localStorage
-        
-        // Funzione helper per ottenere sempre i report aggiornati
+        // ====== FUNZIONI DATABASE (DEVONO ESSERE DEFINITE PRIMA) ======
         function getAllReports() {
-            return JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            if (useFirebase && db) {
+                return db.collection('reports')
+                    .orderBy('timestamp', 'desc')
+                    .get()
+                    .then(snapshot => {
+                        const reports = [];
+                        snapshot.forEach(doc => {
+                            reports.push({ id: doc.id, ...doc.data() });
+                        });
+                        console.log('📊 Report da Firebase:', reports.length);
+                        return reports;
+                    })
+                    .catch(error => {
+                        console.error('Errore Firebase:', error);
+                        return JSON.parse(localStorage.getItem('mauiReports') || '[]');
+                    });
+            } else {
+                const reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+                console.log('📊 Report da localStorage:', reports.length);
+                return Promise.resolve(reports);
+            }
         }
         
-        // Funzione helper per salvare i report
         function saveReports(reportsArray) {
             localStorage.setItem('mauiReports', JSON.stringify(reportsArray));
+            
+            if (useFirebase && db) {
+                const batch = db.batch();
+                reportsArray.forEach(report => {
+                    const docRef = db.collection('reports').doc(report.id.toString());
+                    batch.set(docRef, report);
+                });
+                batch.commit()
+                    .then(() => console.log('✅ Salvato su Firebase'))
+                    .catch(error => console.error('Errore Firebase:', error));
+            }
         }
+        
+        function addReport(report) {
+            const localReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            localReports.push(report);
+            localStorage.setItem('mauiReports', JSON.stringify(localReports));
+            
+            if (useFirebase && db) {
+                return db.collection('reports')
+                    .doc(report.id.toString())
+                    .set(report)
+                    .then(() => {
+                        console.log('✅ Report salvato su Firebase');
+                        return report;
+                    })
+                    .catch(error => {
+                        console.error('Errore Firebase:', error);
+                        return report;
+                    });
+            }
+            
+            console.log('💾 Report salvato su localStorage');
+            return Promise.resolve(report);
+        }
+        
+        function removeReport(reportId) {
+            const localReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            const filtered = localReports.filter(r => r.id !== reportId);
+            localStorage.setItem('mauiReports', JSON.stringify(filtered));
+            
+            if (useFirebase && db) {
+                return db.collection('reports')
+                    .doc(reportId.toString())
+                    .delete()
+                    .then(() => console.log('✅ Rimosso da Firebase'))
+                    .catch(error => console.error('Errore Firebase:', error));
+            }
+            
+            return Promise.resolve();
+        }
+        
+        // ====== INIZIALIZZAZIONE SERVIZI ======
+        
+        // Inizializza Firebase
+        try {
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                useFirebase = true;
+                console.log('✅ Firebase connesso - Database CONDIVISO attivo!');
+                console.log('🌐 Tutti vedranno gli stessi report in tempo reale');
+            } else {
+                console.warn('⚠️ Firebase non disponibile - usando localStorage');
+            }
+        } catch (error) {
+            console.error('❌ Errore Firebase:', error);
+            console.log('📦 Fallback su localStorage');
+        }
+        
+        // Inizializza EmailJS
+        try {
+            emailjs.init("azBz9PrKR4ljQuq93");
+            console.log('✅ EmailJS pronto');
+        } catch (e) {
+            console.warn('⚠️ EmailJS non disponibile');
+        }
+        
+        // ====== FUNZIONI UTILITY ======
+        window.checkDatabaseStatus = function() {
+            if (useFirebase && db) {
+                console.log('✅ Database: Firebase (CONDIVISO)');
+                console.log('🌐 Tutti gli utenti vedranno gli stessi report');
+                console.log('📍 Project: maui-poke-qc');
+            } else {
+                console.log('⚠️ Database: localStorage (LOCALE)');
+                console.log('💾 I report sono salvati solo su questo browser');
+            }
+        };
+        
+        window.debugReports = async function() {
+            const reports = await getAllReports();
+            console.log('=== REPORT NEL SISTEMA ===');
+            console.log('Totale:', reports.length);
+            console.log('Database:', useFirebase ? 'Firebase' : 'localStorage');
+            reports.forEach((r, i) => {
+                console.log(`${i+1}. ${r.store} - ${r.date} - Voto: ${r.score}`);
+            });
+            return reports;
+        };
+        
+        // ====== CODICE PRINCIPALE DELL'APPLICAZIONE ======
+        // NON inizializzare reports qui - lo faremo sempre dal localStorage
+        
+        // Funzione di debug per verificare i report
+        function debugReports() {
+            const reports = getAllReports();
+            console.log('=== DEBUG REPORT SYSTEM ===');
+            console.log('Utente corrente:', currentUser?.name || 'Non loggato');
+            console.log('Totale report nel sistema:', reports.length);
+            console.log('Report dettagliati:');
+            reports.forEach((report, index) => {
+                console.log(`Report ${index + 1}:`, {
+                    id: report.id,
+                    store: report.store,
+                    inspector: report.inspector,
+                    date: report.date,
+                    score: report.score,
+                    submittedBy: report.submittedBy
+                });
+            });
+            console.log('=========================');
+            return reports;
+        }
+        
+        // Aggiungi funzione globale per test
+        window.debugMauiReports = debugReports;
+        window.clearAllReports = function() {
+            if (confirm('⚠️ ATTENZIONE: Questo cancellerà TUTTI i report. Sei sicuro?')) {
+                localStorage.removeItem('mauiReports');
+                console.log('✅ Tutti i report sono stati cancellati');
+                updateDashboard();
+            }
+        };
+        window.addTestReport = function() {
+            const testReport = {
+                id: Date.now(),
+                store: 'Test Store ' + Math.floor(Math.random() * 100),
+                date: new Date().toISOString().split('T')[0],
+                time: new Date().toTimeString().slice(0, 5),
+                inspector: 'Test Inspector',
+                personale: 'Test Staff',
+                ratings: {
+                    pulizia_generale: 5,
+                    pulizia_bancone: 4,
+                    staff_cortesia: 5,
+                    fresh_pesce: 4
+                },
+                score: '8',
+                notes: {
+                    final: 'Report di test creato automaticamente'
+                },
+                photos: [],
+                submittedBy: 'test'
+            };
+            
+            const reports = getAllReports();
+            reports.push(testReport);
+            saveReports(reports);
+            console.log('✅ Report di test aggiunto');
+            updateDashboard();
+        };
         
         // Check if user is already logged in
         function checkAuth() {
             const savedSession = sessionStorage.getItem('mauiUser');
             if (savedSession) {
                 currentUser = JSON.parse(savedSession);
+                console.log('🔐 Utente autenticato:', currentUser.name);
+                getAllReports().then(reports => {
+                    console.log('📊 Report totali nel sistema:', reports.length);
+                });
                 showMainApp();
             }
         }
@@ -1670,6 +1872,12 @@
                 };
                 
                 sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
+                
+                console.log('✅ Login effettuato:', currentUser.name);
+                getAllReports().then(reports => {
+                    console.log('📊 Report totali disponibili:', reports.length);
+                });
+                
                 showMainApp();
                 
                 document.getElementById('username').value = '';
@@ -1718,6 +1926,25 @@
         
         // Initialize App
         function initializeApp() {
+            console.log('🚀 Inizializzazione app per:', currentUser?.name);
+            
+            // Verifica stato database
+            checkDatabaseStatus();
+            
+            // Carica i report e mostra il conteggio
+            getAllReports().then(reports => {
+                console.log('📦 Report disponibili:', reports.length);
+                if (reports.length > 0) {
+                    console.log('📋 Ultimo report:', {
+                        store: reports[0].store,
+                        inspector: reports[0].inspector,
+                        date: reports[0].date
+                    });
+                }
+            }).catch(error => {
+                console.error('Errore caricamento report:', error);
+            });
+            
             initializeParticles();
             initializeDateTime();
             initializeStoreSelector();
@@ -1957,32 +2184,36 @@
                         final: document.getElementById('note_finali').value || ''
                     },
                     photos: [...uploadedPhotos],
-                    submittedBy: currentUser.username
+                    submittedBy: currentUser.username,
+                    timestamp: new Date().toISOString()
                 };
                 
                 console.log('Report da salvare:', report);
                 
-                // Ottieni tutti i report esistenti e aggiungi il nuovo
-                const allReports = getAllReports();
-                allReports.push(report);
-                saveReports(allReports);
-                
-                console.log('Report salvato con successo nel localStorage');
-                console.log('Totale report salvati:', allReports.length);
-                
-                // Invia email (non bloccare se fallisce)
-                sendEmail(report);
-                
-                // Mostra successo dopo un breve delay
-                setTimeout(() => {
-                    showSuccess();
-                    resetForm();
-                    updateDashboard();
+                // Usa la funzione async per salvare
+                addReport(report).then(() => {
+                    console.log('Report salvato con successo');
+                    
+                    // Invia email (non bloccare se fallisce)
+                    sendEmail(report);
+                    
+                    // Mostra successo dopo un breve delay
+                    setTimeout(() => {
+                        showSuccess();
+                        resetForm();
+                        updateDashboard();
+                        btn.classList.remove('loading');
+                        btnText.textContent = 'INVIA REPORT';
+                        btn.disabled = false;
+                        console.log('Processo completato con successo');
+                    }, 1500);
+                }).catch(error => {
+                    console.error('Errore durante il salvataggio:', error);
+                    alert('Errore durante il salvataggio. Riprova.');
                     btn.classList.remove('loading');
                     btnText.textContent = 'INVIA REPORT';
                     btn.disabled = false;
-                    console.log('Processo completato con successo');
-                }, 1500);
+                });
                 
             } catch (error) {
                 console.error('Errore durante il salvataggio del report:', error);
@@ -2085,21 +2316,21 @@
             }
         }
         
-        // Dashboard
-        function updateDashboard() {
-            updateMonthFilter();
+        // Dashboard - ora async
+        async function updateDashboard() {
+            await updateMonthFilter();
             const selectedMonth = document.getElementById('monthSelect').value;
-            updateDashboardStats(selectedMonth);
-            updateRecentReports(selectedMonth);
-            updateChart(selectedMonth);
+            await updateDashboardStats(selectedMonth);
+            await updateRecentReports(selectedMonth);
+            await updateChart(selectedMonth);
         }
         
-        function updateMonthFilter() {
+        async function updateMonthFilter() {
             const monthSelect = document.getElementById('monthSelect');
             const existingValue = monthSelect.value;
             
-            // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+            // Ottieni sempre i report aggiornati (con await perché è async)
+            const allReports = await getAllReports();
             
             const months = [...new Set(allReports.map(r => {
                 const date = new Date(r.date);
@@ -2126,9 +2357,9 @@
             monthSelect.onchange = () => updateDashboard();
         }
         
-        function updateDashboardStats(selectedMonth = 'all') {
-            // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+        async function updateDashboardStats(selectedMonth = 'all') {
+            // Ottieni sempre i report aggiornati (con await)
+            const allReports = await getAllReports();
             console.log('Dashboard - Totale report nel sistema:', allReports.length);
             
             let filteredReports = allReports;
@@ -2182,11 +2413,11 @@
             }
         }
         
-        function updateRecentReports(selectedMonth = 'all') {
+        async function updateRecentReports(selectedMonth = 'all') {
             const container = document.getElementById('recentReports');
             
-            // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+            // Ottieni sempre i report aggiornati (con await)
+            const allReports = await getAllReports();
             console.log('Report visualizzati - Totale:', allReports.length);
             
             let filteredReports = allReports;
@@ -2244,10 +2475,10 @@
             }).join('');
         }
         
-        // View Report Details
-        function viewReportDetails(reportId) {
+        // View Report Details - ora async
+        async function viewReportDetails(reportId) {
             // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+            const allReports = await getAllReports();
             const report = allReports.find(r => r.id === reportId);
             if (!report) return;
             
@@ -2364,9 +2595,9 @@
             }
         }
         
-        function resendReportEmail(reportId) {
+        async function resendReportEmail(reportId) {
             // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+            const allReports = await getAllReports();
             const report = allReports.find(r => r.id === reportId);
             if (!report) return;
             
@@ -2374,34 +2605,33 @@
             alert('Email reinviata con successo!');
         }
         
-        function deleteReport(reportId) {
+        async function deleteReport(reportId) {
             if (!currentUser || currentUser.username !== 'manolo') {
                 alert('Solo Manolo Schiano ha i permessi per eliminare i report');
                 return;
             }
             
             if (confirm('Sei sicuro di voler eliminare definitivamente questo report?')) {
-                // Ottieni sempre i report aggiornati
-                const allReports = getAllReports();
-                const index = allReports.findIndex(r => r.id === reportId);
-                if (index > -1) {
-                    allReports.splice(index, 1);
-                    saveReports(allReports);
+                try {
+                    await removeReport(reportId);
                     updateDashboard();
                     alert('Report eliminato con successo');
+                } catch (error) {
+                    console.error('Errore eliminazione:', error);
+                    alert('Errore durante l\'eliminazione del report');
                 }
             }
         }
         
-        function updateChart(selectedMonth = 'all') {
+        async function updateChart(selectedMonth = 'all') {
             const ctx = document.getElementById('performanceChart');
             
             if (window.performanceChart && typeof window.performanceChart.destroy === 'function') {
                 window.performanceChart.destroy();
             }
             
-            // Ottieni sempre i report aggiornati
-            const allReports = getAllReports();
+            // Ottieni sempre i report aggiornati (con await)
+            const allReports = await getAllReports();
             let filteredReports = allReports;
             
             if (selectedMonth !== 'all') {
