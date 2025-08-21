@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maui Poke - Quality Control System 2.0</title>
+    <title>Maui Poke - Quality Control System 3.0</title>
     <style>
         * { 
             margin: 0; 
@@ -12,9 +12,9 @@
         }
         
         :root {
-            --primary: #00BFFF;  /* Deep Sky Blue - come il logo */
-            --secondary: #F17B67; /* Corallo/Salmone - come il testo del logo */
-            --accent: #B0E0E6;   /* Celeste Pastello - sfondo logo */
+            --primary: #00BFFF;
+            --secondary: #F17B67;
+            --accent: #B0E0E6;
             --success: #00C896;
             --warning: #FFB800;
             --danger: #FF3B3B;
@@ -183,47 +183,6 @@
             75% { transform: translateX(10px); }
         }
         
-        .biometric-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #2d3436 100%);
-            color: white;
-            border: 2px solid #00BFFF;
-            border-radius: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .biometric-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
-            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
-        }
-        
-        .biometric-icon {
-            font-size: 1.5em;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .login-footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
         .user-info {
             position: absolute;
             top: 20px;
@@ -262,7 +221,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0;
+            padding: 20px;
             position: relative;
         }
         
@@ -321,72 +280,6 @@
             font-weight: 300;
             position: relative;
             z-index: 1;
-        }
-        
-        /* Geolocation Styles */
-        .location-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .detected-store-card {
-            background: linear-gradient(135deg, #00BFFF 0%, #B0E0E6 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.3);
-            animation: slideUp 0.5s ease;
-        }
-        
-        .store-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-            animation: iconFloat 3s ease-in-out infinite;
-        }
-        
-        .distance-info {
-            font-size: 0.9em;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .change-store-btn {
-            background: rgba(255, 255, 255, 0.95);
-            color: #00BFFF;
-            border: 2px solid #00BFFF;
-            padding: 12px 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: block;
-        }
-        
-        .change-store-btn:hover {
-            background: #00BFFF;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
         }
         
         /* Store Selector */
@@ -512,6 +405,123 @@
         @keyframes iconFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
+        }
+        
+        /* Photo Upload Section */
+        .photo-upload-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 30px;
+            border: 2px dashed #00BFFF;
+            transition: all 0.3s;
+        }
+        
+        .photo-upload-section:hover {
+            border-color: #F17B67;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-area {
+            position: relative;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 15px;
+        }
+        
+        .upload-area:hover {
+            background: rgba(0, 191, 255, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #00BFFF;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .upload-text {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .photo-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .photo-preview {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .photo-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .photo-preview:hover img {
+            transform: scale(1.05);
+        }
+        
+        .photo-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 59, 59, 0.9);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .photo-remove:hover {
+            background: var(--danger);
+            transform: scale(1.1);
+        }
+        
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            font-size: 0.85em;
+            text-align: center;
         }
         
         /* Advanced Rating System */
@@ -906,6 +916,19 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
         }
         
+        .has-photos-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        
         /* Success Message */
         .success-message {
             position: fixed;
@@ -947,6 +970,130 @@
             100% { transform: scale(1) rotate(360deg); }
         }
         
+        /* Modal Styles */
+        .report-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 20px;
+        }
+        
+        .report-modal.active {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: modalSlideUp 0.3s ease;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .photos-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .gallery-photo {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-photo:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-photo img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .lightbox-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+        }
+        
         /* Overlay */
         .overlay {
             position: fixed;
@@ -963,6 +1110,55 @@
         .overlay.active {
             display: block;
             animation: fadeIn 0.3s ease;
+        }
+        
+        /* Button Styles */
+        .view-report-btn, .resend-email-btn, .delete-report-btn {
+            background: rgba(0, 90, 167, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .view-report-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 90, 167, 0.3);
+        }
+        
+        .resend-email-btn {
+            background: rgba(0, 200, 150, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+        
+        .resend-email-btn:hover {
+            background: var(--success);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+        }
+        
+        .delete-report-btn {
+            background: rgba(255, 59, 59, 0.1);
+            border: 2px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .delete-report-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
         }
         
         /* Animations */
@@ -1026,6 +1222,10 @@
                 padding: 18px 40px;
                 font-size: 1.1em;
             }
+            
+            .photo-preview-container {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
         }
         
         @media (max-width: 480px) {
@@ -1081,20 +1281,11 @@
                         <input type="password" id="password" placeholder="Inserisci password" autocomplete="current-password">
                     </div>
                     <button type="button" class="login-btn" onclick="handleLogin()">ACCEDI</button>
-                    <div id="biometricSection" style="display: none; margin-top: 20px;">
-                        <div style="text-align: center; padding: 15px 0; color: #666; font-size: 0.9em;">
-                            — oppure —
-                        </div>
-                        <button type="button" class="biometric-btn" onclick="handleBiometricLogin()">
-                            <span class="biometric-icon">🔐</span>
-                            <span id="biometricText">Accedi con Biometria</span>
-                        </button>
-                    </div>
                     <div id="loginError" class="error-message" style="display: none;">
                         Username o password non validi
                     </div>
                 </div>
-                <div class="login-footer">
+                <div class="login-footer" style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 0.9em;">
                     <p>© 2024 Maui Poke - Quality Control System</p>
                 </div>
             </div>
@@ -1117,13 +1308,13 @@
         <div class="store-selector">
             <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 1.5em;">📍 Seleziona Store</h3>
             <div class="store-grid">
-                  <div class="store-card" data-store="Lugano">Lugano</div>
-                  <div class="store-card" data-store="Locarno">Locarno</div>
-                  <div class="store-card" data-store="Mendrisio">Mendrisio</div>
-                  <div class="store-card" data-store="Grancia">Grancia</div>
-                  <div class="store-card" data-store="Lugano Centro">Lugano Centro</div>
-                  <div class="store-card" data-store="Lido">Lido</div>
-                  <div class="store-card" data-store="Maui Kitchen">Maui Kitchen</div>
+                <div class="store-card" data-store="Lugano">Lugano</div>
+                <div class="store-card" data-store="Locarno">Locarno</div>
+                <div class="store-card" data-store="Mendrisio">Mendrisio</div>
+                <div class="store-card" data-store="Grancia">Grancia</div>
+                <div class="store-card" data-store="Lugano Centro">Lugano Centro</div>
+                <div class="store-card" data-store="Lido">Lido</div>
+                <div class="store-card" data-store="Maui Kitchen">Maui Kitchen</div>
             </div>
         </div>
         
@@ -1148,6 +1339,22 @@
                 <div class="form-group">
                     <label for="personale">Personale in Servizio</label>
                     <textarea id="personale" name="personale" placeholder="Elenca il personale presente durante l'ispezione"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>
+                    <div class="section-icon">📸</div>
+                    Documentazione Fotografica
+                </h3>
+                <div class="photo-upload-section">
+                    <div class="upload-area" onclick="document.getElementById('photoInput').click()">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Clicca per caricare foto</div>
+                        <div class="upload-hint">Formati supportati: JPG, PNG, GIF (max 5MB per foto)</div>
+                        <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)">
+                    </div>
+                    <div class="photo-preview-container" id="photoPreviewContainer"></div>
                 </div>
             </div>
             
@@ -1374,12 +1581,6 @@
                 </div>
             </div>
             
-            <!-- Monthly Summary -->
-            <div id="monthlySummary" style="display: none; background: white; padding: 25px; border-radius: 20px; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <h4 style="color: var(--dark); margin-bottom: 20px;">📈 Riepilogo Mensile</h4>
-                <div id="monthlySummaryContent"></div>
-            </div>
-            
             <div class="chart-container">
                 <canvas id="performanceChart"></canvas>
             </div>
@@ -1389,6 +1590,14 @@
                 <p style="text-align: center; color: #999;">Nessun report disponibile</p>
             </div>
         </div>
+        </div>
+    </div>
+    
+    <!-- Lightbox for Photos -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="Foto ingrandita">
         </div>
     </div>
     
@@ -1417,258 +1626,10 @@
         };
         
         let currentUser = null;
-        let inactivityTimer = null;
-        const INACTIVITY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 ore in millisecondi
-        
-        // Activity tracking
-        function resetInactivityTimer() {
-            // Clear existing timer
-            if (inactivityTimer) {
-                clearTimeout(inactivityTimer);
-            }
-            
-            // Set new timer for 2 hours
-            inactivityTimer = setTimeout(() => {
-                // Show warning before logout
-                showInactivityWarning();
-            }, INACTIVITY_TIMEOUT - 60000); // Warning 1 minute before logout
-        }
-        
-        function showInactivityWarning() {
-            const warningModal = document.createElement('div');
-            warningModal.id = 'inactivityWarning';
-            warningModal.className = 'inactivity-warning-modal';
-            warningModal.innerHTML = `
-                <div class="inactivity-warning-content">
-                    <div class="warning-header">
-                        <div class="warning-icon">⏰</div>
-                        <h3>Sessione in Scadenza</h3>
-                    </div>
-                    <div class="warning-body">
-                        <p>La tua sessione scadrà tra <span id="countdown">60</span> secondi per inattività.</p>
-                        <p>Clicca il pulsante per rimanere connesso.</p>
-                    </div>
-                    <div class="warning-footer">
-                        <button onclick="extendSession()" class="extend-session-btn">
-                            🔄 Rimani Connesso
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // Add styles for warning modal
-            const warningStyles = `
-                <style>
-                .inactivity-warning-modal {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 6000;
-                    animation: slideInRight 0.5s ease;
-                }
-                
-                .inactivity-warning-content {
-                    background: white;
-                    border-radius: 20px;
-                    padding: 25px;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                    border: 3px solid var(--warning);
-                    max-width: 350px;
-                }
-                
-                .warning-header {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                
-                .warning-icon {
-                    font-size: 3em;
-                    animation: shake 1s infinite;
-                }
-                
-                .warning-header h3 {
-                    margin: 10px 0 0 0;
-                    color: var(--dark);
-                }
-                
-                .warning-body {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                
-                .warning-body p {
-                    margin: 10px 0;
-                    color: #666;
-                }
-                
-                #countdown {
-                    font-size: 1.5em;
-                    font-weight: bold;
-                    color: var(--danger);
-                }
-                
-                .extend-session-btn {
-                    width: 100%;
-                    padding: 15px;
-                    background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                    color: white;
-                    border: none;
-                    border-radius: 12px;
-                    font-size: 1.1em;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                }
-                
-                .extend-session-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                }
-                
-                @keyframes shake {
-                    0%, 100% { transform: rotate(0deg); }
-                    25% { transform: rotate(-10deg); }
-                    75% { transform: rotate(10deg); }
-                }
-                </style>
-            `;
-            
-            // Add styles if not present
-            if (!document.querySelector('#inactivityWarningStyles')) {
-                const styleElement = document.createElement('div');
-                styleElement.id = 'inactivityWarningStyles';
-                styleElement.innerHTML = warningStyles;
-                document.head.appendChild(styleElement);
-            }
-            
-            document.body.appendChild(warningModal);
-            
-            // Start countdown
-            let seconds = 60;
-            const countdownInterval = setInterval(() => {
-                seconds--;
-                const countdownElement = document.getElementById('countdown');
-                if (countdownElement) {
-                    countdownElement.textContent = seconds;
-                }
-                
-                if (seconds <= 0) {
-                    clearInterval(countdownInterval);
-                    autoLogout();
-                }
-            }, 1000);
-            
-            // Store interval ID to clear it if user extends session
-            warningModal.dataset.intervalId = countdownInterval;
-        }
-        
-        function extendSession() {
-            // Remove warning modal
-            const warningModal = document.getElementById('inactivityWarning');
-            if (warningModal) {
-                // Clear countdown interval
-                const intervalId = warningModal.dataset.intervalId;
-                if (intervalId) {
-                    clearInterval(intervalId);
-                }
-                warningModal.remove();
-            }
-            
-            // Reset inactivity timer
-            resetInactivityTimer();
-            
-            // Show confirmation
-            const confirmation = document.createElement('div');
-            confirmation.className = 'session-extended';
-            confirmation.innerHTML = '✅ Sessione estesa di altre 2 ore';
-            confirmation.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                color: white;
-                padding: 15px 25px;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                z-index: 6000;
-                animation: slideInRight 0.5s ease;
-                font-weight: 600;
-            `;
-            document.body.appendChild(confirmation);
-            
-            setTimeout(() => {
-                confirmation.style.animation = 'slideOutRight 0.5s ease';
-                setTimeout(() => confirmation.remove(), 500);
-            }, 3000);
-        }
-        
-        function autoLogout() {
-            // Remove warning modal if exists
-            const warningModal = document.getElementById('inactivityWarning');
-            if (warningModal) {
-                warningModal.remove();
-            }
-            
-            // Show logout message
-            const logoutMessage = document.createElement('div');
-            logoutMessage.className = 'auto-logout-message';
-            logoutMessage.innerHTML = '🔒 Sessione scaduta per inattività. Effettua nuovamente il login.';
-            logoutMessage.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
-                color: white;
-                padding: 25px 40px;
-                border-radius: 15px;
-                box-shadow: 0 20px 60px rgba(255, 59, 59, 0.4);
-                z-index: 6000;
-                font-weight: 600;
-                font-size: 1.1em;
-                text-align: center;
-            `;
-            document.body.appendChild(logoutMessage);
-            
-            // Perform logout after showing message
-            setTimeout(() => {
-                logoutMessage.remove();
-                performLogout();
-            }, 3000);
-        }
-        
-        function performLogout() {
-            currentUser = null;
-            sessionStorage.removeItem('mauiUser');
-            
-            // Clear inactivity timer
-            if (inactivityTimer) {
-                clearTimeout(inactivityTimer);
-                inactivityTimer = null;
-            }
-            
-            // Remove activity listeners
-            removeActivityListeners();
-            
-            // Show login screen
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-        }
-        
-        // Setup activity listeners
-        function setupActivityListeners() {
-            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-            events.forEach(event => {
-                document.addEventListener(event, resetInactivityTimer, true);
-            });
-        }
-        
-        function removeActivityListeners() {
-            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-            events.forEach(event => {
-                document.removeEventListener(event, resetInactivityTimer, true);
-            });
-        }
+        let selectedStore = '';
+        let ratings = {};
+        let uploadedPhotos = [];
+        let reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
         
         // Check if user is already logged in
         function checkAuth() {
@@ -1698,17 +1659,9 @@
                     role: USERS[username].role
                 };
                 
-                // Save session
                 sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
-                
-                // Setup inactivity timer and listeners
-                setupActivityListeners();
-                resetInactivityTimer();
-                
-                // Show main app
                 showMainApp();
                 
-                // Clear login form
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 errorDiv.style.display = 'none';
@@ -1716,7 +1669,6 @@
                 errorDiv.textContent = 'Username o password non validi';
                 errorDiv.style.display = 'block';
                 
-                // Shake animation
                 const loginBox = document.querySelector('.login-box');
                 loginBox.style.animation = 'shake 0.5s';
                 setTimeout(() => {
@@ -1731,10 +1683,8 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('currentUser').textContent = `👤 ${currentUser.name}`;
             
-            // Initialize app FIRST, then set inspector name
             initializeApp();
             
-            // Set inspector name automatically and make it readonly
             setTimeout(() => {
                 const inspectorField = document.getElementById('inspector');
                 if (inspectorField) {
@@ -1749,269 +1699,14 @@
         // Handle Logout
         function handleLogout() {
             if (confirm('Sei sicuro di voler uscire?')) {
-                performLogout();
+                currentUser = null;
+                sessionStorage.removeItem('mauiUser');
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
             }
         }
         
-        // Initialize Biometric Authentication
-        async function initializeBiometric() {
-            // Check if WebAuthn is available
-            if (window.PublicKeyCredential) {
-                const biometricSection = document.getElementById('biometricSection');
-                const biometricText = document.getElementById('biometricText');
-                const biometricIcon = document.querySelector('.biometric-icon');
-                
-                if (biometricSection) {
-                    biometricSection.style.display = 'block';
-                    
-                    // Detect device type for appropriate icon and text
-                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                    const isApple = /iPhone|iPad|iPod|Mac/i.test(navigator.userAgent);
-                    
-                    if (isApple) {
-                        biometricIcon.textContent = '👤';
-                        biometricText.textContent = 'Accedi con Face ID / Touch ID';
-                    } else if (isMobile) {
-                        biometricIcon.textContent = '👆';
-                        biometricText.textContent = 'Accedi con Impronta';
-                    } else {
-                        biometricIcon.textContent = '🔐';
-                        biometricText.textContent = 'Accedi con Windows Hello / Biometria';
-                    }
-                    
-                    // Check if user has saved credentials
-                    checkSavedCredentials();
-                }
-            }
-        }
-        
-        // Check for saved biometric credentials
-        async function checkSavedCredentials() {
-            const savedBiometric = localStorage.getItem('mauiBiometricEnabled');
-            if (savedBiometric) {
-                const biometricBtn = document.querySelector('.biometric-btn');
-                if (biometricBtn) {
-                    biometricBtn.style.background = 'linear-gradient(135deg, var(--success) 0%, #00a878 100%)';
-                }
-            }
-        }
-        
-        // Handle Biometric Login
-        async function handleBiometricLogin() {
-            try {
-                // Check if user has previously authenticated
-                const savedCredentials = localStorage.getItem('mauiBiometricUser');
-                
-                if (!savedCredentials) {
-                    // First time - need to authenticate with username/password first
-                    alert('Per configurare l\'accesso biometrico, effettua prima il login con username e password.');
-                    return;
-                }
-                
-                // Simulate biometric authentication
-                // In a real implementation, this would use WebAuthn API
-                const authenticating = confirm('Posiziona il dito sul sensore o guarda la fotocamera per l\'autenticazione biometrica.');
-                
-                if (authenticating) {
-                    // Show loading state
-                    const biometricBtn = document.querySelector('.biometric-btn');
-                    const originalContent = biometricBtn.innerHTML;
-                    biometricBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; display: inline-block;"></span> Autenticazione...';
-                    biometricBtn.disabled = true;
-                    
-                    // Simulate biometric processing
-                    setTimeout(() => {
-                        try {
-                            const userData = JSON.parse(savedCredentials);
-                            
-                            // Verify this is a valid user
-                            if (USERS[userData.username]) {
-                                currentUser = {
-                                    username: userData.username,
-                                    name: USERS[userData.username].name,
-                                    role: USERS[userData.username].role
-                                };
-                                
-                                // Save session
-                                sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
-                                
-                                // Setup inactivity timer and listeners
-                                setupActivityListeners();
-                                resetInactivityTimer();
-                                
-                                // Show success animation
-                                biometricBtn.innerHTML = '✅ Autenticato!';
-                                biometricBtn.style.background = 'linear-gradient(135deg, var(--success) 0%, #00a878 100%)';
-                                
-                                setTimeout(() => {
-                                    showMainApp();
-                                }, 1000);
-                            } else {
-                                throw new Error('Invalid saved credentials');
-                            }
-                        } catch (error) {
-                            console.error('Biometric login error:', error);
-                            biometricBtn.innerHTML = originalContent;
-                            biometricBtn.disabled = false;
-                            alert('Autenticazione biometrica fallita. Usa username e password.');
-                        }
-                    }, 1500);
-                }
-            } catch (error) {
-                console.error('Biometric authentication error:', error);
-                alert('La tua device non supporta l\'autenticazione biometrica o è stata negata l\'autorizzazione.');
-            }
-        }
-        
-        // Save biometric credentials after successful login
-        function saveBiometricCredentials(username) {
-            if (window.PublicKeyCredential) {
-                // Ask user if they want to enable biometric login
-                setTimeout(() => {
-                    if (confirm('Vuoi abilitare l\'accesso rapido con Face ID / Touch ID / Impronta per i prossimi accessi?')) {
-                        localStorage.setItem('mauiBiometricUser', JSON.stringify({ 
-                            username: username,
-                            timestamp: Date.now()
-                        }));
-                        localStorage.setItem('mauiBiometricEnabled', 'true');
-                        
-                        // Show success message
-                        const notification = document.createElement('div');
-                        notification.innerHTML = '✅ Accesso biometrico configurato con successo!';
-                        notification.style.cssText = `
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                            color: white;
-                            padding: 15px 25px;
-                            border-radius: 12px;
-                            box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                            z-index: 6000;
-                            animation: slideInRight 0.5s ease;
-                            font-weight: 600;
-                        `;
-                        document.body.appendChild(notification);
-                        
-                        setTimeout(() => {
-                            notification.style.animation = 'slideOutRight 0.5s ease';
-                            setTimeout(() => notification.remove(), 500);
-                        }, 3000);
-                    }
-                }, 2000);
-            }
-        }
-        
-        // Modified Handle Login to include biometric setup
-        function handleLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-            
-            if (!username || !password) {
-                errorDiv.textContent = 'Inserisci username e password';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (USERS[username] && USERS[username].password === password) {
-                currentUser = {
-                    username: username,
-                    name: USERS[username].name,
-                    role: USERS[username].role
-                };
-                
-                // Save session
-                sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
-                
-                // Setup inactivity timer and listeners
-                setupActivityListeners();
-                resetInactivityTimer();
-                
-                // Show main app
-                showMainApp();
-                
-                // Clear login form
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                errorDiv.style.display = 'none';
-                
-                // Offer to save biometric credentials
-                saveBiometricCredentials(username);
-            } else {
-                errorDiv.textContent = 'Username o password non validi';
-                errorDiv.style.display = 'block';
-                
-                // Shake animation
-                const loginBox = document.querySelector('.login-box');
-                loginBox.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    loginBox.style.animation = '';
-                }, 500);
-            }
-        }
-        
-        // Modified performLogout to clear biometric data
-        function performLogout() {
-            currentUser = null;
-            sessionStorage.removeItem('mauiUser');
-            
-            // Ask if user wants to clear biometric login
-            if (localStorage.getItem('mauiBiometricEnabled')) {
-                if (confirm('Vuoi anche disabilitare l\'accesso biometrico?')) {
-                    localStorage.removeItem('mauiBiometricUser');
-                    localStorage.removeItem('mauiBiometricEnabled');
-                }
-            }
-            
-            // Clear inactivity timer
-            if (inactivityTimer) {
-                clearTimeout(inactivityTimer);
-                inactivityTimer = null;
-            }
-            
-            // Remove activity listeners
-            removeActivityListeners();
-            
-            // Show login screen
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-        }
-        
-        // Enter key support for login
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordField = document.getElementById('password');
-            const usernameField = document.getElementById('username');
-            
-            if (passwordField) {
-                passwordField.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        handleLogin();
-                    }
-                });
-            }
-            
-            if (usernameField) {
-                usernameField.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        document.getElementById('password').focus();
-                    }
-                });
-            }
-            
-            // Initialize biometric authentication
-            initializeBiometric();
-            
-            // Check authentication on load
-            checkAuth();
-        });
-        
-        // State Management
-        let selectedStore = '';
-        let ratings = {};
-        let reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
-        
-        // Initialize App (called after login)
+        // Initialize App
         function initializeApp() {
             initializeParticles();
             initializeDateTime();
@@ -2022,15 +1717,10 @@
             updateProgressBar();
         }
         
-        // Modify the original DOMContentLoaded to not auto-initialize
-        window.addEventListener('load', function() {
-            // Only initialize particles for visual effect
-            initializeParticles();
-        });
-        
         // Particles Animation
         function initializeParticles() {
             const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
             for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -2041,7 +1731,7 @@
             }
         }
         
-        // DateTime - Always current, not editable
+        // DateTime
         function initializeDateTime() {
             const now = new Date();
             const dateField = document.getElementById('date');
@@ -2050,233 +1740,93 @@
             if (dateField) {
                 dateField.valueAsDate = now;
                 dateField.readOnly = true;
-                dateField.style.backgroundColor = '#f0f0f0';
-                dateField.style.cursor = 'not-allowed';
             }
             
             if (timeField) {
                 timeField.value = now.toTimeString().slice(0, 5);
                 timeField.readOnly = true;
-                timeField.style.backgroundColor = '#f0f0f0';
-                timeField.style.cursor = 'not-allowed';
             }
         }
         
-        // Store locations with coordinates
-        const STORE_LOCATIONS = {
-            'Lugano': {
-                name: 'Lugano',
-                address: 'Via Marco da Carona 2, 6900 Lugano',
-                lat: 46.0037,
-                lng: 8.9511
-            },
-            'Locarno': {
-                name: 'Locarno',
-                address: 'Via della Posta 2, 6600 Locarno',
-                lat: 46.1712,
-                lng: 8.7955
-            },
-            'Mendrisio': {
-                name: 'Mendrisio',
-                address: 'Via Moree 16, 6850 Mendrisio',
-                lat: 45.8696,
-                lng: 8.9823
-            },
-            'Grancia': {
-                name: 'Grancia',
-                address: 'Centro Commerciale, 6916 Grancia',
-                lat: 45.9918,
-                lng: 8.9267
-            },
-            'Lugano Centro': {
-                name: 'Lugano Centro',
-                address: 'Via della Posta, 6900 Lugano',
-                lat: 46.0025,
-                lng: 8.9515
-            },
-            'Lido': {
-                name: 'Lido',
-                address: 'Via Lido, 6900 Lugano',
-                lat: 46.0067,
-                lng: 8.9650
-            },
-            'Maui Kitchen': {
-                name: 'Maui Kitchen',
-                address: 'Via Madonnetta 24, 6900 Lugano',
-                lat: 46.0050,
-                lng: 8.9530
-            }
-        };
-        
-        // Geolocation functions
-        function initializeGeolocation() {
-            // Check if elements exist before trying to use them
-            const locationStatus = document.getElementById('locationStatus');
-            const manualSelection = document.getElementById('manualSelection');
-            
-            if (!locationStatus || !manualSelection) {
-                console.log('Geolocation elements not found, using manual selection');
-                // If elements don't exist, just use standard store selector
-                return;
-            }
-            
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        try {
-                            const userLat = position.coords.latitude;
-                            const userLng = position.coords.longitude;
-                            console.log('User position:', userLat, userLng);
-                            
-                            const nearestStore = findNearestStore(userLat, userLng);
-                            
-                            if (nearestStore && nearestStore.distance < 0.5) { // Within 500 meters
-                                showDetectedStore(nearestStore);
-                                selectedStore = nearestStore.store.name;
-                                updateProgressBar();
-                            } else {
-                                // Too far from any store, show manual selection
-                                showManualStoreSelection();
-                            }
-                        } catch (error) {
-                            console.error('Error processing location:', error);
-                            showManualStoreSelection();
-                        }
-                    },
-                    (error) => {
-                        console.log('Geolocation error:', error.message);
-                        // Show manual selection on any geolocation error
-                        showManualStoreSelection();
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                console.log('Geolocation not supported');
-                showManualStoreSelection();
-            }
-        }
-        
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth's radius in km
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c; // Distance in km
-        }
-        
-        function findNearestStore(userLat, userLng) {
-            let nearestStore = null;
-            let minDistance = Infinity;
-            
-            Object.values(STORE_LOCATIONS).forEach(store => {
-                const distance = calculateDistance(userLat, userLng, store.lat, store.lng);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearestStore = { store: store, distance: distance };
-                }
-            });
-            
-            return nearestStore;
-        }
-        
-        function showDetectedStore(storeInfo) {
-            const locationStatus = document.getElementById('locationStatus');
-            const detectedStore = document.getElementById('detectedStore');
-            const changeStoreBtn = document.getElementById('changeStoreBtn');
-            const storeName = document.getElementById('storeName');
-            const storeAddress = document.getElementById('storeAddress');
-            const distanceInfo = document.getElementById('distanceInfo');
-            
-            if (!locationStatus || !detectedStore || !changeStoreBtn || !storeName || !storeAddress || !distanceInfo) {
-                console.error('Required elements not found');
-                return;
-            }
-            
-            locationStatus.style.display = 'none';
-            detectedStore.style.display = 'block';
-            changeStoreBtn.style.display = 'block';
-            
-            storeName.textContent = storeInfo.store.name;
-            storeAddress.textContent = storeInfo.store.address;
-            
-            const distanceText = storeInfo.distance < 0.1 
-                ? '📍 Sei qui!' 
-                : `📏 Distanza: ${(storeInfo.distance * 1000).toFixed(0)} metri`;
-            distanceInfo.textContent = distanceText;
-            
-            // Highlight store as selected
-            const detectedCard = document.querySelector('.detected-store-card');
-            if (detectedCard) {
-                detectedCard.classList.add('selected');
-            }
-        }
-        
-        function showManualStoreSelection() {
-            const locationStatus = document.getElementById('locationStatus');
-            const detectedStore = document.getElementById('detectedStore');
-            const manualSelection = document.getElementById('manualSelection');
-            
-            if (locationStatus) locationStatus.style.display = 'none';
-            if (detectedStore) detectedStore.style.display = 'none';
-            if (manualSelection) manualSelection.style.display = 'block';
-        }
-        
-        function showManualSelection() {
-            const detectedStore = document.getElementById('detectedStore');
-            const changeStoreBtn = document.getElementById('changeStoreBtn');
-            const manualSelection = document.getElementById('manualSelection');
-            
-            if (detectedStore) detectedStore.style.display = 'none';
-            if (changeStoreBtn) changeStoreBtn.style.display = 'none';
-            if (manualSelection) manualSelection.style.display = 'block';
-            
-            selectedStore = ''; // Reset selection
-            updateProgressBar();
-        }
-        
-        // Modified Store Selector initialization
+        // Store Selector
         function initializeStoreSelector() {
-            // First try geolocation (if elements exist)
-            initializeGeolocation();
-            
-            // Manual selection buttons
             document.querySelectorAll('.store-card').forEach(card => {
                 card.addEventListener('click', function() {
                     document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedStore = this.dataset.store;
                     updateProgressBar();
-                    
-                    // Try to show selected store details if elements exist
-                    const manualSelection = document.getElementById('manualSelection');
-                    const detectedStore = document.getElementById('detectedStore');
-                    const changeStoreBtn = document.getElementById('changeStoreBtn');
-                    const storeName = document.getElementById('storeName');
-                    const storeAddress = document.getElementById('storeAddress');
-                    const distanceInfo = document.getElementById('distanceInfo');
-                    
-                    if (manualSelection && detectedStore && changeStoreBtn && storeName && storeAddress && distanceInfo) {
-                        manualSelection.style.display = 'none';
-                        detectedStore.style.display = 'block';
-                        changeStoreBtn.style.display = 'block';
-                        
-                        const storeData = STORE_LOCATIONS[selectedStore];
-                        if (storeData) {
-                            storeName.textContent = storeData.name;
-                            storeAddress.textContent = storeData.address;
-                            distanceInfo.textContent = '✅ Selezionato manualmente';
-                        }
-                    }
                 });
             });
+        }
+        
+        // Photo Upload Handler
+        function handlePhotoUpload(event) {
+            const files = event.target.files;
+            const container = document.getElementById('photoPreviewContainer');
+            
+            for (let file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`Il file ${file.name} supera i 5MB`);
+                    continue;
+                }
+                
+                if (!file.type.startsWith('image/')) {
+                    alert(`Il file ${file.name} non è un'immagine valida`);
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    const photoData = {
+                        id: photoId,
+                        data: e.target.result,
+                        name: file.name,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    uploadedPhotos.push(photoData);
+                    
+                    const preview = document.createElement('div');
+                    preview.className = 'photo-preview';
+                    preview.id = `preview_${photoId}`;
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="${file.name}" onclick="openLightbox('${e.target.result}')">
+                        <button class="photo-remove" onclick="removePhoto('${photoId}')">×</button>
+                        <div class="photo-caption">${file.name}</div>
+                    `;
+                    
+                    container.appendChild(preview);
+                    updateProgressBar();
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            event.target.value = '';
+        }
+        
+        // Remove Photo
+        function removePhoto(photoId) {
+            uploadedPhotos = uploadedPhotos.filter(p => p.id !== photoId);
+            const preview = document.getElementById(`preview_${photoId}`);
+            if (preview) {
+                preview.remove();
+            }
+            updateProgressBar();
+        }
+        
+        // Lightbox Functions
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = imageSrc;
+            lightbox.classList.add('active');
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
         }
         
         // Grade Ratings
@@ -2289,54 +1839,20 @@
                     button.addEventListener('click', function(e) {
                         e.preventDefault();
                         
-                        // Check if this button is already active
                         if (this.classList.contains('active')) {
-                            // Deselect if clicking on already selected button
                             this.classList.remove('active');
                             delete ratings[field];
-                            
-                            // Visual feedback for deselection
-                            this.style.transform = 'scale(0.95)';
-                            setTimeout(() => {
-                                this.style.transform = '';
-                            }, 100);
                         } else {
-                            // Remove active class from all buttons in this group
                             buttons.forEach(btn => btn.classList.remove('active'));
-                            
-                            // Add active class to clicked button
                             this.classList.add('active');
-                            
-                            // Store the rating value
-                            const value = parseInt(this.dataset.value);
-                            ratings[field] = value;
-                            
-                            // Visual feedback for selection
-                            this.style.transform = 'scale(0.95)';
-                            setTimeout(() => {
-                                this.style.transform = '';
-                            }, 100);
+                            ratings[field] = parseInt(this.dataset.value);
                         }
                         
-                        // Update progress and auto-calculate score
-                        updateProgressBar();
-                        calculateAutoScore();
-                    });
-                    
-                    // Add double-click to clear
-                    button.addEventListener('dblclick', function(e) {
-                        e.preventDefault();
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        delete ratings[field];
                         updateProgressBar();
                         calculateAutoScore();
                     });
                 });
             });
-        }
-        
-        function updateStars(ratingElement, value) {
-            // Not used anymore, keeping for compatibility
         }
         
         // Auto Calculate Score
@@ -2351,7 +1867,7 @@
         
         // Progress Bar
         function updateProgressBar() {
-            const totalFields = 17; // Total fields to complete
+            const totalFields = 17;
             let completed = 0;
             
             if (selectedStore) completed++;
@@ -2360,6 +1876,7 @@
             if (document.getElementById('time').value) completed++;
             completed += Object.keys(ratings).length;
             if (document.getElementById('valutazione_finale').value) completed++;
+            if (uploadedPhotos.length > 0) completed++;
             
             const progress = (completed / totalFields) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
@@ -2369,7 +1886,6 @@
         function initializeForm() {
             document.getElementById('qualityForm').addEventListener('submit', handleSubmit);
             
-            // Update progress on input
             document.querySelectorAll('input, select, textarea').forEach(input => {
                 input.addEventListener('input', updateProgressBar);
             });
@@ -2390,7 +1906,6 @@
             btnText.textContent = 'INVIO IN CORSO...';
             btn.disabled = true;
             
-            // Update date and time to current moment when submitting
             const now = new Date();
             document.getElementById('date').valueAsDate = now;
             document.getElementById('time').value = now.toTimeString().slice(0, 5);
@@ -2401,7 +1916,7 @@
                 store: selectedStore,
                 date: formData.get('date'),
                 time: formData.get('time'),
-                inspector: currentUser.name, // Always use logged in user name, not form field
+                inspector: currentUser.name,
                 personale: formData.get('personale'),
                 ratings: {...ratings},
                 score: formData.get('valutazione_finale'),
@@ -2411,17 +1926,15 @@
                     fresh: formData.get('fresh_note'),
                     final: formData.get('note_finali')
                 },
-                submittedBy: currentUser.username // Track who submitted
+                photos: [...uploadedPhotos],
+                submittedBy: currentUser.username
             };
             
-            // Save report
             reports.push(report);
             localStorage.setItem('mauiReports', JSON.stringify(reports));
             
-            // Send email
             sendEmail(report);
             
-            // Show success
             setTimeout(() => {
                 showSuccess();
                 resetForm();
@@ -2438,162 +1951,42 @@
                 return grades[value] || 'Non valutato';
             };
             
-            // Debug: log what we're sending
-            console.log('Sending email with report data:', report);
-            
-            // Prepara tutti i parametri per il template EmailJS
             const templateParams = {
                 to_email: 'manolo.schiano@mauipoke.ch',
                 cc_email: 'antonello.romeo@mauipoke.ch',
                 subject: `Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
-                
-                // Dati base - assicuriamoci che tutti i campi siano presenti
-                store_name: report.store || 'Non specificato',
-                inspector_name: report.inspector || currentUser?.name || 'Non specificato',
-                report_date: report.date ? new Date(report.date).toLocaleDateString('it-IT') : 'Non specificata',
-                report_time: report.time || 'Non specificata',
-                overall_score: report.score || '0',
+                store_name: report.store,
+                inspector_name: report.inspector,
+                report_date: new Date(report.date).toLocaleDateString('it-IT'),
+                report_time: report.time,
+                overall_score: report.score,
                 personale: report.personale || 'Non specificato',
-                
-                // Valutazioni Pulizia - controlliamo che esistano
                 pulizia_generale: ratingToText(report.ratings?.pulizia_generale),
                 pulizia_bancone: ratingToText(report.ratings?.pulizia_bancone),
                 pulizia_pavimenti: ratingToText(report.ratings?.pulizia_pavimenti),
                 pulizia_bagni: ratingToText(report.ratings?.pulizia_bagni),
                 pulizia_note: report.notes?.pulizia || 'Nessuna nota',
-                
-                // Valutazioni Staff
                 staff_cortesia: ratingToText(report.ratings?.staff_cortesia),
                 staff_professionalita: ratingToText(report.ratings?.staff_professionalita),
                 staff_velocita: ratingToText(report.ratings?.staff_velocita),
                 staff_conoscenza: ratingToText(report.ratings?.staff_conoscenza),
                 staff_note: report.notes?.staff || 'Nessuna nota',
-                
-                // Valutazioni Freschezza
                 fresh_pesce: ratingToText(report.ratings?.fresh_pesce),
                 fresh_verdure: ratingToText(report.ratings?.fresh_verdure),
                 fresh_riso: ratingToText(report.ratings?.fresh_riso),
                 fresh_salse: ratingToText(report.ratings?.fresh_salse),
                 fresh_note: report.notes?.fresh || 'Nessuna nota',
-                
-                // Note finali
-                note_finali: report.notes?.final || 'Nessuna nota generale'
+                note_finali: report.notes?.final || 'Nessuna nota generale',
+                photo_count: report.photos?.length || 0
             };
             
-            // Debug: log template parameters
-            console.log('Template parameters being sent:', templateParams);
-            
-            // Invia con EmailJS usando il template con variabili
             emailjs.send('service_cysrzkx', 'template_j203617', templateParams)
                 .then((response) => {
-                    console.log('Email sent successfully!', response.status, response.text);
-                    
-                    // Show success notification
-                    const notification = document.createElement('div');
-                    notification.className = 'email-success-notification';
-                    notification.innerHTML = '✅ Email inviata con successo a manolo.schiano@mauipoke.ch';
-                    notification.style.cssText = `
-                        position: fixed;
-                        bottom: 20px;
-                        right: 20px;
-                        background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                        color: white;
-                        padding: 20px 30px;
-                        border-radius: 15px;
-                        box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                        z-index: 3000;
-                        animation: slideInRight 0.5s ease;
-                        font-weight: 600;
-                    `;
-                    document.body.appendChild(notification);
-                    
-                    setTimeout(() => {
-                        notification.style.animation = 'slideOutRight 0.5s ease';
-                        setTimeout(() => notification.remove(), 500);
-                    }, 4000);
+                    console.log('Email sent successfully!', response);
                 })
                 .catch(error => {
                     console.error('EmailJS error:', error);
-                    console.error('Failed parameters:', templateParams);
-                    
-                    // Show error notification
-                    const errorNotification = document.createElement('div');
-                    errorNotification.className = 'email-error-notification';
-                    errorNotification.innerHTML = '⚠️ Errore invio email. Uso metodo alternativo...';
-                    errorNotification.style.cssText = `
-                        position: fixed;
-                        bottom: 20px;
-                        right: 20px;
-                        background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
-                        color: white;
-                        padding: 20px 30px;
-                        border-radius: 15px;
-                        box-shadow: 0 10px 30px rgba(255, 59, 59, 0.3);
-                        z-index: 3000;
-                        animation: slideInRight 0.5s ease;
-                        font-weight: 600;
-                    `;
-                    document.body.appendChild(errorNotification);
-                    
-                    setTimeout(() => {
-                        errorNotification.remove();
-                    }, 3000);
-                    
-                    // Fallback: apri client email con il report formattato
-                    const emailBody = formatEmailBody(report);
-                    const subject = encodeURIComponent(templateParams.subject);
-                    const body = encodeURIComponent(emailBody);
-                    window.open(`mailto:${templateParams.to_email},${templateParams.cc_email}?subject=${subject}&body=${body}`);
                 });
-        }
-        
-        function formatEmailBody(report) {
-            const ratingToText = (value) => {
-                const grades = { 5: '5 - Eccellente', 4: '4 - Buono', 3: '3 - Sufficiente', 2: '2 - Scarso', 1: '1 - Inaccettabile' };
-                return grades[value] || 'Non valutato';
-            };
-            
-            return `
-MAUI POKE - QUALITY CONTROL REPORT
-═══════════════════════════════════════
-
-📍 STORE: ${report.store}
-👤 ISPETTORE: ${report.inspector}
-📅 DATA: ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time}
-${report.personale ? `👥 PERSONALE: ${report.personale}` : ''}
-
-⭐ VOTO COMPLESSIVO: ${report.score}/10
-
-🧹 PULIZIA
-─────────────────────────
-• Generale: ${ratingToText(report.ratings.pulizia_generale)}
-• Bancone: ${ratingToText(report.ratings.pulizia_bancone)}
-• Pavimenti: ${ratingToText(report.ratings.pulizia_pavimenti)}
-• Bagni: ${ratingToText(report.ratings.pulizia_bagni)}
-${report.notes.pulizia ? `📝 Note: ${report.notes.pulizia}` : ''}
-
-👥 STAFF
-─────────────────────────
-• Cortesia: ${ratingToText(report.ratings.staff_cortesia)}
-• Professionalità: ${ratingToText(report.ratings.staff_professionalita)}
-• Velocità: ${ratingToText(report.ratings.staff_velocita)}
-• Conoscenza: ${ratingToText(report.ratings.staff_conoscenza)}
-${report.notes.staff ? `📝 Note: ${report.notes.staff}` : ''}
-
-🥗 FRESCHEZZA
-─────────────────────────
-• Pesce: ${ratingToText(report.ratings.fresh_pesce)}
-• Verdure: ${ratingToText(report.ratings.fresh_verdure)}
-• Riso: ${ratingToText(report.ratings.fresh_riso)}
-• Salse: ${ratingToText(report.ratings.fresh_salse)}
-${report.notes.fresh ? `📝 Note: ${report.notes.fresh}` : ''}
-
-${report.notes.final ? `📋 NOTE FINALI\n─────────────────────────\n${report.notes.final}` : ''}
-
-═══════════════════════════════════════
-🤖 Report generato automaticamente
-📱 Maui Quality Control System
-            `;
         }
         
         function showSuccess() {
@@ -2615,16 +2008,14 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
             selectedStore = '';
             ratings = {};
+            uploadedPhotos = [];
+            document.getElementById('photoPreviewContainer').innerHTML = '';
             initializeDateTime();
             updateProgressBar();
             
-            // Re-set inspector name after form reset (keeps it as logged user)
             const inspectorField = document.getElementById('inspector');
             if (inspectorField && currentUser) {
                 inspectorField.value = currentUser.name;
-                inspectorField.readOnly = true;
-                inspectorField.style.backgroundColor = '#f0f0f0';
-                inspectorField.style.cursor = 'not-allowed';
             }
         }
         
@@ -2641,13 +2032,11 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             const monthSelect = document.getElementById('monthSelect');
             const existingValue = monthSelect.value;
             
-            // Get unique months from reports
             const months = [...new Set(reports.map(r => {
                 const date = new Date(r.date);
                 return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
             }))].sort().reverse();
             
-            // Clear and rebuild options
             monthSelect.innerHTML = '<option value="all">Tutti i Report</option>';
             
             const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
@@ -2661,12 +2050,10 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 monthSelect.appendChild(option);
             });
             
-            // Restore selection if it exists
             if (existingValue && [...monthSelect.options].some(opt => opt.value === existingValue)) {
                 monthSelect.value = existingValue;
             }
             
-            // Add change event listener
             monthSelect.onchange = () => updateDashboard();
         }
         
@@ -2681,15 +2068,12 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 });
             }
             
-            // Update total reports
             document.getElementById('totalReports').textContent = filteredReports.length;
             
             if (filteredReports.length > 0) {
-                // Average score
                 const avgScore = filteredReports.reduce((sum, r) => sum + parseInt(r.score || 0), 0) / filteredReports.length;
                 document.getElementById('avgScore').textContent = avgScore.toFixed(1);
                 
-                // Store statistics
                 const storeScores = {};
                 filteredReports.forEach(r => {
                     if (!storeScores[r.store]) {
@@ -2718,46 +2102,11 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 
                 document.getElementById('bestStore').textContent = bestStore || '-';
                 document.getElementById('worstStore').textContent = worstStore || '-';
-                
-                // Show monthly summary if month is selected
-                if (selectedMonth !== 'all') {
-                    showMonthlySummary(filteredReports, storeScores);
-                } else {
-                    document.getElementById('monthlySummary').style.display = 'none';
-                }
             } else {
                 document.getElementById('avgScore').textContent = '0.0';
                 document.getElementById('bestStore').textContent = '-';
                 document.getElementById('worstStore').textContent = '-';
-                document.getElementById('monthlySummary').style.display = 'none';
             }
-        }
-        
-        function showMonthlySummary(monthReports, storeScores) {
-            const summaryDiv = document.getElementById('monthlySummary');
-            const contentDiv = document.getElementById('monthlySummaryContent');
-            
-            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">';
-            
-            Object.keys(storeScores).forEach(store => {
-                const avg = (storeScores[store].total / storeScores[store].count).toFixed(1);
-                const count = storeScores[store].count;
-                const color = avg >= 8 ? 'var(--success)' : avg >= 6 ? 'var(--warning)' : 'var(--danger)';
-                
-                html += `
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; border-left: 4px solid ${color};">
-                        <h5 style="margin: 0 0 10px 0; color: var(--dark);">${store}</h5>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 2em; font-weight: bold; color: ${color};">${avg}</span>
-                            <span style="color: #666;">${count} report${count > 1 ? 's' : ''}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-            contentDiv.innerHTML = html;
-            summaryDiv.style.display = 'block';
         }
         
         function updateRecentReports(selectedMonth = 'all') {
@@ -2777,7 +2126,6 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 return;
             }
             
-            // Sort by date and show all reports for the selected period
             const sortedReports = filteredReports.sort((a, b) => 
                 new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time)
             );
@@ -2785,13 +2133,15 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             container.innerHTML = sortedReports.map(report => {
                 const score = parseInt(report.score || 0);
                 const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
-                // Only Manolo can delete reports
                 const canDelete = currentUser && currentUser.username === 'manolo';
+                const hasPhotos = report.photos && report.photos.length > 0;
                 
                 return `
                     <div class="report-card ${scoreClass}" data-report-id="${report.id}">
                         <div class="report-info">
-                            <h4>${report.store}</h4>
+                            <h4>${report.store}
+                                ${hasPhotos ? `<span class="has-photos-indicator">📸 ${report.photos.length} foto</span>` : ''}
+                            </h4>
                             <div class="report-meta">
                                 ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time} - ${report.inspector}
                             </div>
@@ -2828,70 +2178,61 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2>📋 Dettagli Report - ${report.store}</h2>
-                        <button onclick="closeReportModal()" class="close-modal-btn">✕</button>
+                        <button onclick="closeReportModal()" class="lightbox-close" style="background: none; border: none; color: white; font-size: 2em; cursor: pointer;">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="report-detail-section">
+                        <div class="form-section">
                             <h3>📍 Informazioni Generali</h3>
-                            <div class="detail-grid">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                                 <div><strong>Store:</strong> ${report.store}</div>
                                 <div><strong>Data:</strong> ${new Date(report.date).toLocaleDateString('it-IT')}</div>
                                 <div><strong>Ora:</strong> ${report.time}</div>
                                 <div><strong>Ispettore:</strong> ${report.inspector}</div>
                                 <div><strong>Personale:</strong> ${report.personale || 'Non specificato'}</div>
-                                <div><strong>Voto Finale:</strong> <span class="score-badge">${report.score}/10</span></div>
+                                <div><strong>Voto Finale:</strong> <span style="font-weight: bold; color: ${report.score >= 8 ? 'var(--success)' : report.score >= 6 ? 'var(--warning)' : 'var(--danger)'}">${report.score}/10</span></div>
                             </div>
                         </div>
                         
-                        ${generateRatingSection('🧹 Pulizia', {
-                            'Generale': report.ratings.pulizia_generale,
-                            'Bancone': report.ratings.pulizia_bancone,
-                            'Pavimenti': report.ratings.pulizia_pavimenti,
-                            'Bagni': report.ratings.pulizia_bagni
-                        }, report.notes?.pulizia)}
-                        
-                        ${generateRatingSection('👥 Staff', {
-                            'Cortesia': report.ratings.staff_cortesia,
-                            'Professionalità': report.ratings.staff_professionalita,
-                            'Velocità': report.ratings.staff_velocita,
-                            'Conoscenza': report.ratings.staff_conoscenza
-                        }, report.notes?.staff)}
-                        
-                        ${generateRatingSection('🥗 Freschezza', {
-                            'Pesce': report.ratings.fresh_pesce,
-                            'Verdure': report.ratings.fresh_verdure,
-                            'Riso': report.ratings.fresh_riso,
-                            'Salse': report.ratings.fresh_salse
-                        }, report.notes?.fresh)}
-                        
-                        ${report.notes?.final ? `
-                            <div class="report-detail-section">
-                                <h3>📝 Note Finali</h3>
-                                <div class="notes-box">${report.notes.final}</div>
-                            </div>
-                        ` : ''}
-                        
-                        ${identifyProblems(report).length > 0 ? `
-                            <div class="report-detail-section problems-section">
-                                <h3>⚠️ Aree Critiche da Migliorare</h3>
-                                <div class="problems-list">
-                                    ${identifyProblems(report).map(problem => `
-                                        <div class="problem-item">
-                                            <span class="problem-icon">❗</span>
-                                            <div>
-                                                <strong>${problem.area}:</strong> ${problem.item} - Voto ${problem.score}/5
-                                                ${problem.note ? `<br><small>📝 ${problem.note}</small>` : ''}
-                                            </div>
+                        ${report.photos && report.photos.length > 0 ? `
+                            <div class="form-section">
+                                <h3>📸 Documentazione Fotografica</h3>
+                                <div class="photos-gallery">
+                                    ${report.photos.map(photo => `
+                                        <div class="gallery-photo">
+                                            <img src="${photo.data}" alt="${photo.name}" onclick="openLightbox('${photo.data}')">
                                         </div>
                                     `).join('')}
                                 </div>
                             </div>
                         ` : ''}
-                    </div>
-                    <div class="modal-footer">
-                        <button onclick="printReport(${reportId})" class="print-btn">🖨️ Stampa</button>
-                        <button onclick="downloadReport(${reportId})" class="download-btn">💾 Scarica</button>
-                        <button onclick="closeReportModal()" class="close-btn">Chiudi</button>
+                        
+                        ${generateRatingSection('🧹 Pulizia', {
+                            'Generale': report.ratings?.pulizia_generale,
+                            'Bancone': report.ratings?.pulizia_bancone,
+                            'Pavimenti': report.ratings?.pulizia_pavimenti,
+                            'Bagni': report.ratings?.pulizia_bagni
+                        }, report.notes?.pulizia)}
+                        
+                        ${generateRatingSection('👥 Staff', {
+                            'Cortesia': report.ratings?.staff_cortesia,
+                            'Professionalità': report.ratings?.staff_professionalita,
+                            'Velocità': report.ratings?.staff_velocita,
+                            'Conoscenza': report.ratings?.staff_conoscenza
+                        }, report.notes?.staff)}
+                        
+                        ${generateRatingSection('🥗 Freschezza', {
+                            'Pesce': report.ratings?.fresh_pesce,
+                            'Verdure': report.ratings?.fresh_verdure,
+                            'Riso': report.ratings?.fresh_riso,
+                            'Salse': report.ratings?.fresh_salse
+                        }, report.notes?.fresh)}
+                        
+                        ${report.notes?.final ? `
+                            <div class="form-section">
+                                <h3>📝 Note Finali</h3>
+                                <p>${report.notes.final}</p>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -2902,27 +2243,27 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
         
         function generateRatingSection(title, ratings, notes) {
             return `
-                <div class="report-detail-section">
+                <div class="form-section">
                     <h3>${title}</h3>
-                    <div class="rating-details">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
                         ${Object.entries(ratings).map(([key, value]) => `
-                            <div class="rating-row">
+                            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 8px;">
                                 <span>${key}:</span>
-                                <span class="rating-value ${getRatingClass(value)}">${getRatingText(value)}</span>
+                                <span style="font-weight: bold; color: ${getRatingColor(value)}">${getRatingText(value)}</span>
                             </div>
                         `).join('')}
                     </div>
-                    ${notes ? `<div class="section-notes">📝 Note: ${notes}</div>` : ''}
+                    ${notes ? `<div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">📝 Note: ${notes}</div>` : ''}
                 </div>
             `;
         }
         
-        function getRatingClass(value) {
-            if (value >= 5) return 'excellent';
-            if (value >= 4) return 'good';
-            if (value >= 3) return 'average';
-            if (value >= 2) return 'poor';
-            return 'critical';
+        function getRatingColor(value) {
+            if (value >= 5) return 'var(--success)';
+            if (value >= 4) return '#4CAF50';
+            if (value >= 3) return 'var(--warning)';
+            if (value >= 2) return '#FF9800';
+            return 'var(--danger)';
         }
         
         function getRatingText(value) {
@@ -2936,46 +2277,6 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             return ratings[value] || 'Non valutato';
         }
         
-        function identifyProblems(report) {
-            const problems = [];
-            const categories = [
-                { prefix: 'pulizia', area: 'Pulizia', items: {
-                    'pulizia_generale': 'Generale',
-                    'pulizia_bancone': 'Bancone',
-                    'pulizia_pavimenti': 'Pavimenti',
-                    'pulizia_bagni': 'Bagni'
-                }},
-                { prefix: 'staff', area: 'Staff', items: {
-                    'staff_cortesia': 'Cortesia',
-                    'staff_professionalita': 'Professionalità',
-                    'staff_velocita': 'Velocità',
-                    'staff_conoscenza': 'Conoscenza'
-                }},
-                { prefix: 'fresh', area: 'Freschezza', items: {
-                    'fresh_pesce': 'Pesce',
-                    'fresh_verdure': 'Verdure',
-                    'fresh_riso': 'Riso',
-                    'fresh_salse': 'Salse'
-                }}
-            ];
-            
-            categories.forEach(category => {
-                Object.entries(category.items).forEach(([field, name]) => {
-                    const score = report.ratings[field];
-                    if (score && score <= 2) {
-                        problems.push({
-                            area: category.area,
-                            item: name,
-                            score: score,
-                            note: report.notes?.[category.prefix.split('_')[0]]
-                        });
-                    }
-                });
-            });
-            
-            return problems.sort((a, b) => a.score - b.score);
-        }
-        
         function closeReportModal() {
             const modal = document.querySelector('.report-modal');
             if (modal) {
@@ -2984,717 +2285,34 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             }
         }
         
-        function printReport(reportId) {
-            const report = reports.find(r => r.id === reportId);
-            if (!report) return;
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Report ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { color: #005AA7; }
-                        .section { margin: 20px 0; }
-                        .rating { margin: 5px 0; }
-                        .critical { color: red; font-weight: bold; }
-                    </style>
-                </head>
-                <body>
-                    <h1>MAUI POKE - Report Qualità</h1>
-                    <h2>${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}</h2>
-                    ${document.querySelector('.modal-body').innerHTML}
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-        }
-        
-        function downloadReport(reportId) {
-            const report = reports.find(r => r.id === reportId);
-            if (!report) return;
-            
-            const content = formatEmailBody(report);
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `report_${report.store}_${report.date}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-        
-        // Resend Email Function
         function resendReportEmail(reportId) {
             const report = reports.find(r => r.id === reportId);
             if (!report) return;
             
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = '⏳';
-            
-            // Resend email
             sendEmail(report);
-            
-            // Show success message
-            setTimeout(() => {
-                btn.textContent = '✅';
-                setTimeout(() => {
-                    btn.textContent = '📧';
-                    btn.disabled = false;
-                }, 2000);
-                
-                // Show notification
-                const notification = document.createElement('div');
-                notification.className = 'email-notification';
-                notification.innerHTML = '✅ Email reinviata con successo!';
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                    color: white;
-                    padding: 15px 25px;
-                    border-radius: 10px;
-                    box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                    z-index: 3000;
-                    animation: slideInRight 0.5s ease;
-                `;
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.style.animation = 'slideOutRight 0.5s ease';
-                    setTimeout(() => notification.remove(), 500);
-                }, 3000);
-            }, 1500);
+            alert('Email reinviata con successo!');
         }
         
-        // Delete Report Function
         function deleteReport(reportId) {
-            const report = reports.find(r => r.id === reportId);
-            if (!report) return;
-            
-            // Check permissions - Only Manolo can delete
             if (!currentUser || currentUser.username !== 'manolo') {
                 alert('Solo Manolo Schiano ha i permessi per eliminare i report');
                 return;
             }
             
-            // Create custom confirmation modal
-            const confirmModal = document.createElement('div');
-            confirmModal.className = 'delete-confirm-modal';
-            confirmModal.innerHTML = `
-                <div class="delete-confirm-content">
-                    <div class="delete-confirm-header">
-                        <div class="warning-icon">⚠️</div>
-                        <h2>Conferma Eliminazione Report</h2>
-                    </div>
-                    <div class="delete-confirm-body">
-                        <p><strong>Stai per eliminare definitivamente questo report:</strong></p>
-                        <div class="report-summary">
-                            <div><strong>📍 Store:</strong> ${report.store}</div>
-                            <div><strong>📅 Data:</strong> ${new Date(report.date).toLocaleDateString('it-IT')}</div>
-                            <div><strong>⏰ Ora:</strong> ${report.time}</div>
-                            <div><strong>👤 Ispettore:</strong> ${report.inspector}</div>
-                            <div><strong>⭐ Voto:</strong> <span class="score-highlight">${report.score}/10</span></div>
-                        </div>
-                        <div class="warning-message">
-                            <p>⚠️ <strong>ATTENZIONE:</strong></p>
-                            <ul>
-                                <li>Questa azione è <strong>IRREVERSIBILE</strong></li>
-                                <li>Il report sarà eliminato <strong>PERMANENTEMENTE</strong></li>
-                                <li>Non sarà possibile recuperare i dati</li>
-                            </ul>
-                        </div>
-                        <div class="confirm-question">
-                            <p><strong>Sei assolutamente sicuro di voler procedere?</strong></p>
-                        </div>
-                    </div>
-                    <div class="delete-confirm-footer">
-                        <button onclick="cancelDelete()" class="cancel-delete-btn">❌ Annulla</button>
-                        <button onclick="confirmDelete(${reportId})" class="confirm-delete-btn">🗑️ Sì, Elimina Definitivamente</button>
-                    </div>
-                </div>
-            `;
-            
-            // Add styles for the modal
-            const modalStyles = `
-                <style>
-                .delete-confirm-modal {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.8);
-                    backdrop-filter: blur(5px);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 5000;
-                    animation: fadeIn 0.3s ease;
+            if (confirm('Sei sicuro di voler eliminare definitivamente questo report?')) {
+                const index = reports.findIndex(r => r.id === reportId);
+                if (index > -1) {
+                    reports.splice(index, 1);
+                    localStorage.setItem('mauiReports', JSON.stringify(reports));
+                    updateDashboard();
+                    alert('Report eliminato con successo');
                 }
-                
-                .delete-confirm-content {
-                    background: white;
-                    border-radius: 20px;
-                    max-width: 500px;
-                    width: 90%;
-                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-                    overflow: hidden;
-                    animation: slideUp 0.3s ease;
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                
-                @keyframes slideUp {
-                    from { 
-                        transform: translateY(50px);
-                        opacity: 0;
-                    }
-                    to { 
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-                
-                .delete-confirm-header {
-                    background: linear-gradient(135deg, #FF3B3B 0%, #FF6B6B 100%);
-                    color: white;
-                    padding: 25px;
-                    text-align: center;
-                }
-                
-                .warning-icon {
-                    font-size: 3em;
-                    animation: pulse 1.5s infinite;
-                }
-                
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.1); }
-                }
-                
-                .delete-confirm-header h2 {
-                    margin: 10px 0 0 0;
-                    font-size: 1.5em;
-                }
-                
-                .delete-confirm-body {
-                    padding: 30px;
-                }
-                
-                .report-summary {
-                    background: #f8f9fa;
-                    padding: 20px;
-                    border-radius: 10px;
-                    margin: 20px 0;
-                    border-left: 4px solid var(--primary);
-                }
-                
-                .report-summary div {
-                    margin: 8px 0;
-                }
-                
-                .score-highlight {
-                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-                    color: white;
-                    padding: 3px 10px;
-                    border-radius: 15px;
-                    font-weight: bold;
-                }
-                
-                .warning-message {
-                    background: #fff3cd;
-                    border: 2px solid #ffc107;
-                    border-radius: 10px;
-                    padding: 20px;
-                    margin: 20px 0;
-                }
-                
-                .warning-message p {
-                    margin: 0 0 10px 0;
-                    color: #856404;
-                    font-weight: bold;
-                }
-                
-                .warning-message ul {
-                    margin: 0;
-                    padding-left: 20px;
-                    color: #856404;
-                }
-                
-                .warning-message li {
-                    margin: 5px 0;
-                }
-                
-                .confirm-question {
-                    text-align: center;
-                    margin: 20px 0;
-                }
-                
-                .confirm-question p {
-                    font-size: 1.1em;
-                    color: var(--danger);
-                }
-                
-                .delete-confirm-footer {
-                    display: flex;
-                    gap: 15px;
-                    padding: 20px 30px;
-                    background: #f8f9fa;
-                    justify-content: center;
-                }
-                
-                .delete-confirm-footer button {
-                    padding: 15px 30px;
-                    border-radius: 10px;
-                    border: none;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 1em;
-                }
-                
-                .cancel-delete-btn {
-                    background: #28a745;
-                    color: white;
-                    flex: 1;
-                }
-                
-                .cancel-delete-btn:hover {
-                    background: #218838;
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-                }
-                
-                .confirm-delete-btn {
-                    background: var(--danger);
-                    color: white;
-                    flex: 1;
-                }
-                
-                .confirm-delete-btn:hover {
-                    background: #dc3545;
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
-                }
-                </style>
-            `;
-            
-            // Add styles if not already present
-            if (!document.querySelector('#deleteModalStyles')) {
-                const styleElement = document.createElement('div');
-                styleElement.id = 'deleteModalStyles';
-                styleElement.innerHTML = modalStyles;
-                document.head.appendChild(styleElement);
             }
-            
-            document.body.appendChild(confirmModal);
-        }
-        
-        // Cancel Delete Function
-        function cancelDelete() {
-            const modal = document.querySelector('.delete-confirm-modal');
-            if (modal) {
-                modal.style.animation = 'fadeOut 0.3s ease';
-                setTimeout(() => {
-                    modal.remove();
-                }, 300);
-            }
-        }
-        
-        // Confirm Delete Function
-        function confirmDelete(reportId) {
-            const report = reports.find(r => r.id === reportId);
-            if (!report) return;
-            
-            // Remove report from array
-            const index = reports.findIndex(r => r.id === reportId);
-            if (index > -1) {
-                reports.splice(index, 1);
-                
-                // Save to localStorage
-                localStorage.setItem('mauiReports', JSON.stringify(reports));
-                
-                // Close modal
-                cancelDelete();
-                
-                // Show success message
-                showDeleteSuccess();
-                
-                // Update dashboard
-                updateDashboard();
-            }
-        }
-        
-        // Show delete success message
-        function showDeleteSuccess() {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'delete-success';
-            messageDiv.innerHTML = '✅ Report eliminato con successo';
-            messageDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, var(--success) 0%, #00a878 100%);
-                color: white;
-                padding: 20px 30px;
-                border-radius: 15px;
-                box-shadow: 0 10px 30px rgba(0, 200, 150, 0.3);
-                z-index: 3000;
-                animation: slideInRight 0.5s ease;
-                font-weight: 600;
-            `;
-            
-            document.body.appendChild(messageDiv);
-            
-            setTimeout(() => {
-                messageDiv.style.animation = 'slideOutRight 0.5s ease';
-                setTimeout(() => {
-                    document.body.removeChild(messageDiv);
-                }, 500);
-            }, 3000);
-        }
-        
-        // Add animation keyframes
-        if (!document.querySelector('#deleteAnimations')) {
-            const style = document.createElement('style');
-            style.id = 'deleteAnimations';
-            style.innerHTML = `
-                @keyframes slideInRight {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-                
-                @keyframes slideOutRight {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                }
-                
-                .delete-report-btn {
-                    background: rgba(255, 59, 59, 0.1);
-                    border: 2px solid var(--danger);
-                    color: var(--danger);
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 1.2em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                
-                .delete-report-btn:hover {
-                    background: var(--danger);
-                    color: white;
-                    transform: scale(1.1);
-                    box-shadow: 0 5px 15px rgba(255, 59, 59, 0.3);
-                }
-                
-                .delete-report-btn:active {
-                    transform: scale(0.95);
-                }
-                
-                .view-report-btn, .resend-email-btn {
-                    background: rgba(0, 90, 167, 0.1);
-                    border: 2px solid var(--primary);
-                    color: var(--primary);
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                    font-size: 1.2em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                
-                .view-report-btn:hover {
-                    background: var(--primary);
-                    color: white;
-                    transform: scale(1.1);
-                    box-shadow: 0 5px 15px rgba(0, 90, 167, 0.3);
-                }
-                
-                .resend-email-btn {
-                    background: rgba(0, 200, 150, 0.1);
-                    border: 2px solid var(--success);
-                    color: var(--success);
-                }
-                
-                .resend-email-btn:hover {
-                    background: var(--success);
-                    color: white;
-                    transform: scale(1.1);
-                    box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
-                }
-                
-                /* Report Modal Styles */
-                .report-modal {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.7);
-                    backdrop-filter: blur(5px);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 4000;
-                    opacity: 0;
-                    transition: opacity 0.3s;
-                    padding: 20px;
-                }
-                
-                .report-modal.active {
-                    opacity: 1;
-                }
-                
-                .modal-content {
-                    background: white;
-                    border-radius: 25px;
-                    max-width: 900px;
-                    width: 100%;
-                    max-height: 90vh;
-                    overflow: hidden;
-                    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-                    display: flex;
-                    flex-direction: column;
-                    animation: modalSlideUp 0.3s ease;
-                }
-                
-                @keyframes modalSlideUp {
-                    from {
-                        transform: translateY(50px);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-                
-                .modal-header {
-                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-                    color: white;
-                    padding: 25px 30px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-                
-                .modal-header h2 {
-                    margin: 0;
-                    font-size: 1.5em;
-                }
-                
-                .close-modal-btn {
-                    background: rgba(255, 255, 255, 0.2);
-                    border: none;
-                    color: white;
-                    width: 35px;
-                    height: 35px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    font-size: 1.5em;
-                    transition: all 0.3s;
-                }
-                
-                .close-modal-btn:hover {
-                    background: rgba(255, 255, 255, 0.3);
-                    transform: rotate(90deg);
-                }
-                
-                .modal-body {
-                    padding: 30px;
-                    overflow-y: auto;
-                    flex: 1;
-                }
-                
-                .report-detail-section {
-                    margin-bottom: 30px;
-                    padding: 20px;
-                    background: #f8f9fa;
-                    border-radius: 15px;
-                }
-                
-                .report-detail-section h3 {
-                    color: var(--dark);
-                    margin: 0 0 15px 0;
-                    font-size: 1.2em;
-                    border-bottom: 2px solid #e0e0e0;
-                    padding-bottom: 10px;
-                }
-                
-                .detail-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 15px;
-                }
-                
-                .detail-grid div {
-                    padding: 10px;
-                    background: white;
-                    border-radius: 8px;
-                }
-                
-                .score-badge {
-                    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-                    color: white;
-                    padding: 5px 15px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                }
-                
-                .rating-details {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                    gap: 10px;
-                }
-                
-                .rating-row {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 10px;
-                    background: white;
-                    border-radius: 8px;
-                }
-                
-                .rating-value {
-                    font-weight: bold;
-                    padding: 2px 10px;
-                    border-radius: 5px;
-                }
-                
-                .rating-value.excellent {
-                    background: rgba(0, 200, 150, 0.2);
-                    color: var(--success);
-                }
-                
-                .rating-value.good {
-                    background: rgba(76, 175, 80, 0.2);
-                    color: #4CAF50;
-                }
-                
-                .rating-value.average {
-                    background: rgba(255, 184, 0, 0.2);
-                    color: var(--warning);
-                }
-                
-                .rating-value.poor {
-                    background: rgba(255, 152, 0, 0.2);
-                    color: #FF9800;
-                }
-                
-                .rating-value.critical {
-                    background: rgba(255, 59, 59, 0.2);
-                    color: var(--danger);
-                }
-                
-                .section-notes {
-                    margin-top: 15px;
-                    padding: 15px;
-                    background: white;
-                    border-radius: 8px;
-                    border-left: 3px solid var(--primary);
-                }
-                
-                .problems-section {
-                    background: #fff3cd;
-                    border: 1px solid #ffeeba;
-                }
-                
-                .problems-list {
-                    display: grid;
-                    gap: 15px;
-                }
-                
-                .problem-item {
-                    display: flex;
-                    gap: 15px;
-                    padding: 15px;
-                    background: white;
-                    border-radius: 8px;
-                    border-left: 4px solid var(--danger);
-                }
-                
-                .problem-icon {
-                    font-size: 1.5em;
-                }
-                
-                .notes-box {
-                    padding: 15px;
-                    background: white;
-                    border-radius: 8px;
-                    border: 1px solid #e0e0e0;
-                }
-                
-                .modal-footer {
-                    padding: 20px 30px;
-                    background: #f8f9fa;
-                    display: flex;
-                    justify-content: flex-end;
-                    gap: 10px;
-                    border-top: 1px solid #e0e0e0;
-                }
-                
-                .modal-footer button {
-                    padding: 12px 25px;
-                    border-radius: 10px;
-                    border: none;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                }
-                
-                .print-btn, .download-btn {
-                    background: var(--primary);
-                    color: white;
-                }
-                
-                .print-btn:hover, .download-btn:hover {
-                    background: var(--secondary);
-                    transform: translateY(-2px);
-                }
-                
-                .close-btn {
-                    background: #e0e0e0;
-                    color: var(--dark);
-                }
-                
-                .close-btn:hover {
-                    background: #d0d0d0;
-                }
-            `;
-            document.head.appendChild(style);
         }
         
         function updateChart(selectedMonth = 'all') {
             const ctx = document.getElementById('performanceChart');
             
-            // Clear existing chart if it exists
             if (window.performanceChart && typeof window.performanceChart.destroy === 'function') {
                 window.performanceChart.destroy();
             }
@@ -3709,12 +2327,10 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
             }
             
             if (filteredReports.length === 0) {
-                // Clear the canvas if no data
                 ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
                 return;
             }
             
-            // Prepare data
             const stores = [...new Set(filteredReports.map(r => r.store))];
             const storeData = stores.map(store => {
                 const storeReports = filteredReports.filter(r => r.store === store);
@@ -3774,6 +2390,35 @@ ${report.notes.final ? `📋 NOTE FINALI\n────────────�
                 }
             });
         }
+        
+        // Enter key support for login
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            const usernameField = document.getElementById('username');
+            
+            if (passwordField) {
+                passwordField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            }
+            
+            if (usernameField) {
+                usernameField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('password').focus();
+                    }
+                });
+            }
+            
+            checkAuth();
+        });
+        
+        // Initialize particles on load
+        window.addEventListener('load', function() {
+            initializeParticles();
+        });
     </script>
 </body>
 </html>
