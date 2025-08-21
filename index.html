@@ -1708,6 +1708,9 @@
         
         // Initialize App
         function initializeApp() {
+            // IMPORTANTE: Ricarica sempre i report dal localStorage all'avvio
+            reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            
             initializeParticles();
             initializeDateTime();
             initializeStoreSelector();
@@ -2021,6 +2024,9 @@
         
         // Dashboard
         function updateDashboard() {
+            // IMPORTANTE: Ricarica sempre i report dal localStorage
+            reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            
             updateMonthFilter();
             const selectedMonth = document.getElementById('monthSelect').value;
             updateDashboardStats(selectedMonth);
@@ -2032,7 +2038,10 @@
             const monthSelect = document.getElementById('monthSelect');
             const existingValue = monthSelect.value;
             
-            const months = [...new Set(reports.map(r => {
+            // IMPORTANTE: Usa sempre TUTTI i report dal localStorage
+            let allReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            
+            const months = [...new Set(allReports.map(r => {
                 const date = new Date(r.date);
                 return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
             }))].sort().reverse();
@@ -2058,10 +2067,12 @@
         }
         
         function updateDashboardStats(selectedMonth = 'all') {
-            let filteredReports = reports;
+            // IMPORTANTE: Usa sempre TUTTI i report dal localStorage
+            let allReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            let filteredReports = allReports;
             
             if (selectedMonth !== 'all') {
-                filteredReports = reports.filter(r => {
+                filteredReports = allReports.filter(r => {
                     const date = new Date(r.date);
                     const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                     return reportMonth === selectedMonth;
@@ -2172,7 +2183,9 @@
         
         // View Report Details
         function viewReportDetails(reportId) {
-            const report = reports.find(r => r.id === reportId);
+            // IMPORTANTE: Cerca il report in TUTTI i report salvati
+            const allReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            const report = allReports.find(r => r.id === reportId);
             if (!report) return;
             
             const modal = document.createElement('div');
@@ -2289,6 +2302,8 @@
         }
         
         function resendReportEmail(reportId) {
+            // Ricarica i report dal localStorage
+            reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
             const report = reports.find(r => r.id === reportId);
             if (!report) return;
             
@@ -2303,6 +2318,8 @@
             }
             
             if (confirm('Sei sicuro di voler eliminare definitivamente questo report?')) {
+                // Ricarica i report dal localStorage
+                reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
                 const index = reports.findIndex(r => r.id === reportId);
                 if (index > -1) {
                     reports.splice(index, 1);
@@ -2320,9 +2337,12 @@
                 window.performanceChart.destroy();
             }
             
-            let filteredReports = reports;
+            // IMPORTANTE: Usa sempre TUTTI i report dal localStorage
+            let allReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            let filteredReports = allReports;
+            
             if (selectedMonth !== 'all') {
-                filteredReports = reports.filter(r => {
+                filteredReports = allReports.filter(r => {
                     const date = new Date(r.date);
                     const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                     return reportMonth === selectedMonth;
