@@ -1683,6 +1683,9 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('currentUser').textContent = `👤 ${currentUser.name}`;
             
+            // IMPORTANTE: Ricarica sempre i report all'accesso
+            reports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            
             initializeApp();
             
             setTimeout(() => {
@@ -1909,87 +1912,112 @@
             btnText.textContent = 'INVIO IN CORSO...';
             btn.disabled = true;
             
-            const now = new Date();
-            document.getElementById('date').valueAsDate = now;
-            document.getElementById('time').value = now.toTimeString().slice(0, 5);
-            
-            const formData = new FormData(e.target);
-            const report = {
-                id: Date.now(),
-                store: selectedStore,
-                date: formData.get('date'),
-                time: formData.get('time'),
-                inspector: currentUser.name,
-                personale: formData.get('personale'),
-                ratings: {...ratings},
-                score: formData.get('valutazione_finale'),
-                notes: {
-                    pulizia: formData.get('pulizia_note'),
-                    staff: formData.get('staff_note'),
-                    fresh: formData.get('fresh_note'),
-                    final: formData.get('note_finali')
-                },
-                photos: [...uploadedPhotos],
-                submittedBy: currentUser.username
-            };
-            
-            reports.push(report);
-            localStorage.setItem('mauiReports', JSON.stringify(reports));
-            
-            sendEmail(report);
-            
-            setTimeout(() => {
-                showSuccess();
-                resetForm();
-                updateDashboard();
+            try {
+                const now = new Date();
+                document.getElementById('date').valueAsDate = now;
+                document.getElementById('time').value = now.toTimeString().slice(0, 5);
+                
+                const formData = new FormData(e.target);
+                const report = {
+                    id: Date.now(),
+                    store: selectedStore,
+                    date: formData.get('date'),
+                    time: formData.get('time'),
+                    inspector: currentUser.name,
+                    personale: formData.get('personale'),
+                    ratings: {...ratings},
+                    score: formData.get('valutazione_finale'),
+                    notes: {
+                        pulizia: formData.get('pulizia_note'),
+                        staff: formData.get('staff_note'),
+                        fresh: formData.get('fresh_note'),
+                        final: formData.get('note_finali')
+                    },
+                    photos: [...uploadedPhotos],
+                    submittedBy: currentUser.username
+                };
+                
+                // Salva il report nel localStorage
+                reports.push(report);
+                localStorage.setItem('mauiReports', JSON.stringify(reports));
+                
+                // Invia email (non bloccare se fallisce)
+                sendEmail(report);
+                
+                // Mostra successo dopo un breve delay
+                setTimeout(() => {
+                    showSuccess();
+                    resetForm();
+                    updateDashboard();
+                    btn.classList.remove('loading');
+                    btnText.textContent = 'INVIA REPORT';
+                    btn.disabled = false;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Errore durante il salvataggio del report:', error);
+                alert('Si è verificato un errore durante il salvataggio del report. Il report è stato comunque salvato localmente.');
+                
+                // Reset button anche in caso di errore
                 btn.classList.remove('loading');
                 btnText.textContent = 'INVIA REPORT';
                 btn.disabled = false;
-            }, 1500);
+                
+                // Aggiorna comunque la dashboard
+                updateDashboard();
+            }
         }
         
         function sendEmail(report) {
-            const ratingToText = (value) => {
-                const grades = { 5: '5 - Eccellente', 4: '4 - Buono', 3: '3 - Sufficiente', 2: '2 - Scarso', 1: '1 - Inaccettabile' };
-                return grades[value] || 'Non valutato';
-            };
-            
-            const templateParams = {
-                to_email: 'manolo.schiano@mauipoke.ch',
-                cc_email: 'antonello.romeo@mauipoke.ch',
-                subject: `Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
-                store_name: report.store,
-                inspector_name: report.inspector,
-                report_date: new Date(report.date).toLocaleDateString('it-IT'),
-                report_time: report.time,
-                overall_score: report.score,
-                personale: report.personale || 'Non specificato',
-                pulizia_generale: ratingToText(report.ratings?.pulizia_generale),
-                pulizia_bancone: ratingToText(report.ratings?.pulizia_bancone),
-                pulizia_pavimenti: ratingToText(report.ratings?.pulizia_pavimenti),
-                pulizia_bagni: ratingToText(report.ratings?.pulizia_bagni),
-                pulizia_note: report.notes?.pulizia || 'Nessuna nota',
-                staff_cortesia: ratingToText(report.ratings?.staff_cortesia),
-                staff_professionalita: ratingToText(report.ratings?.staff_professionalita),
-                staff_velocita: ratingToText(report.ratings?.staff_velocita),
-                staff_conoscenza: ratingToText(report.ratings?.staff_conoscenza),
-                staff_note: report.notes?.staff || 'Nessuna nota',
-                fresh_pesce: ratingToText(report.ratings?.fresh_pesce),
-                fresh_verdure: ratingToText(report.ratings?.fresh_verdure),
-                fresh_riso: ratingToText(report.ratings?.fresh_riso),
-                fresh_salse: ratingToText(report.ratings?.fresh_salse),
-                fresh_note: report.notes?.fresh || 'Nessuna nota',
-                note_finali: report.notes?.final || 'Nessuna nota generale',
-                photo_count: report.photos?.length || 0
-            };
-            
-            emailjs.send('service_cysrzkx', 'template_j203617', templateParams)
-                .then((response) => {
-                    console.log('Email sent successfully!', response);
-                })
-                .catch(error => {
-                    console.error('EmailJS error:', error);
-                });
+            try {
+                const ratingToText = (value) => {
+                    const grades = { 5: '5 - Eccellente', 4: '4 - Buono', 3: '3 - Sufficiente', 2: '2 - Scarso', 1: '1 - Inaccettabile' };
+                    return grades[value] || 'Non valutato';
+                };
+                
+                const templateParams = {
+                    to_email: 'manolo.schiano@mauipoke.ch',
+                    cc_email: 'antonello.romeo@mauipoke.ch',
+                    subject: `Quality Report - ${report.store} - ${new Date(report.date).toLocaleDateString('it-IT')}`,
+                    store_name: report.store || 'Non specificato',
+                    inspector_name: report.inspector || 'Non specificato',
+                    report_date: report.date ? new Date(report.date).toLocaleDateString('it-IT') : 'Non specificata',
+                    report_time: report.time || 'Non specificata',
+                    overall_score: report.score || '0',
+                    personale: report.personale || 'Non specificato',
+                    pulizia_generale: ratingToText(report.ratings?.pulizia_generale),
+                    pulizia_bancone: ratingToText(report.ratings?.pulizia_bancone),
+                    pulizia_pavimenti: ratingToText(report.ratings?.pulizia_pavimenti),
+                    pulizia_bagni: ratingToText(report.ratings?.pulizia_bagni),
+                    pulizia_note: report.notes?.pulizia || 'Nessuna nota',
+                    staff_cortesia: ratingToText(report.ratings?.staff_cortesia),
+                    staff_professionalita: ratingToText(report.ratings?.staff_professionalita),
+                    staff_velocita: ratingToText(report.ratings?.staff_velocita),
+                    staff_conoscenza: ratingToText(report.ratings?.staff_conoscenza),
+                    staff_note: report.notes?.staff || 'Nessuna nota',
+                    fresh_pesce: ratingToText(report.ratings?.fresh_pesce),
+                    fresh_verdure: ratingToText(report.ratings?.fresh_verdure),
+                    fresh_riso: ratingToText(report.ratings?.fresh_riso),
+                    fresh_salse: ratingToText(report.ratings?.fresh_salse),
+                    fresh_note: report.notes?.fresh || 'Nessuna nota',
+                    note_finali: report.notes?.final || 'Nessuna nota generale',
+                    photo_count: report.photos?.length || 0
+                };
+                
+                console.log('Invio email con parametri:', templateParams);
+                
+                emailjs.send('service_cysrzkx', 'template_j203617', templateParams)
+                    .then((response) => {
+                        console.log('Email inviata con successo!', response);
+                    })
+                    .catch(error => {
+                        console.error('Errore EmailJS:', error);
+                        // Non bloccare il processo se l'email fallisce
+                    });
+            } catch (error) {
+                console.error('Errore nella preparazione email:', error);
+                // Non bloccare il processo se l'email fallisce
+            }
         }
         
         function showSuccess() {
@@ -2006,19 +2034,24 @@
         }
         
         function resetForm() {
-            document.getElementById('qualityForm').reset();
-            document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
-            selectedStore = '';
-            ratings = {};
-            uploadedPhotos = [];
-            document.getElementById('photoPreviewContainer').innerHTML = '';
-            initializeDateTime();
-            updateProgressBar();
-            
-            const inspectorField = document.getElementById('inspector');
-            if (inspectorField && currentUser) {
-                inspectorField.value = currentUser.name;
+            try {
+                document.getElementById('qualityForm').reset();
+                document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
+                document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+                selectedStore = '';
+                ratings = {};
+                uploadedPhotos = [];
+                document.getElementById('photoPreviewContainer').innerHTML = '';
+                initializeDateTime();
+                updateProgressBar();
+                
+                const inspectorField = document.getElementById('inspector');
+                if (inspectorField && currentUser) {
+                    inspectorField.value = currentUser.name;
+                    inspectorField.readOnly = true;
+                }
+            } catch (error) {
+                console.error('Errore durante il reset del form:', error);
             }
         }
         
