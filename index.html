@@ -2112,9 +2112,12 @@
         function updateRecentReports(selectedMonth = 'all') {
             const container = document.getElementById('recentReports');
             
-            let filteredReports = reports;
+            // IMPORTANTE: Mostra TUTTI i report senza filtri per utente
+            let allReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            
+            let filteredReports = allReports;
             if (selectedMonth !== 'all') {
-                filteredReports = reports.filter(r => {
+                filteredReports = allReports.filter(r => {
                     const date = new Date(r.date);
                     const reportMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                     return reportMonth === selectedMonth;
