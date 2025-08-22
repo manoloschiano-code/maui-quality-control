@@ -1781,33 +1781,20 @@
         }
         
         function removeReport(reportId) {
-    // Crea un log dell'eliminazione
-    console.log('🗑️ Eliminazione report:', {
-        id: reportId,
-        eliminatoDa: currentUser?.name,
-        data: new Date().toISOString()
-    });
-    
-    // Elimina da localStorage
-    const localReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
-    const filtered = localReports.filter(r => r.id !== reportId);
-    localStorage.setItem('mauiReports', JSON.stringify(filtered));
-    
-    // Elimina da Firebase (se connesso)
-    if (useFirebase && db) {
-        return db.collection('reports')
-            .doc(reportId.toString())
-            .delete()
-            .then(() => {
-                console.log('✅ Report rimosso da Firebase');
-            })
-            .catch(error => {
-                console.error('❌ Errore Firebase:', error);
-            });
-    }
-    
-    return Promise.resolve();
-}
+            const localReports = JSON.parse(localStorage.getItem('mauiReports') || '[]');
+            const filtered = localReports.filter(r => r.id !== reportId);
+            localStorage.setItem('mauiReports', JSON.stringify(filtered));
+            
+            if (useFirebase && db) {
+                return db.collection('reports')
+                    .doc(reportId.toString())
+                    .delete()
+                    .then(() => console.log('✅ Rimosso da Firebase'))
+                    .catch(error => console.error('Errore Firebase:', error));
+            }
+            
+            return Promise.resolve();
+        }
         
         // ====== INIZIALIZZAZIONE SERVIZI ======
         
@@ -2765,35 +2752,22 @@
         }
         
         async function deleteReport(reportId) {
-    // PASSO 1: Verifica che sia Manolo
-    if (!currentUser || currentUser.username !== 'manolo') {
-        alert('❌ Solo Manolo Schiano può eliminare i report');
-        return;
-    }
-    
-    // PASSO 2: Doppia conferma
-    const firstConfirm = confirm('⚠️ Sei sicuro di voler eliminare questo report?');
-    if (!firstConfirm) return;
-    
-    // PASSO 3: Chiedi una seconda conferma (extra sicurezza)
-    const secondConfirm = confirm('⚠️ ULTIMA CONFERMA: Il report sarà eliminato PERMANENTEMENTE. Procedere?');
-    if (!secondConfirm) return;
-    
-    try {
-        // PASSO 4: Elimina dal database
-        await removeReport(reportId);
-        
-        // PASSO 5: Aggiorna la dashboard
-        updateDashboard();
-        
-        // PASSO 6: Mostra successo
-        alert('✅ Report eliminato con successo');
-        
-    } catch (error) {
-        console.error('Errore durante eliminazione:', error);
-        alert('❌ Errore durante l\'eliminazione del report');
-    }
-}
+            if (!currentUser || currentUser.username !== 'manolo') {
+                alert('Solo Manolo Schiano ha i permessi per eliminare i report');
+                return;
+            }
+            
+            if (confirm('Sei sicuro di voler eliminare definitivamente questo report?')) {
+                try {
+                    await removeReport(reportId);
+                    updateDashboard();
+                    alert('Report eliminato con successo');
+                } catch (error) {
+                    console.error('Errore eliminazione:', error);
+                    alert('Errore durante l\'eliminazione del report');
+                }
+            }
+        }
         
         async function updateChart(selectedMonth = 'all') {
             const ctx = document.getElementById('performanceChart');
