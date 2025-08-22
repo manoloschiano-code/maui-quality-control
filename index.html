@@ -1284,6 +1284,18 @@
                     <div id="loginError" class="error-message" style="display: none;">
                         Username o password non validi
                     </div>
+<button type="button" class="login-btn" onclick="handleLogin()">ACCEDI</button>
+<div id="loginError" class="error-message" style="display: none;">
+    Username o password non validi
+</div>
+
+<!-- AGGIUNGI QUESTO -->
+<div style="text-align: center; margin-top: 15px;">
+    <a href="#" onclick="resetPassword(); return false;" style="color: #00BFFF; text-decoration: none; font-size: 0.9em;">
+        Password dimenticata?
+    </a>
+</div>
+<!-- FINE AGGIUNTA -->
                 </div>
                 <div class="login-footer" style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 0.9em;">
                     <p>© 2024 Maui Poke - Quality Control System</p>
@@ -1683,7 +1695,8 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <script>
         // ====== CONFIGURAZIONE INIZIALE ======
         console.log('🚀 Avvio sistema Maui Poke QC...');
@@ -1706,16 +1719,15 @@
         let ratings = {};
         let uploadedPhotos = [];
         
-        // User database (DEFINITO UNA SOLA VOLTA)
-        const USERS = {
-            'admin': { password: 'MauiPoke2024!', role: 'Administrator', name: 'Amministratore' },
-            'manolo': { password: 'Maui@Quality24', role: 'Manager', name: 'Manolo Schiano' },
-            'antonello': { password: 'Poke@Control24', role: 'Manager', name: 'Antonello Romeo' },
-            'luigi': { password: 'Luigi@Maui24', role: 'Manager', name: 'Luigi' },
-            'rocco': { password: 'Rocco@Poke24', role: 'Inspector', name: 'Rocco' },
-            'inspector1': { password: 'Quality@2024', role: 'Inspector', name: 'Ispettore 1' },
-            'inspector2': { password: 'Control@2024', role: 'Inspector', name: 'Ispettore 2' }
-        };
+       // Mappa utenti (NO PASSWORD!)
+const USER_PROFILES = {
+    'manolo@mauipoke.ch': { role: 'Manager', name: 'Manolo Schiano', canDelete: true },
+    'antonello@mauipoke.ch': { role: 'Manager', name: 'Antonello Romeo', canDelete: false },
+    'luigi@mauipoke.ch': { role: 'Manager', name: 'Luigi', canDelete: false },
+    'rocco@mauipoke.ch': { role: 'Inspector', name: 'Rocco', canDelete: false },
+    'inspector1@mauipoke.ch': { role: 'Inspector', name: 'Ispettore 1', canDelete: false },
+    'inspector2@mauipoke.ch': { role: 'Inspector', name: 'Ispettore 2', canDelete: false }
+};
         
         // ====== FUNZIONI DATABASE (DEVONO ESSERE DEFINITE PRIMA) ======
         function getAllReports() {
@@ -1815,6 +1827,28 @@
         try {
             if (typeof firebase !== 'undefined') {
                 firebase.initializeApp(firebaseConfig);
+               // Verifica stato autenticazione
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // Utente già autenticato
+        const userProfile = USER_PROFILES[user.email];
+        if (userProfile) {
+            currentUser = {
+                uid: user.uid,
+                email: user.email,
+                username: user.email.split('@')[0],
+                name: userProfile.name,
+                role: userProfile.role,
+                canDelete: userProfile.canDelete || false
+            };
+            console.log('🔐 Sessione attiva per:', currentUser.name);
+            showMainApp();
+        }
+    } else {
+        // Non autenticato
+        console.log('🔓 Nessuna sessione attiva');
+    }
+});
                 db = firebase.firestore();
                 useFirebase = true;
                 console.log('✅ Firebase connesso - Database CONDIVISO attivo!');
@@ -1933,17 +1967,77 @@
             }
         }
         
-        // Handle Login
-        function handleLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-            
-            if (!username || !password) {
-                errorDiv.textContent = 'Inserisci username e password';
-                errorDiv.style.display = 'block';
-                return;
-            }
+        async function handleLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('loginError');
+    
+    if (!username || !password) {
+        errorDiv.textContent = 'Inserisci username e password';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // Costruisci email dall'username
+    const email = username.includes('@') ? username : username + '@mauipoke.ch';
+    
+    try {
+        // LOGIN CON FIREBASE AUTH (SICURO!)
+        const auth = firebase.auth();
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        
+        // Ottieni profilo utente
+        const userProfile = USER_PROFILES[userCredential.user.email];
+        
+        if (!userProfile) {
+            throw new Error('Utente non autorizzato');
+        }
+        
+        // Salva sessione
+        currentUser = {
+            uid: userCredential.user.uid,
+            email: userCredential.user.email,
+            username: email.split('@')[0],
+            name: userProfile.name,
+            role: userProfile.role,
+            canDelete: userProfile.canDelete || false
+        };
+        
+        sessionStorage.setItem('mauiUser', JSON.stringify(currentUser));
+        
+        console.log('✅ Login sicuro effettuato:', currentUser.name);
+        
+        // Pulisci form
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        errorDiv.style.display = 'none';
+        
+        showMainApp();
+        
+    } catch (error) {
+        console.error('Errore login:', error);
+        
+        // Messaggi di errore user-friendly
+        if (error.code === 'auth/user-not-found') {
+            errorDiv.textContent = 'Utente non trovato';
+        } else if (error.code === 'auth/wrong-password') {
+            errorDiv.textContent = 'Password non corretta';
+        } else if (error.code === 'auth/invalid-email') {
+            errorDiv.textContent = 'Username non valido';
+        } else {
+            errorDiv.textContent = 'Errore di accesso. Riprova.';
+        }
+        
+        errorDiv.style.display = 'block';
+        
+        // Animazione shake
+        const loginBox = document.querySelector('.login-box');
+        loginBox.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            loginBox.style.animation = '';
+        }, 500);
+    }
+}
             
             if (USERS[username] && USERS[username].password === password) {
                 currentUser = {
@@ -1995,16 +2089,39 @@
             }, 100);
         }
         
-        // Handle Logout
         function handleLogout() {
-            if (confirm('Sei sicuro di voler uscire?')) {
-                currentUser = null;
-                sessionStorage.removeItem('mauiUser');
-                document.getElementById('mainApp').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
-            }
+    if (confirm('Sei sicuro di voler uscire?')) {
+        // Logout da Firebase
+        firebase.auth().signOut().then(() => {
+            currentUser = null;
+            sessionStorage.removeItem('mauiUser');
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            console.log('✅ Logout sicuro completato');
+        }).catch(error => {
+            console.error('Errore logout:', error);
+        });
+    }
+}
+async function resetPassword() {
+    const email = prompt('Inserisci la tua email per il reset password:');
+    if (!email) return;
+    
+    // Se l'utente inserisce solo username, aggiungi @mauipoke.ch
+    const fullEmail = email.includes('@') ? email : email + '@mauipoke.ch';
+    
+    try {
+        await firebase.auth().sendPasswordResetEmail(fullEmail);
+        alert('✅ Email di reset inviata! Controlla la tua casella di posta.');
+    } catch (error) {
+        console.error('Errore reset password:', error);
+        if (error.code === 'auth/user-not-found') {
+            alert('❌ Email non trovata nel sistema');
+        } else {
+            alert('❌ Errore nell\'invio. Riprova più tardi.');
         }
-        
+    }
+}
         // Initialize App
         function initializeApp() {
             console.log('🚀 Inizializzazione app per:', currentUser?.name);
@@ -2766,7 +2883,7 @@
         
         async function deleteReport(reportId) {
            // PASSO 1: Verifica che sia Manolo
-        if (!currentUser || currentUser.username !== 'manolo') {
+        if (!currentUser || !currentUser.canDelete) {
             alert('❌ Solo Manolo Schiano può eliminare i report');
             return;
             }
