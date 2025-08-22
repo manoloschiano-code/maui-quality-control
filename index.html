@@ -1464,6 +1464,74 @@
                 </div>
             </div>
             
+            <div class="form-section" style="background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border: 2px solid #ff6b6b;">
+                <h3>
+                    <div class="section-icon" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8787 100%);">⚠️</div>
+                    Segnalazione Disciplinare
+                </h3>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="necessita_ammonimento" name="necessita_ammonimento" 
+                               style="width: 20px; height: 20px; cursor: pointer;"
+                               onchange="toggleAmmonimento()">
+                        <span style="font-size: 1.1em; color: #FF6B6B; font-weight: 700;">
+                            Necessità di Ammonimento
+                        </span>
+                    </label>
+                </div>
+                
+                <div id="ammonimentoDetails" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255, 107, 107, 0.1); border-radius: 15px; border: 1px solid rgba(255, 107, 107, 0.3);">
+                    <div class="form-group">
+                        <label for="nome_dipendente" style="color: #FF6B6B; font-weight: 600;">
+                            👤 Nome Dipendente
+                        </label>
+                        <input type="text" id="nome_dipendente" name="nome_dipendente" 
+                               placeholder="Inserisci il nome del dipendente da ammonire"
+                               style="border-color: #FF6B6B;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="motivazione_ammonimento" style="color: #FF6B6B; font-weight: 600;">
+                            📝 Motivazione
+                        </label>
+                        <textarea id="motivazione_ammonimento" name="motivazione_ammonimento" 
+                                  placeholder="Descrivi dettagliatamente il motivo dell'ammonimento..."
+                                  style="min-height: 150px; border-color: #FF6B6B;"></textarea>
+                    </div>
+                    
+                    <div style="padding: 15px; background: rgba(255, 59, 59, 0.1); border-radius: 10px; border-left: 4px solid #FF3B3B;">
+                        <p style="color: #FF3B3B; font-weight: 600; margin: 0;">
+                            ⚠️ ATTENZIONE: Questa segnalazione verrà inviata direttamente alla direzione.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function toggleAmmonimento() {
+                    const checkbox = document.getElementById('necessita_ammonimento');
+                    const details = document.getElementById('ammonimentoDetails');
+                    
+                    if (checkbox.checked) {
+                        details.style.display = 'block';
+                        // Anima l'apertura
+                        details.style.opacity = '0';
+                        setTimeout(() => {
+                            details.style.transition = 'opacity 0.3s ease';
+                            details.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        details.style.opacity = '0';
+                        setTimeout(() => {
+                            details.style.display = 'none';
+                            // Pulisci i campi quando si deseleziona
+                            document.getElementById('nome_dipendente').value = '';
+                            document.getElementById('motivazione_ammonimento').value = '';
+                        }, 300);
+                    }
+                }
+            </script>
+            
             <div class="form-section">
                 <h3>
                     <div class="section-icon">🥗</div>
@@ -2231,6 +2299,11 @@
                         fresh: document.getElementById('fresh_note').value || '',
                         final: document.getElementById('note_finali').value || ''
                     },
+                    ammonimento: {
+                        necessario: document.getElementById('necessita_ammonimento').checked,
+                        nome_dipendente: document.getElementById('nome_dipendente').value || '',
+                        motivazione: document.getElementById('motivazione_ammonimento').value || ''
+                    },
                     photos: [...uploadedPhotos],
                     submittedBy: currentUser.username,
                     timestamp: new Date().toISOString()
@@ -2351,6 +2424,13 @@
                 ratings = {};
                 uploadedPhotos = [];
                 document.getElementById('photoPreviewContainer').innerHTML = '';
+                
+                // Reset ammonimento
+                document.getElementById('necessita_ammonimento').checked = false;
+                document.getElementById('ammonimentoDetails').style.display = 'none';
+                document.getElementById('nome_dipendente').value = '';
+                document.getElementById('motivazione_ammonimento').value = '';
+                
                 initializeDateTime();
                 updateProgressBar();
                 
@@ -2491,12 +2571,14 @@
                 const scoreClass = score >= 8 ? 'excellent' : score >= 6 ? 'good' : 'poor';
                 const canDelete = currentUser && currentUser.username === 'manolo';
                 const hasPhotos = report.photos && report.photos.length > 0;
+                const hasAmmonimento = report.ammonimento && report.ammonimento.necessario;
                 
                 return `
                     <div class="report-card ${scoreClass}" data-report-id="${report.id}">
                         <div class="report-info">
                             <h4>${report.store}
                                 ${hasPhotos ? `<span class="has-photos-indicator">📸 ${report.photos.length} foto</span>` : ''}
+                                ${hasAmmonimento ? `<span class="has-photos-indicator" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8787 100%);">⚠️ Ammonimento</span>` : ''}
                             </h4>
                             <div class="report-meta">
                                 ${new Date(report.date).toLocaleDateString('it-IT')} ${report.time} - ${report.inspector}
@@ -2589,6 +2671,22 @@
                             <div class="form-section">
                                 <h3>📝 Note Finali</h3>
                                 <p>${report.notes.final}</p>
+                            </div>
+                        ` : ''}
+                        
+                        ${report.ammonimento && report.ammonimento.necessario ? `
+                            <div class="form-section" style="background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border: 2px solid #ff6b6b;">
+                                <h3 style="color: #FF6B6B;">⚠️ AMMONIMENTO DISCIPLINARE</h3>
+                                <div style="padding: 15px; background: rgba(255, 107, 107, 0.1); border-radius: 10px;">
+                                    <p><strong>👤 Dipendente:</strong> ${report.ammonimento.nome_dipendente}</p>
+                                    <p><strong>📝 Motivazione:</strong></p>
+                                    <p style="padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #FF6B6B;">
+                                        ${report.ammonimento.motivazione}
+                                    </p>
+                                    <p style="color: #FF3B3B; font-weight: 600; margin-top: 15px;">
+                                        ⚠️ Questa segnalazione è stata inviata alla direzione
+                                    </p>
+                                </div>
                             </div>
                         ` : ''}
                     </div>
